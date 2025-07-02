@@ -1,0 +1,65 @@
+# LaTeX auxiliary and intermediate files
+*.aux
+*.bbl
+*.blg
+*.brf
+*.log
+*.nav
+*.out
+*.snm
+*.toc
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*.run.xml
+
+# TeX4ht and htlatex auxiliary files
+*.4ct
+*.4tc
+*.idv
+*.lg
+*.tmp
+*.xref
+
+# Bibliography tool temp files
+*.bcf
+*.blx.bib
+
+# Editor-specific files
+*.swp
+*~
+*.bak
+*.tmp
+*.backup
+*.save
+
+# VSCode settings
+.vscode/
+
+# MacOS Finder and system files
+.DS_Store
+._*
+
+# Output files
+*.pdf
+*.dvi
+*.ps
+
+# glossaries
+*.acn
+*.acr
+*.alg
+*.glg
+*.glo
+*.gls
+*.ist
+
+# latexmk
+latexmkrc
+
+# Aux directories (e.g., for intermediate builds)
+_build/
+build/
