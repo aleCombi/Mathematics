@@ -162,7 +162,8 @@ Restrict $x$ to $[s,t]$ and control it with $(u,v) \mapsto |x|_{1-Hol,[s,t]}|u-v
 
 \begin{example}
     Example of uncountable set of 1-variation functions in $C^{1-var}([0,T], \R)$ for which $|f_\alpha - f_{\alpha'}|_{1-var} \geq 1$ if $\alpha \neq \alpha'.$
-    One can show a sinusoidal oscillating $n$ times in $[1-\frac{1}{2^{n-1}}, 1 - \frac{1}{2^n}]$, divided by $2n.$ 
+    One can define a sinusoidal $\alpha_n$ oscillating $n$ times in $[1-\frac{1}{2^{n-1}}, 1 - \frac{1}{2^n}]$, divided by $2n.$ 
+    Then the uncountable set is formed by the sums of $\alpha_n$ where $n$ is in a specific subset of $\mathbb{N}.$
 \end{example}
 
 \begin{prop}[mistake in the book]
@@ -186,12 +187,12 @@ Restrict $x$ to $[s,t]$ and control it with $(u,v) \mapsto |x|_{1-Hol,[s,t]}|u-v
     where $I(x)=x.$ This gives an explicit proof that $f^D \not \rightarrow f$
 \end{example}
 \begin{proof}[Outline]
-    Show the self-similarity of $f,$ and this of the role of the piecewise approximation in an interval of $D_n$ as the role of the identity function in $[0,1].$
+    Show the self-similarity of $f,$ and see the role of the piecewise approximation in an interval of $D_n$ as the role of the identity function in $[0,1].$
 \end{proof}
 
 \subsubsection{Closure of smooth paths in variation norm}
 
-\begin{prop}
+\begin{prop}\label{theo:1varL1}
     The map $y \mapsto \int_0^{\cdot} y_t dt$ is a Banach space isomorphism from 
     \begin{equation}
         L^1([0,T], \R^d) \rightarrow C_0^{0,1-var}([0,T], \R^d).
@@ -286,16 +287,26 @@ variation}
     \end{equation}
     defines a control and $|x|_{1-var,[s,t]} \leq \omega(s,t).$ Hence we have a continuous embedding $W^{1,p} \hookrightarrow C^{1-var}.$
 \end{theorem}
+\begin{proof}[Outline of the proof]
+    Use the Holder inequality on $\int_s^t |x_t| \cdot 1 dt$ to show that $\omega(s,t) \geq d(x_s, x_t),$ use it again in the sequence formulation to show superadditivity.
+\end{proof}
 
-\begin{prop}
+\begin{prop}\label{theo:sobolevnorm}
     Let $p \in (1,\infty).$ A function $x: [0,T] \rightarrow \R^d$ is in $W^{1,p}$ if and only if $M_p(x) < \infty,$ where
     \begin{equation}
         M_p(x) := \sup_D \sum_i \frac{|x_{t_i t_{i+1}}|^p}{(t_{i+1} - t_i)^{p-1}}.
     \end{equation}
     In this case $M_p(x) = |x|^p_{W^{1,p};[0,T]}$
 \end{prop}
+\begin{proof}[Outline of the proof]
+    $\Leftarrow$: if $M_p(x) < \infty,$ then prove that $x$ is absolutely continuous. 
+    It follows that the piecewise linear approximations of $x$ converge to $x$ in 1-variation norm.
+    Hence one can prove the property for PL approximations and conclude.
+\end{proof}
 
 \subsubsection{Paths of Sobolev regularity on metric spaces}
+
+For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cdot)$ as in Proposition \ref{theo:sobolevnorm}. 
 
 \begin{theorem}
     For any $x \in W^{1,p}([0,T], E)$ we have for all $s < t$
@@ -311,7 +322,7 @@ variation}
     |x|_{W^{1,p};[0,T]}^p =\lim_{\delta \rightarrow 0} \sup_{(t_i) \in D_\delta ([0,T])} \sum_{i:t_i \in D} \frac{|d(x_{t_i}, x_{t_{i+1}})|^p}{|t_{i+1} - t_i|^{p-1}} \in [0, \infty].
 \end{equation}
 \end{prop}
-\begin{proof}
+\begin{proof}[Outline of the proof]
     It suffices to prove the super-additivity of the operator under summation. 
 \end{proof}
 
@@ -327,7 +338,7 @@ variation}
         \begin{equation}
             \left\{ x \in C_0([0,T], E): M_p(x) \leq \Lambda \right\} \text{ with } \Lambda \in [0, \infty) \text{ and } o \in E
         \end{equation}
-        are compact.
+        are compact (\textit{hint: use Ascoli-Arzelà}).
     \end{enumerate}
 \end{example}
 
