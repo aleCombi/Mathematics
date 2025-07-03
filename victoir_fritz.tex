@@ -301,7 +301,7 @@ variation}
 \begin{proof}[Outline of the proof]
     $\Leftarrow$: if $M_p(x) < \infty,$ then prove that $x$ is absolutely continuous. 
     It follows that the piecewise linear approximations of $x$ converge to $x$ in 1-variation norm.
-    Hence one can prove the property for PL approximations and conclude.
+    Hence one can prove the property for PL approximations and conclude with Fatou's lemma.
 \end{proof}
 
 \subsubsection{Paths of Sobolev regularity on metric spaces}
@@ -357,17 +357,19 @@ For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cd
         \left| \int_0^t y dx \right| \leq |y|_{\infty;[0,T]} |x|_{1-var; [0,T]}.
     \end{equation}
     Moreover
-    \begin{equation}
+    \begin{equation}\label{eq:integralAdditivity}
         \int_s^t y_u dx_u = \int_0^t y_u dx_u - \int_0^s y_u dx_u.
     \end{equation}
 \end{prop}
-\begin{proof}
+\begin{proof}[Outline of the proof]
     \begin{enumerate}
         \item Step functions,
         \item $dx-$integrable functions form a linear space,
         \item Estimate\ref{eq:RSEstimate},
         \item $dx-$integrable functions are closed in sup topology,
-        
+        \item $d(\alpha x + \beta \tilde{x})$-integrability and multilinearity,
+        \item Continuous functions, approximating with step functions, piecewise-continuous functions,
+        \item Equation \ref{eq:integralAdditivity}.
     \end{enumerate}
 \end{proof}
 
@@ -378,18 +380,56 @@ For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cd
     \end{equation}
 \end{exercise}
 
-\begin{prop}[Integration by parts, wrong in the book]
-    Let $x \in C^{1-var}([0,T],\R^d)$ and $y\in C^{1-var}([0,T],L(\R^d, \R^e)).$ Then:
+\begin{prop}[Integration by parts, seems wrong in the book]
+    Let $x \in C^{1-var}([0,T],\R^d)$ and $y\in C^{1-var}([0,T], L(\R^d, \R^e)).$ Then:
     \begin{equation}
         \int_0^T y_u dx_u + \int_0^T x_u dy_u = x_T y_T - x_0 y_0.
     \end{equation}
 \end{prop}
+\begin{proof}[Interpretation]
+    When $e=1,$ the space $L(\R^d, \R)$ is isomorphic to $\R^d$ via duality as metric spaces. 
+    Hence the definition of the integral is clear.
+    When $e>1,$ one can see $y = (y_1, \ldots, y_e)$ a collection of maps in $L(\R^d, \R)$ and define the integral as $\int x dy = (\int x dy_1, \ldots, \int x dy_e).$
+    Note that $x(t)$ here is interpreted as an element of $L(\R^d, \R).$
+    The proof is trivial using appropriate approximating sums.
+\end{proof}
 
 \begin{exercise}
-    Show how change of variable works.
+    Take $x \in C^{1-var}([0,T_1, \R^d])$ and $y \in C^{1-var}([0,T_1, L(\R^d,\R^e)])$ and assume that $\phi$ is a non-decreasing continuous function from $[0,T_1]$ onto $[0,T_2].$ 
+    \begin{equation}
+        \int_0^t y\phi d(x\phi) = \int_0^{\phi(t)} y dx, \ \forall t \in [0,T_1].
+    \end{equation} 
 \end{exercise}
 
 \begin{exercise}
-    Mollifiers.
+    Let $x \in C^{1-var}([0,T], \R^d),$ let $\phi$ a $C^{\infty}$ function compactely supported on $[-1,1],$ and define $\Phi_t = \int_{-\infty}^t \phi(u)du$ and extend $x$ to $[-\infty, \infty]$ as $x_0$ below and $x_T$ above.
+    The \textit{mollifier approximation} is:
+    \begin{equation}
+        x^\varepsilon: t \in [0,T] \mapsto x_0 + \int_{\R} \phi_{(t-s) / \varepsilon} dx_s.
+    \end{equation}
+
+    \begin{itemize}
+        \item $x^{\varepsilon}$ is infinitely differentiable [\textit{derivative under the integral sign, follows from the fact that convergence to the derivative is uniform for $C^1$ functions}].
+        \item $|x^\varepsilon|_{1-var,[0,T]} \leq |x|_{1-var,[0,T]}$ and $|x^\varepsilon|_{1-Hol,[0,T]} \leq |x|_{1-Hol,[0,T]}.$ [\textit{Use Fubini version between the Lebesgue measure $dt$, and the Radon measure $d|x_t|$}]
+        \item $x^{\varepsilon}$ converges to $x$ in supremum topology as $\varepsilon \rightarrow \infty.$
+    \end{itemize}
+
+    Observe that using integration by parts we have:
+    \begin{equation}
+        x_t^\varepsilon = \int_{-1}^1 x_{t + \varepsilon s} \phi(s) ds.
+    \end{equation}
 \end{exercise}
+
+\subsection{Continuity properties}
+
+\begin{prop}
+    Let $y^n, y: [0,T] \rightarrow L(\R^d, \R^e)$ be continuous functions and assume $y_n \rightarrow y$ uniformly. Assume $x^n, x \in C^{1-var}([0,T], \R^d)$ and $x^n \rightarrow x$ uniformly with
+    \begin{equation}
+        \sup_n |x^n|_{1-var, [0,T]} < \infty.
+    \end{equation} 
+    Then 
+    \begin{equation}
+        \int_0^t y^n dx^n \rightarrow \int_0^t y dx \text{ uniformly for } t \in [0,T].
+    \end{equation}
+\end{prop}
 \end{document}
