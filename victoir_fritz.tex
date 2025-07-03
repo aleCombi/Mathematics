@@ -323,11 +323,11 @@ For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cd
 \end{equation}
 \end{prop}
 \begin{proof}[Outline of the proof]
-    It suffices to prove the super-additivity of the operator under summation. 
+    It suffices to prove the super-additivity of the operator under summation, which follows from the convexity of the map $x \mapsto x^p.$
 \end{proof}
 
 \begin{example}
-    Let $C([0,T], E)$ equipped with the uniform topology. Let $p \in (1,\infty).$ Then:
+    Let $C([0,T], E)$ be equipped with the uniform topology. Let $p \in (1,\infty).$ Then:
     \begin{enumerate}
         \item show
         \begin{equation}
@@ -422,7 +422,7 @@ For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cd
 
 \subsection{Continuity properties}
 
-\begin{prop}
+\begin{prop}[Continuity]
     Let $y^n, y: [0,T] \rightarrow L(\R^d, \R^e)$ be continuous functions and assume $y_n \rightarrow y$ uniformly. Assume $x^n, x \in C^{1-var}([0,T], \R^d)$ and $x^n \rightarrow x$ uniformly with
     \begin{equation}
         \sup_n |x^n|_{1-var, [0,T]} < \infty.
@@ -432,4 +432,55 @@ For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cd
         \int_0^t y^n dx^n \rightarrow \int_0^t y dx \text{ uniformly for } t \in [0,T].
     \end{equation}
 \end{prop}
+
+\begin{prop}[Uniform continuity on bounded sets]
+   Let $y, y' \in C([0,T], L(\R^d, \R^e))$ and $x,x' \in C^{1-var, \R^d}.$ Then
+\begin{equation}
+    |\int_0^\cdot ydx - \int_0^\cdot y'dx'| \leq |x|_{1-var} |y - y'|_\infty + |x - x'|_{1-var} |y'|_\infty 
+\end{equation} 
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Add and substract $\int_0^\cdot y'dx.$
+\end{proof}
+
+\begin{corollary}
+     Let $y, y' \in C([0,T], \R^e)$ and $x,x' \in C^{1-var, \R^d}$ and $V: \R^e \rightarrow L(\R^d, \R^e)$ continuous. 
+     Assume
+     \begin{equation}
+        |x|_{1-var}, |x'|_{1-var}, |y|_\infty, |y'|_\infty < R.
+     \end{equation} 
+
+     Then exist $\delta = \delta(\varepsilon, R, V)$ such that
+     \begin{equation}
+        |\int_0^\cdot V(y)dx - \int_0^\cdot V(y')dx'| \leq \varepsilon.
+     \end{equation}
+\end{corollary}
+
+\section{Ordinary differential equations}
+
+We consider equations of the type:
+\begin{equation}
+    dy = V(y) dx,
+\end{equation}
+where $y$ is a path in $\R^e,$ $x$ is a path in $\R^d$ and $V:\R^e \rightarrow L(\R^e, \R^d).$
+Observe that $V$ can be seen as $V = (V_1, \ldots, V_d),$ where $V_i: \R^e \rightarrow \R^e.$
+One can see the $V_i(y)$s as the columns of $V(y)$ seen as a matrix.
+In this case:
+\begin{equation}
+    \int V(y) dx = \sum_i^d \int V_i(y) dx_i.
+\end{equation} 
+
+\begin{definition}
+    A collection of vector fields $V = (V_1, \ldots, V_n) : \R^e \rightarrow L(\R^e, \R^d)$ is said \textit{bounded} if
+    \begin{equation}
+        |V|_\infty = sup_{y \in \R^e} |V(y)| < \infty.
+    \end{equation}
+
+    For any $U \subset \R^e,$ we define the $1$-Lipschitz norm as:
+    \begin{equation}
+        |V|_{Lip^1(U)} := \max \left\{ sup_{y \neq z,\ y,z \in U} \frac{|V(y) - V(z)|}{|y - z|}, sup_{y \in U} |V(y)| \right\}.
+    \end{equation}
+
+    We say that $V \in Lip^1(\R^e)$ if $|V|_{Lip^1(\R^n)} < infty$ and locally 1-Lipschitz if it is 1-Lipschitz in any bounded subset $U$ of $\R^e.$
+\end{definition}
 \end{document}
