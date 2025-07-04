@@ -562,4 +562,114 @@ In this case:
     Use the condition in Equation \eqref{eq:lineargrowth} plus Gronwall to control $|y_s|.$
     Then use Gronwall again to control $|y_{u,v}|.$
 \end{proof}
+
+\subsection{Uniqueness}
+
+\begin{theorem}
+    Assume that 
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of Lipschitz continuous vector fields on $\R^e,$ such that
+        \begin{equation}
+            v \geq \sup_{y,z \in \R^e} \frac{|V(y) - V(z)|}{|y - z|}.
+        \end{equation}
+        \item $x \in C^{1-var}([0,T],\R^d)$ such that $v |x|_{1-var,[0,T]} \geq l.$
+    \end{itemize}
+    Then, for every initial condition $y_0$ there exists a unique ODE solution and the associated flow is Lipschitz continuous, that is:
+    \begin{equation}\label{eq:solutionLipschitz}
+         |\pi_{(V)}(0, y^1_0; x) - \pi_{(V)}(0, y^2_0; x)|_\infty \leq |y^1_0 - y^2_0| \exp(l).
+    \end{equation}
+    Moreover, for all $s < t$ in $[0,T],$
+    \begin{equation}
+        |\pi_{(V)}(0, y^1_0; x) - \pi_{(V)}(0, y^2_0; x)|_{1-var,[s,t]} \leq |y^1_0 - y^2_0| \exp(2l) v |x|_{1-var,[s,t]}.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    First use Gronwall on $\bar{y} = y^1 - y^2.$ This is enough to prove Equation \eqref{eq:solutionLipschitz}.
+    Then use Gronwall again on $\bar{y}_{s,t}.$
+\end{proof}
+
+\subsection{Consequences of uniqueness}
+\begin{prop}[Change of variable]
+    Let $x \in C^{1-var}([0,T_1], \R^d)$ and $V = (V_1, \ldots, V_d)$ a collection of locally Lipschitz vector fields on $\R^e$ of linear growth.
+    Assume $\phi$ is a non-decreasing function from $[0,T_2]$ onto $[0,T_1].$ so that
+\begin{equation}
+    x \circ \phi \in C^{1-var}([0,T_2], \R^d).
+\end{equation}
+Then 
+\begin{equation}
+    \pi_{(V)}(0, y_0; x)_{\phi(\cdot)} = \pi_{(V)}(0, y_0; x \circ \phi) \text{ on } [0,T_2].
+\end{equation}
+\end{prop}
+
+\subsection{Continuity of the solution map}
+
+\subsubsection{Limit theorem for 1-variation signals}
+
+\begin{theorem}
+    We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of $Lip^1$ vector fields on $\R^e$ such that
+        \begin{equation}
+            \max_{i=1,2} |V^i|_{Lip^1} \leq v.
+        \end{equation}
+        \item $y_0^1$ and $y_0^2$ initial conditions.
+        \item $x^0$ and $x^1$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$ we have\footnote{Recall that $|x|_0 = \sup_{u,v \in [0,T]} |x_u - x_v|$}.
+    \begin{equation}
+        |y^1 - y^2|_\infty \leq \left( |y_0^1 - y_0^2| + v |x^1 - x^2|_0 + |V^1 - V^2|_\infty l \right) \exp(2vl).
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Add and subtract, integration by parts and finally Gronwall.
+\end{proof}
+
+\begin{corollary}[Localization]
+      We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of locally $Lip^1$ vector fields on $\R^e$ with linear growth,
+        \item $y_0^1$ and $y_0^2$ initial conditions, with $R \geq |y_0^i|,$
+        \item $x^0$ and $x^1$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$
+     \begin{equation}
+        |y^1 - y^2|_\infty \leq C \left( |y_0^1 - y_0^2| + |x^1 - x^2|_0 + |V^1 - V^2|_{\infty, B(0,M)} \right).
+    \end{equation}
+\end{corollary}
+
+\begin{exercise}[Change of variable formula]
+    Change of variable.
+\end{exercise}
+
+\subsubsection{Continuity under the 1-variation norm}
+
+\begin{theorem}
+    We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of $Lip^1$ vector fields on $\R^e$ such that
+        \begin{equation}
+            \max_{i=1,2} |V^i|_{Lip^1} \leq v,
+        \end{equation}
+        \item $y_0^1$ and $y_0^2$ initial conditions, with $R \geq |y_0^i|,$
+        \item $x^1$ and $x^2$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$
+    \begin{equation}
+        |y^1 - y^2|_{1-var,[0,T]} \leq 2 \left( |y_0^1 - y_0^2| v l + |x^1 - x^2|_{1-var,[0,T]} + |V^1 - V^2|_\infty l \right) e^{3vl}.
+    \end{equation}
+\end{theorem}
+
+\begin{corollary}[Localization]
+    Localization.
+\end{corollary}
 \end{document}
