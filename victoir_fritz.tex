@@ -483,4 +483,83 @@ In this case:
 
     We say that $V \in Lip^1(\R^e)$ if $|V|_{Lip^1(\R^n)} < infty$ and locally 1-Lipschitz if it is 1-Lipschitz in any bounded subset $U$ of $\R^e.$
 \end{definition}
+
+\begin{lemma}[Gronwall's lemma]
+    Let $x \in C^{1-var}([0,T], \R^d)$ and $\phi:[0,T] \rightarrow \R^+$ a bounded measurable function. Assume that for all $t \in [0,T]$
+    \begin{equation}\label{eq:gronwall}
+        \phi_t \leq K + L \int_0^t \phi_s |dx_s|.
+    \end{equation}
+
+    Then for all $t \in [0,T]$
+    \begin{equation}
+        \phi_t \leq K exp(L \int_0^t |dx_s|).
+    \end{equation}
+
+    The same works substituting $K$ with a non-decreasing function $K_t.$
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Apply inductively Equation \eqref{eq:gronwall} and use the exponential series definition.
+    It also requires the iterated integral of $|dx_t|,$ which is easily solved with integration by parts.
+\end{proof}
+
+\subsection{Existence}
+
+\begin{theorem}[Existence]
+    Assume that
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of continuous, bounded vector fields on $\R^e$,
+        \item $y_0 \in \R^e$ is the initial condition,
+        \item $x \in C^{1-var}([0,T], \R^d)$.
+    \end{itemize}
+    Then the exist a solution (not necessarily unique) of the ODE $dy = V(y)dx$.
+    Moreover for all $s < t$,
+    \begin{equation}
+        |\pi_{(V)}(0, y_0; x)|_{1-var, [s,t]} \leq |V|_\infty |x|_{1-var, [s,t]}.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Define the Euler approximation on a dissection $D$.
+    Bound the variations $y^D_{s,t}$ and consequently the $|y^D|_\infty.$
+    Then by Ascoli Arzelà $y^{D_n}$ must have a limit point.
+    Hence one can pass to the limit in the integral that defined $y^D_{s,t}$ by dominated convergence.
+    Note that one has to pass to the limit in $V(y_{r_D}^D)$, where $r_D$ is the largest element in $D$ smaller than $r.$
+\end{proof}
+
+\begin{theorem}[Existence up to explosion time]
+      Assume that
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of continuous vector fields on $\R^e$,
+        \item $y_0 \in \R^e$ is the initial condition,
+        \item $x \in C^{1-var}([0,T], \R^d)$.
+    \end{itemize}
+    Then either there exists a solution (not necessarily unique) of the ODE $dy = V(y)dx$, $y:[0,T] \rightarrow \R^e,$
+    or there exist a $\tau \in [0,T]$ and a local solution $y:[0,\tau) \rightarrow \R^e$ that solves in any $[0,t], \ t < \tau,$ and 
+ \begin{equation}
+    lim_{t \nearrow \tau} |y_t| = +\infty.
+ \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Consider the solution in balls around $y_0$ of increasing radius. Up to reaching the border at $\tau_i$ of each ball we have a solution by the Existence theorem.
+    Proceeding inductively we either reach $T$ with the $\tau_i$ or we converge to a $\tau.$ In the second case there is explosion.
+\end{proof}
+
+\begin{theorem}[No explosion]
+ Assume that
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of continuous vector fields on $\R^e$ of \textbf{linear growth}, that is
+        \begin{equation}\label{eq:lineargrowth}
+             \exists A > 0:\ |V(y)| < A (1 + |y|),\ \forall y \in \R^e,
+        \end{equation}
+        \item $y_0 \in \R^e$ is the initial condition,
+        \item $x \in C^{1-var}([0,T], \R^d)$ and $l \geq A |x|_{1-var,[0,T]}.$
+    \end{itemize}   
+    Then explosion cannot happen. Moreover any solution satisfies:
+    \begin{equation}
+        |y|_{\infty, [0,T]} \leq (|y_0| + l) \exp(l).
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Use the condition in Equation \eqref{eq:lineargrowth} plus Gronwall to control $|y_s|.$
+    Then use Gronwall again to control $|y_{u,v}|.$
+\end{proof}
 \end{document}
