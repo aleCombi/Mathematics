@@ -492,7 +492,7 @@ In this case:
 
     Then for all $t \in [0,T]$
     \begin{equation}
-        \phi_t \leq K exp(L \int_0^t |dx_s|).
+        \phi_t \leq K exp\left( L \int_0^t |dx_s| \right).
     \end{equation}
 
     The same works substituting $K$ with a non-decreasing function $K_t.$
@@ -556,6 +556,11 @@ In this case:
     Then explosion cannot happen. Moreover any solution satisfies:
     \begin{equation}
         |y|_{\infty, [0,T]} \leq (|y_0| + l) \exp(l).
+    \end{equation}
+
+    Furthermore for all $0 \leq s \leq t \leq T,$ 
+    \begin{equation}
+        |y|_{1-var, [s,t]} \leq (1 + |y_0|) \exp(2l) A \int_s^t |dx_u|.
     \end{equation}
 \end{theorem}
 \begin{proof}[Outline of the proof]
@@ -670,6 +675,23 @@ Then
 \end{theorem}
 
 \begin{corollary}[Localization]
-    Localization.
+        We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of locally $Lip^1$ vector fields on $\R^e,$ with linear growth,
+        \item $y_0^1$ and $y_0^2$ initial conditions, with $R \geq |y_0^i|,$
+        \item $x^1$ and $x^2$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$ there exist constants $C, M$ depending only on $R, l$ and the vector fields $V$ such that
+    \begin{equation}
+        |y^1 - y^2|_{1-var,[0,T]} \leq C \left( |y_0^1 - y_0^2| + |x^1 - x^2|_{0,[0,T]} + |V^1 - V^2|_{\infty, B(0,M)} \right).
+    \end{equation}
 \end{corollary}
+
+\subsection{Summary of the regularity estimates for ODEs}
+Summarize in a scheme conditions on $V$ and their consequence on $y.$
+\section{ODE: Smoothness}
 \end{document}
