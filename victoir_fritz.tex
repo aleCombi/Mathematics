@@ -693,5 +693,19 @@ Then
 
 \subsection{Summary of the regularity estimates for ODEs}
 Summarize in a scheme conditions on $V$ and their consequence on $y.$
+
+\begin{itemize}
+    \item \textit{existence}: $V$ continuous, bounded $\Rightarrow$ Global existence and $1-var$ estimate.
+    \item \textit{explosion}: $V$ continuous $\Rightarrow$ Existence up to explosion time $\tau$ or global.
+    \item \textit{non explosion}: $V$ continuous, linear growth $\Rightarrow$ No explosion, uniform and $1-var$ estimates.
+    \item \textit{uniqueness}: $V$ globally $Lip^1$ $\Rightarrow$ esistence and uniqueness, continuity wrt $y^0$ in uniform norm and $1-var.$
+    \item \textit{local uniqueness}: $V$ locally $Lip^1$ $\Rightarrow$ esistence and uniqueness up to explosion time. If no explosion (e.g. linear growth), global unique solution.
+    \item \textit{uniform continuity}: $V^i$ globally $Lip^1$ $\Rightarrow$ uniform continuity wrt $y_0,\ V,\ x$.
+    \item \textit{uniform local continuity}: $V^i$ locally $Lip^1$, linear growth $\Rightarrow$ continuity wrt $y_0,\ V,\ x$, with estimates depending on $|x|_{1-var},\ |y_0|,\ V.$
+    \item \textit{1-var continuity}: $V^i$ globally $Lip^1$ $\Rightarrow$ $1-var$ continuity wrt $y_0,\ V,\ x$.
+    \item \textit{local 1-var continuity}: $V^i$ locally $Lip^1$, linear growth $\Rightarrow$ $1-var$ continuity wrt $y_0,\ V,\ x$, with estimates depending on $|x|_{1-var},\ |y_0|,\ V.$
+\end{itemize}
+
+That is, boundedness or linear growth implies global existence, continuity implies existence up to explosion, global $Lip^1$ implies global uniqueness and continuity (uniform and in $1-var$), local $Lip^1$ implies uniqueness up to explosion and continuity (uniform and in $1-var$).
 \section{ODE: Smoothness}
 \end{document}
