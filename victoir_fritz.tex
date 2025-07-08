@@ -814,7 +814,9 @@ That is, boundedness or linear growth implies global existence, continuity impli
     \end{equation}
     is $C^1$ in the Frechet sense.
 \end{theorem}
-
+\begin{proof}[Outline of the proof]
+    Use Proposition \ref{theo:FrechetDirectional} and the continuity results on $ODE$ solutions and the Riemann-Stieltjes integral.
+\end{proof}
 \appendix
 
 \section{Banach spaces}
@@ -863,7 +865,7 @@ We want to see when the existence of directional derivatives is sufficient to de
     Use the fundamental theorem of calculus on $f(x + h) - f(x).$
 \end{proof}
 
-\begin{prop}
+\begin{prop}\label{theo:FrechetDirectional}
     Let $U$ be an open set in $E$ and $f: U \rightarrow F$ be a continuous map that admits directional derivatives in all points and all directions. Let also
     \begin{equation}
         (x,h) \in U \times E \mapsto D_h f(x) \in F
