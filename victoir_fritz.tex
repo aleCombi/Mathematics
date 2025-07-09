@@ -779,7 +779,7 @@ That is, boundedness or linear growth implies global existence, continuity impli
         dz = dM \cdot z + dH, 
     \end{equation}
     where we defined $dM = DV(y) dx$ and $dH = V(y) dh.$
-    Then Equation\ref{eq:directionalODE} admits a unique solution $z$ under the hypothesis of Theorem \ref{theo:directionalRS}.
+    Then Equation \eqref{eq:directionalODE} admits a unique solution $z$ under the hypothesis of Theorem \ref{theo:directionalRS}.
 \end{prop}
 \begin{proof}[Outline of the proof]
     Consider the homogeneous solution:
@@ -798,9 +798,9 @@ That is, boundedness or linear growth implies global existence, continuity impli
         (y_0, x) \mapsto \pi_{(V)}(0, y_0, x)
     \end{equation*}
     has up to $k^{th}$ order directional derivatives in the sense that, for all $(v_i, h_i)_{1 \leq i \leq k} \in (\R^e \times C^{1-var}([0,T], \R^d))^{\times k},$
-    \begin{equation}
-        D_{(v_i, h_i)_{1 \leq k \leq k}}^k \pi(0, y_0, x) := \left\{ \frac{\partial^k}{\partial \varepsilon_1 \ldots \partial \varepsilon_k} \pi \left( 0, y_0 + \sum_{j=1}^k \varepsilon_j v_j, x + \sum_{j=1}^k \varepsilon_j h_j \right) \right\}_{\epsilon = 0}
-    \end{equation}
+    \begin{equation*}
+        D_{(v_i, h_i)_{1 \leq k \leq k}}^k \pi(0, y_0, x) := \left\{ \frac{\partial^k}{\partial \varepsilon_1 \ldots \partial \varepsilon_k} \pi \left( 0, y_0 + \sum_{j=1}^k \varepsilon_j v_j, x + \sum_{j=1}^k \varepsilon_j h_j \right) \right\}_{\varepsilon = 0}
+    \end{equation*}
     exists as a strong limit in the Banach space $C^{1-var}([0,T], \R^e).$
     Furthermore, the directional derivatives satisfy the control ODEs obtained from formal differentiation.
 \end{prop}
@@ -853,7 +853,7 @@ We want to see when the existence of directional derivatives is sufficient to de
     \end{equation}
 \end{example}
 
-\begin{prop}
+\begin{prop}[Directional derivatives as a continuous linear map]
     Let $U$ be an open set in $E$ and $f:U \rightarrow F$ a function that has directional derivatives in all directions. Let $A: U \rightarrow L(E,F)$ a continuous map such that
     \begin{equation}
         D_h f(x) = A(x) h.
@@ -865,7 +865,7 @@ We want to see when the existence of directional derivatives is sufficient to de
     Use the fundamental theorem of calculus on $f(x + h) - f(x).$
 \end{proof}
 
-\begin{prop}\label{theo:FrechetDirectional}
+\begin{prop}[Frechet differentiability condition]\label{theo:FrechetDirectional}
     Let $U$ be an open set in $E$ and $f: U \rightarrow F$ be a continuous map that admits directional derivatives in all points and all directions. Let also
     \begin{equation}
         (x,h) \in U \times E \mapsto D_h f(x) \in F
