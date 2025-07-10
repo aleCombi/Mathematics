@@ -1,0 +1,251 @@
+\section{Ordinary differential equations}
+
+We consider equations of the type:
+\begin{equation}
+    dy = V(y) dx,
+\end{equation}
+where $y$ is a path in $\R^e,$ $x$ is a path in $\R^d$ and $V:\R^e \rightarrow L(\R^e, \R^d).$
+Observe that $V$ can be seen as $V = (V_1, \ldots, V_d),$ where $V_i: \R^e \rightarrow \R^e.$
+One can see the $V_i(y)$s as the columns of $V(y)$ seen as a matrix.
+In this case:
+\begin{equation}
+    \int V(y) dx = \sum_i^d \int V_i(y) dx_i.
+\end{equation} 
+
+\begin{definition}
+    A collection of vector fields $V = (V_1, \ldots, V_n) : \R^e \rightarrow L(\R^e, \R^d)$ is said \textit{bounded} if
+    \begin{equation}
+        |V|_\infty = sup_{y \in \R^e} |V(y)| < \infty.
+    \end{equation}
+
+    For any $U \subset \R^e,$ we define the $1$-Lipschitz norm as:
+    \begin{equation}
+        |V|_{Lip^1(U)} := \max \left\{ sup_{y \neq z,\ y,z \in U} \frac{|V(y) - V(z)|}{|y - z|}, sup_{y \in U} |V(y)| \right\}.
+    \end{equation}
+
+    We say that $V \in Lip^1(\R^e)$ if $|V|_{Lip^1(\R^n)} < infty$ and locally 1-Lipschitz if it is 1-Lipschitz in any bounded subset $U$ of $\R^e.$
+\end{definition}
+
+\begin{lemma}[Gronwall's lemma]
+    Let $x \in C^{1-var}([0,T], \R^d)$ and $\phi:[0,T] \rightarrow \R^+$ a bounded measurable function. Assume that for all $t \in [0,T]$
+    \begin{equation}\label{eq:gronwall}
+        \phi_t \leq K + L \int_0^t \phi_s |dx_s|.
+    \end{equation}
+
+    Then for all $t \in [0,T]$
+    \begin{equation}
+        \phi_t \leq K exp\left( L \int_0^t |dx_s| \right).
+    \end{equation}
+
+    The same works substituting $K$ with a non-decreasing function $K_t.$
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Apply inductively Equation \eqref{eq:gronwall} and use the exponential series definition.
+    It also requires the iterated integral of $|dx_t|,$ which is easily solved with integration by parts.
+\end{proof}
+
+\subsection{Existence}
+
+\begin{theorem}[Existence]
+    Assume that
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of continuous, bounded vector fields on $\R^e$,
+        \item $y_0 \in \R^e$ is the initial condition,
+        \item $x \in C^{1-var}([0,T], \R^d)$.
+    \end{itemize}
+    Then the exist a solution (not necessarily unique) of the ODE $dy = V(y)dx$.
+    Moreover for all $s < t$,
+    \begin{equation}
+        |\pi_{(V)}(0, y_0; x)|_{1-var, [s,t]} \leq |V|_\infty |x|_{1-var, [s,t]}.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Define the Euler approximation on a dissection $D$.
+    Bound the variations $y^D_{s,t}$ and consequently the $|y^D|_\infty.$
+    Then by Ascoli Arzelà $y^{D_n}$ must have a limit point.
+    Hence one can pass to the limit in the integral that defined $y^D_{s,t}$ by dominated convergence.
+    Note that one has to pass to the limit in $V(y_{r_D}^D)$, where $r_D$ is the largest element in $D$ smaller than $r.$
+\end{proof}
+
+\begin{theorem}[Existence up to explosion time]
+      Assume that
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of continuous vector fields on $\R^e$,
+        \item $y_0 \in \R^e$ is the initial condition,
+        \item $x \in C^{1-var}([0,T], \R^d)$.
+    \end{itemize}
+    Then either there exists a solution (not necessarily unique) of the ODE $dy = V(y)dx$, $y:[0,T] \rightarrow \R^e,$
+    or there exist a $\tau \in [0,T]$ and a local solution $y:[0,\tau) \rightarrow \R^e$ that solves in any $[0,t], \ t < \tau,$ and 
+ \begin{equation}
+    lim_{t \nearrow \tau} |y_t| = +\infty.
+ \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Consider the solution in balls around $y_0$ of increasing radius. Up to reaching the border at $\tau_i$ of each ball we have a solution by the Existence theorem.
+    Proceeding inductively we either reach $T$ with the $\tau_i$ or we converge to a $\tau.$ In the second case there is explosion.
+\end{proof}
+
+\begin{theorem}[No explosion]
+ Assume that
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of continuous vector fields on $\R^e$ of \textbf{linear growth}, that is
+        \begin{equation}\label{eq:lineargrowth}
+             \exists A > 0:\ |V(y)| < A (1 + |y|),\ \forall y \in \R^e,
+        \end{equation}
+        \item $y_0 \in \R^e$ is the initial condition,
+        \item $x \in C^{1-var}([0,T], \R^d)$ and $l \geq A |x|_{1-var,[0,T]}.$
+    \end{itemize}   
+    Then explosion cannot happen. Moreover any solution satisfies:
+    \begin{equation}
+        |y|_{\infty, [0,T]} \leq (|y_0| + l) \exp(l).
+    \end{equation}
+
+    Furthermore for all $0 \leq s \leq t \leq T,$ 
+    \begin{equation}
+        |y|_{1-var, [s,t]} \leq (1 + |y_0|) \exp(2l) A \int_s^t |dx_u|.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Use the condition in Equation \eqref{eq:lineargrowth} plus Gronwall to control $|y_s|.$
+    Then use Gronwall again to control $|y_{u,v}|.$
+\end{proof}
+
+\subsection{Uniqueness}
+
+\begin{theorem}
+    Assume that 
+    \begin{itemize}
+        \item $V = (V_1, \ldots, V_d)$ is a collection of Lipschitz continuous vector fields on $\R^e,$ such that
+        \begin{equation}
+            v \geq \sup_{y,z \in \R^e} \frac{|V(y) - V(z)|}{|y - z|}.
+        \end{equation}
+        \item $x \in C^{1-var}([0,T],\R^d)$ such that $v |x|_{1-var,[0,T]} \geq l.$
+    \end{itemize}
+    Then, for every initial condition $y_0$ there exists a unique ODE solution and the associated flow is Lipschitz continuous, that is:
+    \begin{equation}\label{eq:solutionLipschitz}
+         |\pi_{(V)}(0, y^1_0; x) - \pi_{(V)}(0, y^2_0; x)|_\infty \leq |y^1_0 - y^2_0| \exp(l).
+    \end{equation}
+    Moreover, for all $s < t$ in $[0,T],$
+    \begin{equation}
+        |\pi_{(V)}(0, y^1_0; x) - \pi_{(V)}(0, y^2_0; x)|_{1-var,[s,t]} \leq |y^1_0 - y^2_0| \exp(2l) v |x|_{1-var,[s,t]}.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    First use Gronwall on $\bar{y} = y^1 - y^2.$ This is enough to prove Equation \eqref{eq:solutionLipschitz}.
+    Then use Gronwall again on $\bar{y}_{s,t}.$
+\end{proof}
+
+\subsection{Consequences of uniqueness}
+\begin{prop}[Change of variable]
+    Let $x \in C^{1-var}([0,T_1], \R^d)$ and $V = (V_1, \ldots, V_d)$ a collection of locally Lipschitz vector fields on $\R^e$ of linear growth.
+    Assume $\phi$ is a non-decreasing function from $[0,T_2]$ onto $[0,T_1].$ so that
+\begin{equation}
+    x \circ \phi \in C^{1-var}([0,T_2], \R^d).
+\end{equation}
+Then 
+\begin{equation}
+    \pi_{(V)}(0, y_0; x)_{\phi(\cdot)} = \pi_{(V)}(0, y_0; x \circ \phi) \text{ on } [0,T_2].
+\end{equation}
+\end{prop}
+
+\subsection{Continuity of the solution map}
+
+\subsubsection{Limit theorem for 1-variation signals}
+
+\begin{theorem}
+    We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of $Lip^1$ vector fields on $\R^e$ such that
+        \begin{equation}
+            \max_{i=1,2} |V^i|_{Lip^1} \leq v.
+        \end{equation}
+        \item $y_0^1$ and $y_0^2$ initial conditions.
+        \item $x^0$ and $x^1$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$ we have\footnote{Recall that $|x|_0 = \sup_{u,v \in [0,T]} |x_u - x_v|$}.
+    \begin{equation}
+        |y^1 - y^2|_\infty \leq \left( |y_0^1 - y_0^2| + v |x^1 - x^2|_0 + |V^1 - V^2|_\infty l \right) \exp(2vl).
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Add and subtract, integration by parts and finally Gronwall.
+\end{proof}
+
+\begin{corollary}[Localization]
+      We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of locally $Lip^1$ vector fields on $\R^e$ with linear growth,
+        \item $y_0^1$ and $y_0^2$ initial conditions, with $R \geq |y_0^i|,$
+        \item $x^0$ and $x^1$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$
+     \begin{equation}
+        |y^1 - y^2|_\infty \leq C \left( |y_0^1 - y_0^2| + |x^1 - x^2|_0 + |V^1 - V^2|_{\infty, B(0,M)} \right).
+    \end{equation}
+\end{corollary}
+
+\begin{exercise}[Change of variable formula]
+    Change of variable.
+\end{exercise}
+
+\subsubsection{Continuity under the 1-variation norm}
+
+\begin{theorem}
+    We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of $Lip^1$ vector fields on $\R^e$ such that
+        \begin{equation}
+            \max_{i=1,2} |V^i|_{Lip^1} \leq v,
+        \end{equation}
+        \item $y_0^1$ and $y_0^2$ initial conditions, with $R \geq |y_0^i|,$
+        \item $x^1$ and $x^2$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$
+    \begin{equation}
+        |y^1 - y^2|_{1-var,[0,T]} \leq 2 \left( |y_0^1 - y_0^2| v l + |x^1 - x^2|_{1-var,[0,T]} + |V^1 - V^2|_\infty l \right) e^{3vl}.
+    \end{equation}
+\end{theorem}
+
+\begin{corollary}[Localization, the book uses $|\cdot|_0$ on $x$, seems wrong]
+        We consider
+    \begin{itemize}
+        \item $V^1 = (V_1^1, \ldots V^1_d)$ and $V^2 = (V_2^1, \ldots V^2_d)$ two collections of locally $Lip^1$ vector fields on $\R^e,$ with linear growth,
+        \item $y_0^1$ and $y_0^2$ initial conditions, with $R \geq |y_0^i|,$
+        \item $x^1$ and $x^2$ are paths in $C^{1-var}([0,T], \R^d)$ such that 
+        \begin{equation}
+            \max_{i=1,2} |x^i|_{1-var, [0,T]} \leq l.
+        \end{equation} 
+    \end{itemize}
+
+    Then, if $y^i = \pi_{V_i}(0, y_0^i; x^i)$ there exist constants $C, M$ depending only on $R, l$ and the vector fields $V$ such that
+    \begin{equation}
+        |y^1 - y^2|_{1-var,[0,T]} \leq C \left( |y_0^1 - y_0^2| + |x^1 - x^2|_{1-var,[0,T]} + |V^1 - V^2|_{\infty, B(0,M)} \right).
+    \end{equation}
+\end{corollary}
+
+\subsection{Summary of the regularity estimates for ODEs}
+Summarize in a scheme conditions on $V$ and their consequence on $y.$
+
+\begin{itemize}
+    \item \textit{existence}: $V$ continuous, bounded $\Rightarrow$ Global existence and $1-var$ estimate.
+    \item \textit{explosion}: $V$ continuous $\Rightarrow$ Existence up to explosion time $\tau$ or global.
+    \item \textit{non explosion}: $V$ continuous, linear growth $\Rightarrow$ No explosion, uniform and $1-var$ estimates.
+    \item \textit{uniqueness}: $V$ globally $Lip^1$ $\Rightarrow$ esistence and uniqueness, continuity wrt $y^0$ in uniform norm and $1-var.$
+    \item \textit{local uniqueness}: $V$ locally $Lip^1$ $\Rightarrow$ esistence and uniqueness up to explosion time. If no explosion (e.g. linear growth), global unique solution.
+    \item \textit{uniform continuity}: $V^i$ globally $Lip^1$ $\Rightarrow$ uniform continuity wrt $y_0,\ V,\ x$.
+    \item \textit{uniform local continuity}: $V^i$ locally $Lip^1$, linear growth $\Rightarrow$ continuity wrt $y_0,\ V,\ x$, with estimates depending on $|x|_{1-var},\ |y_0|,\ V.$
+    \item \textit{1-var continuity}: $V^i$ globally $Lip^1$ $\Rightarrow$ $1-var$ continuity wrt $y_0,\ V,\ x$.
+    \item \textit{local 1-var continuity}: $V^i$ locally $Lip^1$, linear growth $\Rightarrow$ $1-var$ continuity wrt $y_0,\ V,\ x$, with estimates depending on $|x|_{1-var},\ |y_0|,\ V.$
+\end{itemize}
+
+That is, boundedness or linear growth implies global existence, continuity implies existence up to explosion, global $Lip^1$ implies global uniqueness and continuity (uniform and in $1-var$), local $Lip^1$ implies uniqueness up to explosion and continuity (uniform and in $1-var$).

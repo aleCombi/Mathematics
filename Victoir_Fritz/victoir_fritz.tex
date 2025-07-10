@@ -1,0 +1,32 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts}
+\usepackage{amsmath, amsthm}
+
+\newcommand{\R}{\mathbb{R}}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}
+
+\title{Victoir-Fritz}
+\author{Alessandro Combi}
+\date{June 2025}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+\include{sections/01_bounded_variation.tex}
+\include{sections/02_rieman_stieltjes.tex}
+\include{sections/03_ode.tex}
+\include{sections/04_ode_smoothness.tex}
+
+\appendix
+
+\include{sections/A_Banach_Frechet.tex}

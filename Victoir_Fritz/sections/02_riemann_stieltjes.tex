@@ -1,0 +1,113 @@
+\section{Riemann-Stieltjes Integration}
+
+\begin{definition}
+    Let $x:[0,T] \rightarrow \R^d$ and $y:[0,T] \rightarrow L(\R^d, \R^e).$ Let $D^n$ be a sequence of dissections with $|D_n| \rightarrow 0$ and $\xi^n_i$ points in $[t_i, t_{i+1}].$ Assume that $\sum y(\xi^n_i) x_{t^n_i, t^n_{i+1}}$ converges when $n \rightarrow \infty$ to a limit $I$ independent of the $\xi^n_i$ and of $D_n.$ Then we say the $I$ is the Riemann-Stieltjes of $y$ against $x$ and indicate:
+    \begin{equation}
+        I =: \int_0^T y dx.
+    \end{equation}
+\end{definition}
+
+\begin{prop}
+    Let $x \in C^{1-var}([0,T],\R^d)$ and $y:[0,T] \rightarrow L(\R^d, \R^e)$ piecewise continuous. Then the R-S integral exists, is linear in $x$ and $y$ and:
+    \begin{equation}\label{eq:RSEstimate}
+        \left| \int_0^t y dx \right| \leq |y|_{\infty;[0,T]} |x|_{1-var; [0,T]}.
+    \end{equation}
+    Moreover
+    \begin{equation}\label{eq:integralAdditivity}
+        \int_s^t y_u dx_u = \int_0^t y_u dx_u - \int_0^s y_u dx_u.
+    \end{equation}
+\end{prop}
+\begin{proof}[Outline of the proof]
+    \begin{enumerate}
+        \item Step functions,
+        \item $dx-$integrable functions form a linear space,
+        \item Estimate\ref{eq:RSEstimate},
+        \item $dx-$integrable functions are closed in sup topology,
+        \item $d(\alpha x + \beta \tilde{x})$-integrability and multilinearity,
+        \item Continuous functions, approximating with step functions, piecewise-continuous functions,
+        \item Equation \ref{eq:integralAdditivity}.
+    \end{enumerate}
+\end{proof}
+
+\begin{exercise}
+    Show that for $x \in C^1([0,T],\R^d),$ we have:
+    \begin{equation}
+        \int_0^T y_u dx_u = \int_0^T y_u \dot{x}_u du.
+    \end{equation}
+\end{exercise}
+
+\begin{prop}[Integration by parts, seems wrong in the book]
+    Let $x \in C^{1-var}([0,T],\R^d)$ and $y\in C^{1-var}([0,T], L(\R^d, \R^e)).$ Then:
+    \begin{equation}
+        \int_0^T y_u dx_u + \int_0^T x_u dy_u = x_T y_T - x_0 y_0.
+    \end{equation}
+\end{prop}
+\begin{proof}[Interpretation]
+    When $e=1,$ the space $L(\R^d, \R)$ is isomorphic to $\R^d$ via duality as metric spaces. 
+    Hence the definition of the integral is clear.
+    When $e>1,$ one can see $y = (y_1, \ldots, y_e)$ a collection of maps in $L(\R^d, \R)$ and define the integral as $\int x dy = (\int x dy_1, \ldots, \int x dy_e).$
+    Note that $x(t)$ here is interpreted as an element of $L(\R^d, \R).$
+    The proof is trivial using appropriate approximating sums.
+\end{proof}
+
+\begin{exercise}
+    Take $x \in C^{1-var}([0,T_1, \R^d])$ and $y \in C^{1-var}([0,T_1, L(\R^d,\R^e)])$ and assume that $\phi$ is a non-decreasing continuous function from $[0,T_1]$ onto $[0,T_2].$ 
+    \begin{equation}
+        \int_0^t y\phi d(x\phi) = \int_0^{\phi(t)} y dx, \ \forall t \in [0,T_1].
+    \end{equation} 
+\end{exercise}
+
+\begin{exercise}
+    Let $x \in C^{1-var}([0,T], \R^d),$ let $\phi$ a $C^{\infty}$ function compactely supported on $[-1,1],$ and define $\Phi_t = \int_{-\infty}^t \phi(u)du$ and extend $x$ to $[-\infty, \infty]$ as $x_0$ below and $x_T$ above.
+    The \textit{mollifier approximation} is:
+    \begin{equation}
+        x^\varepsilon: t \in [0,T] \mapsto x_0 + \int_{\R} \phi_{(t-s) / \varepsilon} dx_s.
+    \end{equation}
+
+    \begin{itemize}
+        \item $x^{\varepsilon}$ is infinitely differentiable [\textit{derivative under the integral sign, follows from the fact that convergence to the derivative is uniform for $C^1$ functions}].
+        \item $|x^\varepsilon|_{1-var,[0,T]} \leq |x|_{1-var,[0,T]}$ and $|x^\varepsilon|_{1-Hol,[0,T]} \leq |x|_{1-Hol,[0,T]}.$ [\textit{Use Fubini version between the Lebesgue measure $dt$, and the Radon measure $d|x_t|$}]
+        \item $x^{\varepsilon}$ converges to $x$ in supremum topology as $\varepsilon \rightarrow \infty.$
+    \end{itemize}
+
+    Observe that using integration by parts we have:
+    \begin{equation}
+        x_t^\varepsilon = \int_{-1}^1 x_{t + \varepsilon s} \phi(s) ds.
+    \end{equation}
+\end{exercise}
+
+\subsection{Continuity properties}
+
+\begin{prop}[Continuity]
+    Let $y^n, y: [0,T] \rightarrow L(\R^d, \R^e)$ be continuous functions and assume $y_n \rightarrow y$ uniformly. Assume $x^n, x \in C^{1-var}([0,T], \R^d)$ and $x^n \rightarrow x$ uniformly with
+    \begin{equation}
+        \sup_n |x^n|_{1-var, [0,T]} < \infty.
+    \end{equation} 
+    Then 
+    \begin{equation}
+        \int_0^t y^n dx^n \rightarrow \int_0^t y dx \text{ uniformly for } t \in [0,T].
+    \end{equation}
+\end{prop}
+
+\begin{prop}[Uniform continuity on bounded sets]
+   Let $y, y' \in C([0,T], L(\R^d, \R^e))$ and $x,x' \in C^{1-var, \R^d}.$ Then
+\begin{equation}
+    |\int_0^\cdot ydx - \int_0^\cdot y'dx'| \leq |x|_{1-var} |y - y'|_\infty + |x - x'|_{1-var} |y'|_\infty 
+\end{equation} 
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Add and substract $\int_0^\cdot y'dx.$
+\end{proof}
+
+\begin{corollary}
+     Let $y, y' \in C([0,T], \R^e)$ and $x,x' \in C^{1-var, \R^d}$ and $V: \R^e \rightarrow L(\R^d, \R^e)$ continuous. 
+     Assume
+     \begin{equation}
+        |x|_{1-var}, |x'|_{1-var}, |y|_\infty, |y'|_\infty < R.
+     \end{equation} 
+
+     Then exist $\delta = \delta(\varepsilon, R, V)$ such that
+     \begin{equation}
+        |\int_0^\cdot V(y)dx - \int_0^\cdot V(y')dx'| \leq \varepsilon.
+     \end{equation}
+\end{corollary}

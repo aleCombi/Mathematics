@@ -1,0 +1,148 @@
+\section{ODE: Smoothness}
+
+\begin{definition}
+    We say that $V: \R^e \rightarrow L(\R^d, \R^e)$ is $C^k$-bounded if
+    \begin{itemize}
+        \item it is $k$ times Frechet differentiable,
+        \item $(V, DV, \ldots, D^k V)$ is a bounded function on $\R^e.$
+    \end{itemize}
+    We set
+    \begin{equation}
+        |V|_{C^k} := \max_{i=0, \ldots k} |D^k V|_\infty.
+    \end{equation}
+    In case only the first condition holds we say $V \in C^k_{loc}.$
+\end{definition}
+
+\subsubsection{Directional derivatives}
+
+\begin{lemma}
+    Let $V = (V_1, \ldots, V_d)$ continuously differentiable vector fields on $\R^e,$ $V \in C^1(\R^e, L(\R^d,\R^e)).$
+    Then for all $\varepsilon > 0,$ for all $U \subseteq \R^e$ bounded, there exists $\delta$ such that if $a,b \in U$ and $|a-b|<\delta$, 
+    \begin{equation}
+        |V(b) - V(a) - DV(a) \cdot (b - a)| \leq \varepsilon |b - a|. 
+    \end{equation}
+\end{lemma}
+
+\begin{theorem}[Directional derivatives]\label{theo:directionalRS}
+    Fix a collection of $C^1_{loc}$ vector fields $V$ satisfies the non-explosion condition.
+    Then
+    \begin{itemize}
+        \item the map
+        \begin{equation}
+            (y_0, x) \mapsto \pi(0, y_0, x) 
+        \end{equation}
+        has directional derivatives
+        \begin{equation}
+            D_{(v,h)}\pi(0,y_0,x) := \left\{ \frac{d}{d\varepsilon} \pi(0, y_0 + \varepsilon v, x + \varepsilon h) \right\}_{\varepsilon = 0} \in C^{1-var}([0,T], \R^e).
+        \end{equation}
+        in all directions $(v,h) \in \R^e \times C^{1-var}$.
+        \item define the bounded variation paths
+        \begin{equation}
+            M_t = \sum \int_0^t DV_i(y_s) dx^i_s
+        \end{equation}
+        and 
+        \begin{equation}
+            H_t = \sum \int_0^t V_i(y_s) dh^i_s.
+        \end{equation}
+        Then $z = D_{(v,h)}\pi(0,y_0,x)$ is the unique solution of:
+        \begin{equation}
+            \begin{cases}
+                dz_t = dM_t \cdot z_t + dH_t,\\
+                z_0 = v.
+            \end{cases}
+        \end{equation}
+    \end{itemize}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    By a localisation argument we can assume $V$ is compactly supported.
+    Then take $y^\varepsilon = \pi(0, y_0 + \varepsilon v, x + \varepsilon h)$ and $z^\varepsilon = \frac{y^\varepsilon - y}{\varepsilon}.$
+    We want to prove that $z^\varepsilon$ converges to $z$ uniformly.
+    We can bound $|z^\varepsilon|_{1-var}$ using the continuity in $1-var$ explicit estimate ($C^1$ implied $Lip^1.$)
+    We can bound also $|y_t^\varepsilon$ uniformly in $t$ and $\varepsilon \in [0,1].$
+    Then split $z^\varepsilon - z$ integral form and estimate each piece using $V \in Lip^1$ and the Lemma.
+    Finally use Gronwall.
+    To prove that the limit is actually in $1-var$ we use the following Proposition.
+\end{proof}
+
+\begin{prop}[Solution of the ODE in Theorem \ref{theo:directionalRS}]
+    Consider the ODE:
+    \begin{equation}\label{eq:directionalODE}
+        dz = dM \cdot z + dH, 
+    \end{equation}
+    where we defined $dM = DV(y) dx$ and $dH = V(y) dh.$
+    Then Equation \eqref{eq:directionalODE} admits a unique solution $z$ under the hypothesis of Theorem \ref{theo:directionalRS}.
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Consider the homogeneous solution:
+    \begin{equation}
+        d \Phi = dM \cdot d \Phi.
+    \end{equation}
+    with initial condition $\Phi = I.$
+    Then consider $z_t = \Phi_t \int_0^t \Phi_s^{-1} dH_s.$
+    Observed that $\Phi$ is invertible as it is a matrix exponential.
+\end{proof}
+
+\begin{prop}[Higher order directional derivatives]
+    Let $k \in \{ 1, 2, \ldots \}.$
+    Assume $V$ is a collection of $C^k_{loc}$ vector fields on $\R^e$ satisfying the non-explosion condition. Then
+    \begin{equation*}
+        (y_0, x) \mapsto \pi_{(V)}(0, y_0, x)
+    \end{equation*}
+    has up to $k^{th}$ order directional derivatives in the sense that, for all $(v_i, h_i)_{1 \leq i \leq k} \in (\R^e \times C^{1-var}([0,T], \R^d))^{\times k},$
+    \begin{equation*}
+        D_{(v_i, h_i)_{1 \leq k \leq k}}^k \pi(0, y_0, x) := \left\{ \frac{\partial^k}{\partial \varepsilon_1 \ldots \partial \varepsilon_k} \pi \left( 0, y_0 + \sum_{j=1}^k \varepsilon_j v_j, x + \sum_{j=1}^k \varepsilon_j h_j \right) \right\}_{\varepsilon = 0}
+    \end{equation*}
+    exists as a strong limit in the Banach space $C^{1-var}([0,T], \R^e).$
+    Furthermore, the directional derivatives satisfy the control ODEs obtained from formal differentiation.
+\end{prop}
+
+\subsection{Frechet differentiability}
+
+\begin{theorem}
+    Let $V$ be a collection of $C^1_{loc}$ vector fields on $\R^e$ satisfying the non-explosion condition. Then the map
+    \begin{equation}
+        (y_0, x) \in \R^e \times C^{1-var}([0,T], \R^d) \mapsto y \equiv \pi(0, y_0, x) \in C^{1-var}([0,T], \R^e).
+    \end{equation}
+    is $C^1$ in the Frechet sense.
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Use Proposition \ref{theo:FrechetDirectional} and the continuity results on $ODE$ solutions and the Riemann-Stieltjes integral.
+\end{proof}
+
+\begin{prop}[Higher order Frechet]\label{theo:higherFrechet}
+    Let $k \geq 1$ and $V = (V_1,   ldots, V_d)$ a collection of $C^k_loc$ vector fields on $\R^e$ satisfying the non-explosion condition. Then the map
+    \begin{equation}
+        (y_0, x) \in \R^e \times C^{1-var}([0,T], \R^d) \mapsto y \equiv \pi(0, y_0, x) \in C^{1-var}([0,T], \R^e)
+    \end{equation}
+    is $C^k$ in the Frechet sense.
+\end{prop}
+
+\begin{definition}
+    A \textit{flow of $C^k$ diffeomorphisms} is a map $\phi:[0,T] \times \R^e \rightarrow \R^e,$ with $phi(t,y) = \phi_t(y)$ such that
+    \begin{equation}
+    \begin{cases}
+        \forall t \in [0,T]: \phi_t \text{ is a } C^k \text{ diffeomorphisms of } \R^e \\
+        \forall \alpha, |\alpha| \leq k: \partial_\alpha \phi_t(y) \text{ and } \partial_\alpha \phi_t^{-1}(y) \text{ are continuous in } (t,y).
+    \end{cases}
+    \end{equation}
+\end{definition}
+
+\begin{corollary}
+    Under the assumption of Proposition \ref{theo:higherFrechet}, the map $(t,y_0) \mapsto \pi(0, y_0, x)$ is a flow of $C^k$ diffeomorphisms.  
+\end{corollary}
+
+\begin{prop}[Duhamel's principle]
+    Consider $(y_0, x) \in \R^e \times C^{1-var}([0,T], \R^d)$ and a collection of vector fields $V=(V_1,   ldots, V_d)$ satisfying the non-explosion condition and let us denote by $y \equiv \pi_{(V)}(0,y_0,x)$ the unique ODE solution. Define
+    \begin{equation}
+        M_t = \sum_{i=0}^d \int_0^t DV_i(y^r) dx^i_r \in \R^{e \times e}.
+    \end{equation}
+    Let $J_\cdot$ be the $\R^{e \times e}-$valued unique solution of 
+    \begin{equation}
+        dJ_t = dM_t \cdot J_t,\ J_0 = I.
+    \end{equation}
+    Denote by $J_{t \leftarrow s}$ the solution started at $s$ in $I$ at time $t.$
+    Then $J_{t \leftarrow s}$ is the Jacobian of $pi_{(V)}(0, \cdot, x)_t$ and
+    \begin{equation}
+        D_{(v,h)} \pi_{(V)}(0, y_0, x)_t = D_{(v,h)} y_t = J^{y_0, x}_{t \leftarrow 0} + \sum_{i=1}^d \int_0^t J^{y_s, x}_{t \leftarrow s} \cdot V_i(y_s) dh_s^i.
+    \end{equation}
+\end{prop}

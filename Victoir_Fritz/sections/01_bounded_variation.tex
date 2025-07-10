@@ -1,0 +1,321 @@
+\section{Continuous Paths of bounded variation}
+
+\subsection{Continuous paths on metric spaces}
+
+A version of the Ascoli–Arzelà theorem is shown that characterizes relative compactness of families of continuous paths \( f:[0,T] \to E \), where \( E \) is a complete metric space in which bounded subsets have compact closure.
+
+\begin{lemma}
+Any continuous mapping from $f:[0,T] \rightarrow E$ is uniformly continuous if $E$ is a metric space.
+\end{lemma}
+
+\begin{lemma}
+    $C([0,T],E)$ is metric under $|\cdot|_{\infty}$ and it is complete if $E$ is complete.
+\end{lemma}
+
+\begin{lemma}
+    A subset of a complete metric space has compact closure if and only if it is totally bounded (that is for any $\varepsilon > 0$ it is covered by a finite number of $\varepsilon-$balls).
+\end{lemma}
+
+\begin{theorem}[Ascoli-Arzelà]
+    Let $E$ be a complete metric space, where bounded sets have compact closure. Then a subset $H$ of $C([0,T],E)$ is bounded and equicontinuous if and only if it has compact closure.
+\end{theorem}
+\begin{proof}[Outline of the proof]
+\begin{itemize}
+
+\item Equicontinuity $\Rightarrow$ Compact closure.
+The image through the whole $H$ of each element of a $\delta$-partition is in a finite union of $\varepsilon$-balls.
+Hence I can divide $H$ based on mapping between elements of the partition and $\varepsilon$-balls.
+
+\item Compact closure $\Rightarrow$ Equicontinuity.
+
+Use total boundedness and pick the continuity module of the centers of $\varepsilon$-balls.
+\end{itemize}
+\end{proof}
+
+\subsection{Continuous paths of bounded variation on
+metric spaces}
+
+\subsubsection{Bounded variation of paths and controls}
+
+The notion of \textit{controls} is introduced, which is useful to bound the 1-variation of a path. Lower semi-continuity of 1-variation under pointwise convergence is shown.
+
+\begin{definition}
+    A map $\omega: \Delta_T = \{(s,t):\ 0 \leq s \leq t \leq T \} \rightarrow [0, \infty)$
+    is said to be a control if it is subadditive, continuous and zero on the diagonal. 
+\end{definition}
+
+\begin{example}
+    \begin{itemize}
+        \item $(s,t) \mapsto |t - s|^{\theta},$ $\theta \geq 1$
+        \item integral of a non-negative $L^1$ function over $[s,t].$
+        \item Let $\phi \in C([0,\infty), [0,\infty))$ increasing and convex, with $\phi(0)=0.$ If $\omega$ is a control, then $\phi \omega$ is a control.
+        \item $\omega \tilde{\omega}$ is a control,
+        \item $max(\omega, \tilde{\omega})$ is not always a control,
+        \item If $\alpha + \beta \geq 1,$ then $\omega^{\alpha} \tilde{\omega}^{\beta}$ is a control.
+    \end{itemize}
+\end{example}
+
+\begin{prop}
+    Let $x:[0,T] \rightarrow E$ and $\omega$ superadditive. If $d(x_s, x_t) \leq \omega(s, t)\ \forall s < t,$ then $|x|_{1-var; [s,t]} \leq \omega(s,t).$
+\end{prop}
+
+\begin{prop}
+    Let $x \in C^{1-var}([0,T],E).$ Then $|x|_{1-var; [s,t]}$ defines a control and is additive.    
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Additivity is easy.
+    To show continuity, one can define 1-variation "from inside" as $|x|_{1-var; [s^+,t^-]}$ and show it is also a control.
+\end{proof}
+\begin{lemma}
+    Assume $(x^n)$ is a sequence of paths in $C^{1-var}([0,T],E)$. If $x^n \rightarrow x$ pointwise, then for all $s < t$ we have:
+    \begin{equation}
+        |x|_{1-var; [s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1-var; [s,t]}.
+    \end{equation}
+    The inequality above can be strict.
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    A counterexample is given by a sequence of functions oscillating $n$ times with oscillation size $1/n$.
+\end{proof}
+\subsubsection{Absolute continuity}
+
+\begin{prop}[mistake in the book proof]
+    Any absolutely continuous path is a continuous path of bounded variation.
+\end{prop}
+
+\begin{example}
+    Cantor function: construct and show that it is a counterexample of the above (bounded variation, not absolutely continuous).
+\end{example}
+
+\subsection{Lipschitz and 1-Holder continuity}
+
+1-Holder continuity is introduced, it is shown how finite 1-variation maps are reparametrizations of 1-Holder maps and the lower semicontinuity of 1-Holder norm under pointwise convergence is shown.
+
+\begin{lemma}[not a lemma in the book]\label{lem:HolderControl}
+    A path $x$ is 1-Holder if and only if it is controlled by $(s,t) \mapsto |t-s|.$
+    Furthermore, 
+    \begin{equation}
+    |x|_{1-var,[s,t]} \leq |x|_{1-Hol,[s,t]}|s-t|.
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of proof]
+Restrict $x$ to $[s,t]$ and control it with $(u,v) \mapsto |x|_{1-Hol,[s,t]}|u-v|.$
+\end{proof}
+
+\begin{prop}[Reparametrization]
+    A path $x \in C([0,T], E)$ is of finite $1$-variation if and only if there exist a continuous non-decreasing function $\phi:[0,T] \rightarrow [0,1]$ and an $y \in C^{1-Hol}([0,1], E)$ such that $y\phi= x.$
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Choose $\phi(t) = \frac{|x|_{1-var,[0,t]}}{|x|_{1-var,[0,T]}}$.
+    One can additionally prove that that $|x|_{1-var,[0,T]}=|y|_{1-Hol,[0,1]}$.
+\end{proof}
+
+\begin{lemma}
+    Assume $(x^n)$ is a sequence of paths from $[0,T] \rightarrow E$ of finite $1$-variation. Assume $x^n \rightarrow x$ pointwise. Then for all $s < t$ we have:
+    \begin{equation}
+        |x|_{1-Hol, [s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1-Hol, [s,t]}
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Follows from the lower semicontinuity of the 1-variation norm and from Lemma \ref{lem:HolderControl}.
+\end{proof}
+
+\subsection{Continuous paths of bounded variation in $\R^d$}
+
+\subsubsection{Continuously differentiable paths}
+
+\begin{prop}[1-variation of $C^1$ paths]
+    Let $x \in C^1([0,T], \R^d).$ Then 
+    \begin{equation}
+        t \in [0,T] \rightarrow l(t) := |x|_{1-var; [0,t]}
+    \end{equation}
+    is continuously differentiable with $\dot{l} = |\dot{x}|.$
+    In particular $|x|_{1-var, [s,t]} = \int_s^t |\dot{x}_u| du.$
+\end{prop}
+
+\subsubsection{Bounded variation}
+
+\begin{theorem}
+    $C^{1-var}([0,T], \R^d)$ is Banach with norm $|x(0)| + |x|_{1-var, [0,T]}.$ It is not separable.
+\end{theorem}
+
+\begin{example}
+    Example of uncountable set of 1-variation functions in $C^{1-var}([0,T], \R)$ for which $|f_\alpha - f_{\alpha'}|_{1-var} \geq 1$ if $\alpha \neq \alpha'.$
+    One can define a sinusoidal $\alpha_n$ oscillating $n$ times in $[1-\frac{1}{2^{n-1}}, 1 - \frac{1}{2^n}]$, divided by $2n.$ 
+    Then the uncountable set is formed by the sums of $\alpha_n$ where $n$ is in a specific subset of $\mathbb{N}.$
+\end{example}
+
+\begin{prop}[mistake in the book]
+    Let $x \in C^{1-var}([0,T], \R^d).$ Then for any dissection $D$ and any $s < t$ in the dissection $D:$
+    \begin{equation}
+        |x^D|_{1-var; [s,t]} \leq |x|_{1-var; [s,t]}.
+    \end{equation}
+
+    If $|D_n| \rightarrow 0$, $x^{D_n}$ converges uniformly to $x$.
+\end{prop}
+
+\begin{prop}
+    The set of absolutely continuous functions from $[0,T] \rightarrow \R^d$ is closed in 1-variation and a Banach space under 1-variation norm.
+\end{prop}
+
+\begin{example}
+    Denote by $D_n = \{ j 3^{-n}:\ j = 0, \ldots, 3^n \}.$ Then if $f$ is the Cantor function we have:
+    \begin{equation}
+        |f - f^{D_n}|_{1-var; [0,1]} = |f - I|_{1-var; [0,1]},
+    \end{equation}
+    where $I(x)=x.$ This gives an explicit proof that $f^D \not \rightarrow f$
+\end{example}
+\begin{proof}[Outline]
+    Show the self-similarity of $f,$ and see the role of the piecewise approximation in an interval of $D_n$ as the role of the identity function in $[0,1].$
+\end{proof}
+
+\subsubsection{Closure of smooth paths in variation norm}
+
+\begin{prop}\label{theo:1varL1}
+    The map $y \mapsto \int_0^{\cdot} y_t dt$ is a Banach space isomorphism from 
+    \begin{equation}
+        L^1([0,T], \R^d) \rightarrow C_0^{0,1-var}([0,T], \R^d).
+    \end{equation}
+    The Banach space isometry $|x|_{1-var} = |\dot{x}|_L^1$ holds.
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Show the isometric property of the map as defined from $C^{\infty}$ to $C^{\infty}$ and extend to the closures in the two norms. 
+\end{proof}
+\begin{prop}[Radon-Nikodym]
+Let $x: [0,T] \rightarrow \R^d$ be absolutely continuous. Then it can be written as $x_t = x_0 + \int_0^t \dot{x}_s ds$ for some $\dot{x} \in L^1([0,T], \R^d).$ As a consequence:
+\begin{equation}
+    C^{0,1-var}([0,T], \R^d) = \{ \text{absolutely continuous functions } [0,T] \rightarrow \R^d \}
+\end{equation}
+\end{prop}
+
+\begin{corollary}
+    Let $x \in C^{1-var}([0,T], \R^d).$ Then piecewise linear approximation converge in $1$-var norm:
+    \begin{equation}
+        |x - x^D|_{1-var; [0,T]} \rightarrow 0 \text{ as } |D| \rightarrow 0
+    \end{equation}
+    if and only if $x \in C^{0, 1-var}([0,T], \R^d).$ That is if and only if $x$ is absolutely continuous.
+\end{corollary}
+\begin{proof}[Outline of the proof]
+    $\Leftarrow:$ Approximate  with a smooth path, prove the property for smooth paths and finally use triangular inequality.
+\end{proof}
+
+\begin{corollary}
+ The space $C^{0,1-var}([0,T],\R^d)$ is a separable Banach space (and hence Polish).    
+\end{corollary}
+\begin{proof}[Outline of the proof]
+    Take piecewise linear paths with rational values on the diadic partition $D^n = \{ k 2^{-n}T: k \leq 2^n \}.$
+\end{proof}
+
+\subsubsection{Lipschitz continuity}
+
+\begin{prop}
+    $C^{1-Hol}([0,T], \R^d)$ is Banach with norm $|x_0| + |x|_{1-Hol,[0,T]}.$ It is not separable.
+\end{prop}
+
+\begin{prop}
+    The map $y \mapsto \int_0^{\cdot} y_t dt$ is a Banach space isomorphism from 
+    \begin{equation}
+        L^{\infty}([0,T], \R^d) \rightarrow C_0^{1-Hol}([0,T], \R^d).
+    \end{equation}
+    The Banach space isometry $|x|_{1-Hol} = |\dot{x}|_{L^{\infty}}$ holds.
+\end{prop}
+
+\begin{prop}[reparametrization]
+    Let $x \in C^{1-var}([0,T], \R^d),$ not constant. Then let $y\phi = x,$ where 
+    \begin{equation}
+        \phi(t) = \frac{|x|_{1-var, [0,t]}}{|x|_{1-var, [0,T]}}.
+    \end{equation}
+    Then $y \in C^{1-Hol}([0,T], \R^d)$ has constant speed.
+    \begin{equation}
+        |\dot{y}(t)| \equiv |x|_{1-var, [0,T]} = |y|_{1-Hol,[0,1]}, \ a.e.\ t \in [0,T]
+    \end{equation}
+\end{prop}
+
+\begin{prop}
+    The closure of smooth paths in $C^{1-Hol}([0,T],\R^d)$ equals $C^1([0,T], \R^d).$
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Show that $C^1$ with $x \mapsto |x_0| + |\dot{x}|_{\infty}$ is Banach and that norm is equal to the 1-Holder norm. 
+\end{proof}
+
+\subsection{Sobolev spaces of continuous paths of bounded
+variation}
+
+\subsubsection{Paths of Sobolev regularity on $\R^d$}
+
+\begin{prop}
+    The space $W^{1,p}([0,T],\R^d)$ is a Banach space under the norm
+    \begin{equation}
+        x \mapsto |x_0| + |x|_{W^{1,p};[0,T]}
+    \end{equation}
+    They are separable if and only if $p \in [1, \infty).$
+\end{prop}
+
+\begin{lemma}
+    An equivalent norm is 
+    \begin{equation}
+        |x|_{L^q} + |\dot{x}|_{L^p},
+    \end{equation}
+    for all $q \in [1,\infty].$
+\end{lemma}
+
+\begin{theorem}
+    Let $p \in (1,\infty).$ Given $x \in W^{1,p}([0,T],\R^d),$
+    \begin{equation}
+        \omega(s,t) = |x|_{W^{1,p};[s,t]}(t - s)^{1 - 1/p}
+    \end{equation}
+    defines a control and $|x|_{1-var,[s,t]} \leq \omega(s,t).$ Hence we have a continuous embedding $W^{1,p} \hookrightarrow C^{1-var}.$
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Use the Holder inequality on $\int_s^t |x_t| \cdot 1 dt$ to show that $\omega(s,t) \geq d(x_s, x_t),$ use it again in the sequence formulation to show superadditivity.
+\end{proof}
+
+\begin{prop}\label{theo:sobolevnorm}
+    Let $p \in (1,\infty).$ A function $x: [0,T] \rightarrow \R^d$ is in $W^{1,p}$ if and only if $M_p(x) < \infty,$ where
+    \begin{equation}
+        M_p(x) := \sup_D \sum_i \frac{|x_{t_i t_{i+1}}|^p}{(t_{i+1} - t_i)^{p-1}}.
+    \end{equation}
+    In this case $M_p(x) = |x|^p_{W^{1,p};[0,T]}$
+\end{prop}
+\begin{proof}[Outline of the proof]
+    $\Leftarrow$: if $M_p(x) < \infty,$ then prove that $x$ is absolutely continuous. 
+    It follows that the piecewise linear approximations of $x$ converge to $x$ in 1-variation norm.
+    Hence one can prove the property for PL approximations and conclude with Fatou's lemma.
+\end{proof}
+
+\subsubsection{Paths of Sobolev regularity on metric spaces}
+
+For paths in a generic metric space $E$ Sobolev norms are defined using $M^p(\cdot)$ as in Proposition \ref{theo:sobolevnorm}. 
+
+\begin{theorem}
+    For any $x \in W^{1,p}([0,T], E)$ we have for all $s < t$
+    \begin{equation}
+        d(x_s, x_t) \leq |x|_{1-var, [s,t]} \leq |x|_{W^{1,p};[s,t]} (t - s)^{1 - 1/p}.
+    \end{equation}
+    In particular $W^{1,p} \subset C^{1-var}.$
+\end{theorem}
+
+\begin{prop}
+    For every $x \in C([0,T],\R^d),$ 
+\begin{equation}
+    |x|_{W^{1,p};[0,T]}^p =\lim_{\delta \rightarrow 0} \sup_{(t_i) \in D_\delta ([0,T])} \sum_{i:t_i \in D} \frac{|d(x_{t_i}, x_{t_{i+1}})|^p}{|t_{i+1} - t_i|^{p-1}} \in [0, \infty].
+\end{equation}
+\end{prop}
+\begin{proof}[Outline of the proof]
+    It suffices to prove the super-additivity of the operator under summation, which follows from the convexity of the map $x \mapsto x^p.$
+\end{proof}
+
+\begin{example}
+    Let $C([0,T], E)$ be equipped with the uniform topology. Let $p \in (1,\infty).$ Then:
+    \begin{enumerate}
+        \item show
+        \begin{equation}
+            x \in C([0,T], E) \mapsto M_p(x):= |x|_{W^{1,p};[0,T]} \in [0, \infty) 
+        \end{equation}
+        is lower semicontinuous.
+        \item Assume $E$ has the Heine-Borel property (bounded sets have compact closure). Then level sets:
+        \begin{equation}
+            \left\{ x \in C_0([0,T], E): M_p(x) \leq \Lambda \right\} \text{ with } \Lambda \in [0, \infty) \text{ and } o \in E
+        \end{equation}
+        are compact (\textit{hint: use Ascoli-Arzelà}).
+    \end{enumerate}
+\end{example}

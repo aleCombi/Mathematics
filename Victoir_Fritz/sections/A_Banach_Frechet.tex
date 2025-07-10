@@ -1,0 +1,80 @@
+\section*{Banach spaces}
+
+\begin{prop}[Derivative in embedded space]
+    Assume $E \hookrightarrow F$ (continuous embedding). Assume $f \in C^1((a,b), F)$ is such that its derivative $\dot{f}$ exists as a strong limit in $F$ but actually takes values in $E$ and extends continuously to a function from $[a,b]$ into $E$. Then $f \in C^1((a,b), E)$ with derivative given by $\dot{f}.$
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Use fundamental theorem of calculus and observe the approximating Riemann sums are in $E$.
+\end{proof}
+
+Consider now $L(E,F)$ (linear continuous maps or linear bounded maps equivalently) is a Banach space with the operator norm.
+
+\begin{definition}[Frechet derivative]
+    Let $V, W$ normed vector spaces and $U \subseteq V$ open set. 
+    A function $f:U \rightarrow W$ is called \textit{Frechet differentiable} at $x \in U$ if there exists a
+    bounded linear operator $Df(x): V \rightarrow W$ such that
+    \begin{equation}
+        \lim_{|h|_V \rightarrow 0} \frac{|f(x + h) - f(x) - Df(x) h|_W}{|h|_V} = 0.
+    \end{equation}
+
+    It is said to be Frechet-differentiable on $U$ if $Df(x)$ exists for all $x \in U.$
+    If $x \mapsto Df(x)$ is continuous, then we say $f$ is $C^1$ in the Frechet sense and we write $f \in C^1(U,F).$
+\end{definition}
+
+We want to see when the existence of directional derivatives is sufficient to determine Frechet differentiability.
+
+\begin{example}[Counterexample with directional derivatives but not Frechet differentiable]
+    \begin{equation}
+        \begin{cases}
+            f(0,0) = 0 \\
+            f(x,y) = \frac{x^2 y}{x^2 + y^2}. 
+        \end{cases}
+    \end{equation}
+\end{example}
+
+The following Proposition proves that what is missing for a function with all the directional derivatives $D_h f(x)$ to be Frechet differentiable is linearity in $h$ and continuity in $x$.
+
+\begin{prop}[Directional derivatives as a continuous linear map]\label{theo:FrechetDirectional1}
+    Let $U$ be an open set in $E$ and $f:U \rightarrow F$ a function that has directional derivatives in all directions. Let $A: U \rightarrow L(E,F)$ a continuous map such that
+    \begin{equation}
+        D_h f(x) = A(x) h.
+    \end{equation}
+    for all $x \in U,\ h \in E.$
+    Then $f \in C^1(U,F)$ and $Df(x) h = A(x) h.$
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Use the fundamental theorem of calculus on $f(x + h) - f(x).$
+\end{proof}
+
+A sufficient condition for Frechet differentiability is that $D_h f(x)$ is uniformly continuous on bounded sets as a function of $(h,x).$
+
+\begin{prop}[Frechet differentiability condition]\label{theo:FrechetDirectional}
+    Let $U$ be an open set in $E$ and $f: U \rightarrow F$ be a continuous map that admits directional derivatives in all points and all directions. Let also
+    \begin{equation}
+        (x,h) \in U \times E \mapsto D_h f(x) \in F
+    \end{equation}
+    be uniformly continuous on bounded sets. Then $f$ is $C^1$ in the Frechet sense.
+\end{prop}
+\begin{proof}[Outline of the proof]
+    Prove that $D_h f(x)$ is linear in $h$ using the fundamental theorem of calculus.
+    Then use Lemma \ref{lem:Frechet}.
+\end{proof}
+
+The following lemma is useful to connect the hypothesis of Proposition \ref{theo:FrechetDirectional} with that of Proposition \ref{theo:FrechetDirectional1}.
+
+\begin{lemma}\label{lem:Frechet}
+    Let $U \subset E$ and $\phi: U \times E \rightarrow F$ uniformly continuous on bounded sets, such that for all $x \in U$ the map
+    \begin{equation}
+        h \mapsto \phi(x,h) =: \phi(x) h.  
+    \end{equation}
+    is linear.
+
+    Then the map
+    \begin{align}
+        &\tilde{\phi}: U \rightarrow L(E,F) \\
+        &x \mapsto (h \mapsto \phi(x) h)
+    \end{align}
+    is well defined and uniformly continuous on bounded sets.
+\end{lemma}
+\end{document}
+
