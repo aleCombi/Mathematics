@@ -893,7 +893,9 @@ We want to see when the existence of directional derivatives is sufficient to de
     \end{equation}
 \end{example}
 
-\begin{prop}[Directional derivatives as a continuous linear map]
+The following Proposition proves that what is missing for a function with all the directional derivatives $D_h f(x)$ to be Frechet differentiable is linearity in $h$ and continuity in $x$.
+
+\begin{prop}[Directional derivatives as a continuous linear map]\label{theo:FrechetDirectional1}
     Let $U$ be an open set in $E$ and $f:U \rightarrow F$ a function that has directional derivatives in all directions. Let $A: U \rightarrow L(E,F)$ a continuous map such that
     \begin{equation}
         D_h f(x) = A(x) h.
@@ -904,6 +906,8 @@ We want to see when the existence of directional derivatives is sufficient to de
 \begin{proof}[Outline of the proof]
     Use the fundamental theorem of calculus on $f(x + h) - f(x).$
 \end{proof}
+
+A sufficient condition for Frechet differentiability is that $D_h f(x)$ is uniformly continuous on bounded sets as a function of $(h,x).$
 
 \begin{prop}[Frechet differentiability condition]\label{theo:FrechetDirectional}
     Let $U$ be an open set in $E$ and $f: U \rightarrow F$ be a continuous map that admits directional derivatives in all points and all directions. Let also
@@ -917,10 +921,12 @@ We want to see when the existence of directional derivatives is sufficient to de
     Then use Lemma \ref{lem:Frechet}.
 \end{proof}
 
+The following lemma is useful to connect the hypothesis of Proposition \ref{theo:FrechetDirectional} with that of Proposition \ref{theo:FrechetDirectional1}.
+
 \begin{lemma}\label{lem:Frechet}
     Let $U \subset E$ and $\phi: U \times E \rightarrow F$ uniformly continuous on bounded sets, such that for all $x \in U$ the map
     \begin{equation}
-        h  \mapsto \phi(x,h) =: \phi(x) h.  
+        h \mapsto \phi(x,h) =: \phi(x) h.  
     \end{equation}
     is linear.
 
