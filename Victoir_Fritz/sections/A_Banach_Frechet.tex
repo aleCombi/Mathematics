@@ -76,5 +76,63 @@ The following lemma is useful to connect the hypothesis of Proposition \ref{theo
     \end{align}
     is well defined and uniformly continuous on bounded sets.
 \end{lemma}
-\end{document}
 
+\begin{prop}[Closedness of the differential operator]
+    Assume $f_n \in C^1(U, F)$ where $U$ is an open set in $E$ and $f_n \rightarrow f$ uniformly on bounded sets in $U$ (which implies $f \in C(U,F)$). Let $g \in C(U, L(E,F))$ and assume that
+    \begin{equation}
+        Df_n \rightarrow g 
+    \end{equation}
+    uniformly on bounded sets. Then $f \in C^1(U, F)$ and $Df = g.$
+\end{prop}
+
+\subsection{Higher order differentiability}
+
+\begin{definition}[Higher order directional derivative]
+    Fix $U \subset E$ open set. We say $f:U \rightarrow F$ has a directional derivative at $x \in U$ in direction $(h_1, \ldots, h_k) \in E^k$ if 
+    \begin{equation}
+        D_{(h_1, \ldots, h_k)} f(x) := D_{h_1} \ldots D_{h_k} f(x)
+    \end{equation}
+    exists.
+\end{definition}
+
+\begin{observation}
+    The function 
+    \begin{equation}
+        \begin{cases}
+            f(0,0) = 0, \\
+            f(x,y) = \frac{xy (x^2 - y^2)}{x^2 + y^2}
+        \end{cases}
+    \end{equation}
+    proves that the order of the $h_i$s can matter ($\partial x \partial y f(0,0) \neq \partial y \partial x f(0,0))$.
+    Nevertheless, one can prove that order doesn't matter and there is bilinearity if the $k-th$ derivative is continuouos at $x$.
+\end{observation}
+
+\begin{definition}
+    Let $k \in \{ 1, 2, \ldots\}$ and $U$ an open set of $E$. A function $f: U \rightarrow F$ is $(k + 1)$ times Frechet differentiable on $U$ if it is Frechet differentiable on $U$ and
+    \begin{equation}
+        Df: U \rightarrow L(E,F)
+    \end{equation}
+    is $k$ times Frechet differentiable on $U$. The $k$-th order differential is a map
+    \begin{equation}
+        D^k f: U \rightarrow L(E, \ldots, L(E, L(E, F))) \cong L(E^{\otimes k}, F)
+    \end{equation}
+    where $L(E^{\otimes k}, F)$ is the space of multilinear bounded maps from $E^k$ to $F$.
+    If $D^k f$ is continuous then we say that $f$ is in $C^k$ in Frechet sense and write $f \in C^k(U,F).$
+    A map which is Frechet $C^k$ for all $k \geq 1$ is said to be Frechet smooth.
+\end{definition}
+
+\begin{prop}
+    Suppose $k \in \{ 1, 2, \ldots\}$ and $U$ an open subset of $E$. Assume that $f: U \rightarrow F$ is a function such that $D_{h_1} \ldots D_{h_k} f(x)$ exists for all $x \in U$ and $h_1, \ldots, h_l \in E$ and $l = 1, 2, \ldots, k$. Assume further that there exists continuous functions $A_l: U \rightarrow L(E^{\otimes l}, F)$ such that 
+    \begin{equation}
+        D_{h_1} \ldots D_{h_l} f(x) = A_l(x) < h_1, \ldots, h_l> 
+    \end{equation}
+    for all $x \in U, h_1, \ldots, h_l \in E$ and $l = 1, 2, \ldots k.$ Then $f: U \rightarrow F$ is $C^k$ in Frechet sense.
+\end{prop}
+
+\begin{prop}
+    Suppose $k \in \{ 1, 2, \ldots\}$ and $U$ an open subset of $E$. Assume that $f: U \rightarrow F$ is a function such that $D_{h_1} \ldots D_{h_k} f(x)$ exists for all $x \in U$ and $h_1, \ldots, h_l \in E$ and $l = 1, 2, \ldots, k$. Assume further that 
+    \begin{equation}
+        (x; h_1, \ldots, h_k) \in U \times E^k \mapsto D_{h_1} \ldots D_{h_l} f(x) \in F
+    \end{equation}
+    is uniformly continuous on bounded sets. Then $f$ is $C^k$ in the Frechet sense.
+\end{prop}
