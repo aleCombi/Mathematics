@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsfonts}
+\usepackage{amsmath, amsthm}
+
+\newcommand{\R}{\mathbb{R}}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{exercise}{Exercise}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{example}{Example}
+\newtheorem{observation}{Observation}
+
+\title{Inequalities}
+\author{Alessandro Combi}
+\date{June 2025}
+
+\begin{document}
+
+\maketitle
+\tableofcontents
+\clearpage
+
+\begin{proposition}[Young inequality]
+    Let $a,b \geq 0.$ Let $p, q > 1$ such that $\frac{1}{p} + \frac{1}{q} = 1.$ 
+    Then
+    \begin{equation}
+        ab \leq \frac{a^p}{p} + \frac{b^q}{q}.
+    \end{equation}
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    Fix $b \geq 0$ and consider the function $f(a) = ab - \frac{a^q}{q}.$
+    Using calculus allows to find the maximum and substituing in $f(a) \leq f(a_{max})$ yields the desired result.
+\end{proof}
+
+\begin{proposition}[Holder inequality]
+    Let $a_i,\ \i = 1,\ldots, n$ and $b_i,\ \i = 1,\ldots, n$ sequences of positive numbers. Let $p, q > 1$ such that $\frac{1}{p} + \frac{1}{q} = 1.$ 
+    Then
+    \begin{equation}
+        \sum_i^n a_i b_i \leq \left( \sum_i^n a_i^p \right)^{1/p} \left( \sum_i^n b_i^q \right)^{1/q}.
+    \end{equation}
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    Use Young on each $\tilde{a}_i := \frac{a_i}{\left( \sum_i^n a_i^p \right)^{1/p}}$ and $\tilde{b}_i := \frac{b_i}{\left( \sum_i^n b_i^p \right)^{1/p}}$. 
+\end{proof}
+
+\begin{proposition}[Minkovski inequality]
+    Let $a_i,\ \i = 1,\ldots, n$ and $b_i,\ \i = 1,\ldots, n$ sequences of positive numbers. 
+    Then 
+    \begin{equation}
+        | a + b |_p \leq |a|_p + |b|_p.
+    \end{equation}
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    Split $\sum_i^n (a_i + b_i)^p = a_n \sum_i^{n-1} (a_i + b_i)^p + b_n \sum_i^{n-1} (a_i + b_i)^p.$
+    Then using Holder on both addends yields the thesis.
+\end{proof}
+
+\end{document}
