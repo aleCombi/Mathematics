@@ -64,14 +64,14 @@
     To prove that the limit is actually in $1-var$ we use the following Proposition.
 \end{proof}
 
-\begin{prop}[Solution of the ODE in Theorem \ref{theo:directionalRS}]
+\begin{proposition}[Solution of the ODE in Theorem \ref{theo:directionalRS}]
     Consider the ODE:
     \begin{equation}\label{eq:directionalODE}
         dz = dM \cdot z + dH, 
     \end{equation}
     where we defined $dM = DV(y) dx$ and $dH = V(y) dh.$
     Then Equation \eqref{eq:directionalODE} admits a unique solution $z$ under the hypothesis of Theorem \ref{theo:directionalRS}.
-\end{prop}
+\end{proposition}
 \begin{proof}[Outline of the proof]
     Consider the homogeneous solution:
     \begin{equation}
@@ -82,7 +82,7 @@
     Observed that $\Phi$ is invertible as it is a matrix exponential.
 \end{proof}
 
-\begin{prop}[Higher order directional derivatives]
+\begin{proposition}[Higher order directional derivatives]
     Let $k \in \{ 1, 2, \ldots \}.$
     Assume $V$ is a collection of $C^k_{loc}$ vector fields on $\R^e$ satisfying the non-explosion condition. Then
     \begin{equation*}
@@ -94,7 +94,7 @@
     \end{equation*}
     exists as a strong limit in the Banach space $C^{1-var}([0,T], \R^e).$
     Furthermore, the directional derivatives satisfy the control ODEs obtained from formal differentiation.
-\end{prop}
+\end{proposition}
 
 \subsection{Frechet differentiability}
 
@@ -109,13 +109,13 @@
     Use Proposition \ref{theo:FrechetDirectional} and the continuity results on $ODE$ solutions and the Riemann-Stieltjes integral.
 \end{proof}
 
-\begin{prop}[Higher order Frechet]\label{theo:higherFrechet}
+\begin{proposition}[Higher order Frechet]\label{theo:higherFrechet}
     Let $k \geq 1$ and $V = (V_1,   ldots, V_d)$ a collection of $C^k_loc$ vector fields on $\R^e$ satisfying the non-explosion condition. Then the map
     \begin{equation}
         (y_0, x) \in \R^e \times C^{1-var}([0,T], \R^d) \mapsto y \equiv \pi(0, y_0, x) \in C^{1-var}([0,T], \R^e)
     \end{equation}
     is $C^k$ in the Frechet sense.
-\end{prop}
+\end{proposition}
 
 \begin{definition}
     A \textit{flow of $C^k$ diffeomorphisms} is a map $\phi:[0,T] \times \R^e \rightarrow \R^e,$ with $phi(t,y) = \phi_t(y)$ such that
@@ -131,7 +131,7 @@
     Under the assumption of Proposition \ref{theo:higherFrechet}, the map $(t,y_0) \mapsto \pi(0, y_0, x)$ is a flow of $C^k$ diffeomorphisms.  
 \end{corollary}
 
-\begin{prop}[Duhamel's principle]
+\begin{proposition}[Duhamel's principle]
     Consider $(y_0, x) \in \R^e \times C^{1-var}([0,T], \R^d)$ and a collection of vector fields $V=(V_1,   ldots, V_d)$ satisfying the non-explosion condition and let us denote by $y \equiv \pi_{(V)}(0,y_0,x)$ the unique ODE solution. Define
     \begin{equation}
         M_t = \sum_{i=0}^d \int_0^t DV_i(y^r) dx^i_r \in \R^{e \times e}.
@@ -145,4 +145,4 @@
     \begin{equation}
         D_{(v,h)} \pi_{(V)}(0, y_0, x)_t = D_{(v,h)} y_t = J^{y_0, x}_{t \leftarrow 0} + \sum_{i=1}^d \int_0^t J^{y_s, x}_{t \leftarrow s} \cdot V_i(y_s) dh_s^i.
     \end{equation}
-\end{prop}
+\end{proposition}

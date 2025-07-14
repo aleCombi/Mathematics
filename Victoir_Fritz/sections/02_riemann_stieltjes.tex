@@ -7,7 +7,7 @@
     \end{equation}
 \end{definition}
 
-\begin{prop}
+\begin{proposition}
     Let $x \in C^{1-var}([0,T],\R^d)$ and $y:[0,T] \rightarrow L(\R^d, \R^e)$ piecewise continuous. Then the R-S integral exists, is linear in $x$ and $y$ and:
     \begin{equation}\label{eq:RSEstimate}
         \left| \int_0^t y dx \right| \leq |y|_{\infty;[0,T]} |x|_{1-var; [0,T]}.
@@ -16,7 +16,7 @@
     \begin{equation}\label{eq:integralAdditivity}
         \int_s^t y_u dx_u = \int_0^t y_u dx_u - \int_0^s y_u dx_u.
     \end{equation}
-\end{prop}
+\end{proposition}
 \begin{proof}[Outline of the proof]
     \begin{enumerate}
         \item Step functions,
@@ -36,12 +36,12 @@
     \end{equation}
 \end{exercise}
 
-\begin{prop}[Integration by parts, seems wrong in the book]
+\begin{proposition}[Integration by parts, seems wrong in the book]
     Let $x \in C^{1-var}([0,T],\R^d)$ and $y\in C^{1-var}([0,T], L(\R^d, \R^e)).$ Then:
     \begin{equation}
         \int_0^T y_u dx_u + \int_0^T x_u dy_u = x_T y_T - x_0 y_0.
     \end{equation}
-\end{prop}
+\end{proposition}
 \begin{proof}[Interpretation]
     When $e=1,$ the space $L(\R^d, \R)$ is isomorphic to $\R^d$ via duality as metric spaces. 
     Hence the definition of the integral is clear.
@@ -78,7 +78,7 @@
 
 \subsection{Continuity properties}
 
-\begin{prop}[Continuity]
+\begin{proposition}[Continuity]
     Let $y^n, y: [0,T] \rightarrow L(\R^d, \R^e)$ be continuous functions and assume $y_n \rightarrow y$ uniformly. Assume $x^n, x \in C^{1-var}([0,T], \R^d)$ and $x^n \rightarrow x$ uniformly with
     \begin{equation}
         \sup_n |x^n|_{1-var, [0,T]} < \infty.
@@ -87,14 +87,14 @@
     \begin{equation}
         \int_0^t y^n dx^n \rightarrow \int_0^t y dx \text{ uniformly for } t \in [0,T].
     \end{equation}
-\end{prop}
+\end{proposition}
 
-\begin{prop}[Uniform continuity on bounded sets]
+\begin{proposition}[Uniform continuity on bounded sets]
    Let $y, y' \in C([0,T], L(\R^d, \R^e))$ and $x,x' \in C^{1-var, \R^d}.$ Then
 \begin{equation}
     |\int_0^\cdot ydx - \int_0^\cdot y'dx'| \leq |x|_{1-var} |y - y'|_\infty + |x - x'|_{1-var} |y'|_\infty 
 \end{equation} 
-\end{prop}
+\end{proposition}
 \begin{proof}[Outline of the proof]
     Add and substract $\int_0^\cdot y'dx.$
 \end{proof}

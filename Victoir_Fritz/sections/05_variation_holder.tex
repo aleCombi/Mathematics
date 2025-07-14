@@ -1,6 +1,115 @@
 \section{Variation and Holder spaces}
 
-\begin{prop}
+\begin{proposition}
     Assume $x: [0,T] \rightarrow E$ is $\alpha$-Holder continuous, with $\alpha \in (0,1)$ or continuous with finite $p$-variation with $p \in (0, 1).$
     Then $x$ is constant, $x(\cdot) \equiv x_0.$
-\end{prop}
+\end{proposition}
+
+\begin{proposition}
+    Let $x \in C([0,T], E)$. Then if $1 \leq p \leq p' < \infty,$
+    \begin{equation}
+        |x|_{p'-var, [0,T]} \leq |x|_{p-var, [0,T]}. 
+    \end{equation} 
+    Furthermore, if $0 \leq \alpha' \leq \alpha \leq 1,$
+    \begin{equation}
+        |x|_{\alpha-Hol} \leq |x|_{\alpha'-Hol}.
+    \end{equation}
+\end{proposition}
+
+\begin{proposition}[Interpolation]
+        Let $x \in C([0,T], E)$. Then if $1 \leq p \leq p' < \infty,$
+    \begin{equation}
+        |x|_{p'-var, [0,T]} \leq |x|_{p-var, [0,T]}^{p/p'} \cdot |x|_{0,[0,T]}^{1 - p/p'}. 
+    \end{equation} 
+    Furthermore, if $0 \leq \alpha' \leq \alpha \leq 1,$
+    \begin{equation}
+        |x|_{\alpha-Hol} \leq |x|_{\alpha'-Hol}^{\alpha' / \alpha} \cdot |x|_{0,[0,T]}^{1 - \alpha' / \alpha}.
+    \end{equation}
+\end{proposition}
+
+\begin{proposition}
+    Let $p \geq 1$ and $x \in C([0,T], E)$.
+    \begin{itemize}
+        \item $x \in C^{p-var}([0,T], E)$ is equivalent to
+        \begin{equation}
+            \lim_{\delta \rightarrow 0} \sup_{D_\delta} \sum_i d(x_{t_i}, x_{t_{i+1}})^p < \infty.
+        \end{equation}
+        \item If $1 \leq q < p < \infty$ and $x \in C^{q-var}([0,T], E),$ then
+        \begin{equation}
+            \lim_{\delta \rightarrow 0} \sup_{D_\delta} \sum_i d(x_{t_i}, x_{t_{i+1}})^p = 0.
+        \end{equation}
+    \end{itemize}
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    \begin{itemize}
+        \item Bound the contribution of intervals with size larger then $\delta$ in $\sum d(x_{t_i}, x_{t_{i+1}})^p$ using their maximum and their quantity.
+        \item Use the convergence to zero of the modulus of continuity 
+        \begin{equation}
+            osc(x, \delta) = \sup \{ d(x_s, x_t): s,t \in [0,T], |t - s| \leq \delta \}.
+        \end{equation}
+        as $\delta \rightarrow 0.$
+    \end{itemize}
+\end{proof}
+
+\begin{proposition}[Control function from $p$-variation]
+    Let $(E,d)$ be a metric space, $p \geq 1$ and $x: [0,T] \rightarrow E$ be a continuous path of bounded $p$-variation. Then
+    \begin{equation}
+        \omega_{x,p}(s,t) = |x|_{p-var}^p
+    \end{equation}
+    defines a control.
+\end{proposition}
+\begin{proof}
+    This Proposition generalized Proposotion \ref{theo:1varcontrol}.
+    Superadditivity works similar to $p=1$.
+    Continuity from inside is similar to $p=1$.
+    We prove continuity from outside.
+    \begin{itemize}
+        \item $\omega_{x,p}(t,t^+) = 0$.
+        We wish to negate the hypothesis $\omega_{x,p}(t,t^+) = \delta > 0$.
+        It can be seen by choosing an $h_1$ such that if $h \leq h_1$, $d(x_t,x_{t+h}) < \delta / 8.$
+        Then one can take a dissection of $[0,h_0]$ where $h_0 \leq h_1$.
+        The sum of $d(x_{t_i},x_{t_{i+1}})^p$ can be bounded from below from the hypothesis.
+        This yields a bound from below of the sum of $d(x_{t_i},x_{t_{i+1}})^p$ even excluding the first one.
+        
+        One can do the same on the first interval (dissect, bound the sum of $d(x_{t_i},x_{t_{i+1}})^p$ excluding the first one from below).
+
+        This yields two non-overlapping intervals where the sum of $d(x_{t_i},x_{t_{i+1}})^p$ is more than $3/4 \delta.$ This yields $\omega(t, t^+) \geq 3/2 \delta.$ Since $h_0$ can be chosen small at will, this contradicts the hypothesis.
+        \item Fix $s < t$ and a dissection of $[s,t+h]$ such that the $p$ power sum is higher than $\omega_{x,p}(s,t+h) - \varepsilon.$ Splitting the dissection as a dissection of $[s,t]$ and the rest and sending $h$ to zero yields the thesis.
+    \end{itemize}
+\end{proof}
+
+\begin{proposition}
+    Let $(E,d)$ be a metric space, $p \geq 1$ and $x$ a continuous path of finite $p$-variation and $\delta > 0.$ Then
+    \begin{itemize}
+        \item \begin{equation}
+            \omega_{x,\delta,p}(s,t) \leq |x|_{p-var,[s,t]}^p
+        \end{equation}
+        defines a control.
+        \item \begin{align}
+            \omega_{x,\delta,p}(s,t) &= \sup \sum_{D_\delta} \sum_i |x|_{p-var,[t_i,t_{i+1}]}^p \\
+            \sup_{|t - s| \leq \delta} \frac{d(x_s, x_t)}{|t - s|^{1/p}} = \sup_{|t - s| < \delta} |x|_{1/p-Hol, [s,t]}
+        \end{align}
+    \end{itemize}
+\end{proposition}
+
+\begin{proposition}
+    Let $(E,d)$ be a metric space, $\omega$ a control, $p \geq 1$, $C>0$ and $x:[0,T] \rightarrow E$ a continuous path.
+    \begin{itemize}
+        \item The pointwise estimate 
+        \begin{equation}
+            d(x_s, x_t) \leq C \omega(s,t)^{1/p} \text{ for all } s < t \text{ in } [0,T].
+        \end{equation}
+        implies the $p$-variation estimate
+        \begin{equation}
+            |x|_{p-var, [s,t]} \leq C \omega(s,t)^{1/p} \text{ for all } s < t \text{ in } [0,T].
+        \end{equation}
+        \item Under the weaker assumption 
+        \begin{equation}
+            d(x_s, x_t) \leq C \omega(s, t)^{1/p} \text{ for all } s < t \text{ in } [0,T] \text{ such that } \omega(s,t) \leq 1.
+        \end{equation}
+        we have
+        \begin{equation}
+            |x|_{p-var, [s,t]} \leq 2 C \left( \omega(s,t)^{1/p} \vee \omega(s,t) \right) \text{ for all } s < t \text{ in } [0,T].
+        \end{equation}
+    \end{itemize}
+\end{proposition}
