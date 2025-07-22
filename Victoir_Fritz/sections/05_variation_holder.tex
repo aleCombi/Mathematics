@@ -1,7 +1,7 @@
 \section{Variation and Holder spaces}
 
 \begin{proposition}
-    Assume $x: [0,T] \rightarrow E$ is $\alpha$-Holder continuous, with $\alpha \in (0,1)$ or continuous with finite $p$-variation with $p \in (0, 1).$
+    Assume $x: [0,T] \rightarrow E$ is $\alpha$-Holder continuous, with $\alpha 1$ or continuous with finite $p$-variation with $p \in (0, 1).$
     Then $x$ is constant, $x(\cdot) \equiv x_0.$
 \end{proposition}
 
@@ -10,9 +10,9 @@
     \begin{equation}
         |x|_{p'-var, [0,T]} \leq |x|_{p-var, [0,T]}. 
     \end{equation} 
-    Furthermore, if $0 \leq \alpha' \leq \alpha \leq 1,$
+    Furthermore, if $0 \leq \alpha \leq \alpha' \leq 1,$
     \begin{equation}
-        |x|_{\alpha-Hol} \leq |x|_{\alpha'-Hol}.
+        |x|_{\alpha-Hol,[0,T]} \leq |x|_{\alpha'-Hol,[0,T]} \cdot T^{\alpha' - \alpha}.
     \end{equation}
 \end{proposition}
 
@@ -59,7 +59,7 @@
     defines a control.
 \end{proposition}
 \begin{proof}
-    This Proposition generalized Proposotion \ref{theo:1varcontrol}.
+    This Proposition generalized Proposition \ref{theo:1varcontrol}.
     Superadditivity works similar to $p=1$.
     Continuity from inside is similar to $p=1$.
     We prove continuity from outside.
@@ -86,13 +86,13 @@
         \end{equation}
         defines a control.
         \item \begin{align}
-            \omega_{x,\delta,p}(s,t) &= \sup \sum_{D_\delta} \sum_i |x|_{p-var,[t_i,t_{i+1}]}^p \\
-            \sup_{|t - s| \leq \delta} \frac{d(x_s, x_t)}{|t - s|^{1/p}} = \sup_{|t - s| < \delta} |x|_{1/p-Hol, [s,t]}
+            \omega_{x,\delta,p}(s,t) &= \sup_{D_\delta} \sum_i |x|_{p-var,[t_i,t_{i+1}]}^p \\
+            \sup_{|t - s| \leq \delta} \frac{d(x_s, x_t)}{|t - s|^{1/p}} &= \sup_{|t - s| < \delta} |x|_{1/p-Hol, [s,t]}
         \end{align}
     \end{itemize}
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}\label{prop:pVarControl}
     Let $(E,d)$ be a metric space, $\omega$ a control, $p \geq 1$, $C>0$ and $x:[0,T] \rightarrow E$ a continuous path.
     \begin{itemize}
         \item The pointwise estimate 
@@ -112,4 +112,96 @@
             |x|_{p-var, [s,t]} \leq 2 C \left( \omega(s,t)^{1/p} \vee \omega(s,t) \right) \text{ for all } s < t \text{ in } [0,T].
         \end{equation}
     \end{itemize}
+
+\end{proposition}
+
+\begin{corollary}[Not in the book, generalized version of Lemma\ref{lem:HolderControl}]\label{lem:pHolderControl}
+    If $x \in C^{1/p-Hol}([0,T], E)$, then we have:
+    \begin{equation}
+        |x|_{p-var, [s,t]} \leq |x|_{1-Hol,[s,t]} |s - t|^{1/p}.
+    \end{equation}
+\end{corollary}
+\begin{proof}
+    Apply Proposition\ref{prop:pVarControl} with $\omega(u,v) = |u - v|$ and $C = |x|_{1-Hol,[s,t]}$ on the interval $[s,t]$.
+    It implies that $|x|_{p-var, [u,v]} \leq |x|_{1-Hol,[s,t]} |u - v|^{1/p}|$ for all $u, v$ in $[s,t]$, hence the thesis.
+\end{proof}
+
+\begin{lemma}[Lower semicontinuity of $p$-var and $1/p$-Hol]
+    Let $x^n$ be a sequence of paths from $[0,T]$ in $E$ of finite $p$-variation. Then
+    \begin{equation}
+        |x|_{p-var,[s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{p-var, [s,t]}.
+    \end{equation}
+    In particular 
+    \begin{equation}
+        |x|_{1/p-Hold,[s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1/p-Hol, [s,t]}.
+    \end{equation}
+\end{lemma}
+
+\begin{lemma}
+    Let $x:[0,T] \rightarrow E$ be a continuous map of finite $p$-variation. Then, for all $s < t$, the map $p':[p,\infty) \mapsto |x|_{p'-var,[s,t]}$ is non-increasing and 
+    \begin{equation}
+        \lim_{p' \searrow p} |x|_{p'-var, [s,t]} = |x|_{p-var, [s,t]}.
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    We need to show that 
+    \begin{equation}
+    \omega(s,t) = \left( \lim_{p' \searrow p} |x|_{p'-var, [s,t]} \right)^p = \lim_{p' \searrow p} |x|_{p'-var, [s,t]}^{p'}
+    \end{equation}
+    is a control.
+\end{proof}
+
+\subsubsection{On some path spaces contained in $C^{p-var}([0,T], E)$}
+
+\begin{observation}
+    $x$ is a path of finite $p$-variation controlled by $(s,t) \mapsto |t - s|$ if an only if it is $1/p$-Holder.
+\end{observation}
+
+We show that conversely, any finite $p$-variation path can be reparametrized to a $1/p$-Holder path.
+
+\begin{proposition}
+    Let $(E,d)$ be a metric space and $x:[0,T] \rightarrow E$ a continuous path.
+    Then $x$ is of finite $p$-variation if and only if there exists $h$ continuous increasing from $[0,T]$ to $[0,1]$ and $y:[0,1]\rightarrow E$ $1/p$-Holder, such that $x = y \circ h.$
+\end{proposition}
+
+\subsection{Approximation in Geodesic spaces}
+
+\begin{definition}
+    In a metric space $(E,d)$ a Geodesic joining two points $a,b \in E$ is a path $\Upsilon^{a,b}:[0,1] \rightarrow E$ such that $\Upsilon^{a,b}(0) = a,\ \Upsilon^{a,b}(1) = b$ and 
+    \begin{equation}
+        d \left( \Upsilon^{a,b}_s, \Upsilon^{a,b}_t \right) = |t - s| d(a,b).
+    \end{equation} 
+    If any two points are connected by a geodesic, we say that $E$ is a geodesic space.
+\end{definition}
+
+\begin{example}
+    The unit circle $S^1$ in $\R^2$ with the induced metric is not geodesic. It is geodesic with the arclength distance.
+\end{example}
+
+Geodesic spaces have the structure that allows to generalize piecewise linear approximations.
+
+\begin{definition}[PL approximations]
+    $x$ continuous path in $E$, $D$ dissection.
+    \begin{equation}
+        \begin{cases}
+            x^D_t = x_t \text{ for } t \in D \\
+            x^D_t = \Upsilon^{x_{t_i}, x_{t_{i+1}}} \left( \frac{t - t_i}{t_{i+1} - t_i} \right) \text{ for } t \in (t_i, t_{i+1}). 
+        \end{cases}
+    \end{equation}
+\end{definition}
+
+\begin{lemma}
+    $E$ geodesic space, $x \in C([0,T],E).$ Then $x^D$ converges uniformly to $x$ on $[0,T].$
+\end{lemma}
+
+\begin{proposition}
+    Let $E$ be a geodesic space and $x \in C^{p-var}([0,T], E)$, $p \ge 1$ and $D$ a dissection of $[0,T]$. Then
+    \begin{equation}
+        |x^D|_{p-var,[0,T]} \le 3^{1-1/p} |x|_{p-var, [0,T]}.
+    \end{equation}
+
+    If $x$ is $1/p$-Holder,
+    \begin{equation}
+        |x^D|_{1/p-Holder,[0,T]} \le 3^{1-1/p} |x|_{1/p-Hol, [0,T]}.
+    \end{equation}
 \end{proposition}

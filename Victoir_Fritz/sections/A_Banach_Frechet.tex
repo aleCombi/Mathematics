@@ -121,7 +121,10 @@ The following lemma is useful to connect the hypothesis of Proposition \ref{theo
     A map which is Frechet $C^k$ for all $k \geq 1$ is said to be Frechet smooth.
 \end{definition}
 
-\begin{proposition}
+The following Proposition is the equivalent of Proposition \ref{theo:FrechetDirectional1} for higher order derivatives.
+It states that multilinearity in $(h_1,\ldots,h_k)$ and continuity in $x$ are enough to give Frechet differentiability from directional derivatives.
+
+\begin{proposition}\label{theo:multiFrechetDiff}
     Suppose $k \in \{ 1, 2, \ldots\}$ and $U$ an open subset of $E$. Assume that $f: U \rightarrow F$ is a function such that $D_{h_1} \ldots D_{h_k} f(x)$ exists for all $x \in U$ and $h_1, \ldots, h_l \in E$ and $l = 1, 2, \ldots, k$. Assume further that there exists continuous functions $A_l: U \rightarrow L(E^{\otimes l}, F)$ such that 
     \begin{equation}
         D_{h_1} \ldots D_{h_l} f(x) = A_l(x) < h_1, \ldots, h_l> 
@@ -129,10 +132,15 @@ The following lemma is useful to connect the hypothesis of Proposition \ref{theo
     for all $x \in U, h_1, \ldots, h_l \in E$ and $l = 1, 2, \ldots k.$ Then $f: U \rightarrow F$ is $C^k$ in Frechet sense.
 \end{proposition}
 
-\begin{proposition}
+\begin{proposition}\label{theo:multiFrechetDiff2}
     Suppose $k \in \{ 1, 2, \ldots\}$ and $U$ an open subset of $E$. Assume that $f: U \rightarrow F$ is a function such that $D_{h_1} \ldots D_{h_k} f(x)$ exists for all $x \in U$ and $h_1, \ldots, h_l \in E$ and $l = 1, 2, \ldots, k$. Assume further that 
     \begin{equation}
         (x; h_1, \ldots, h_k) \in U \times E^k \mapsto D_{h_1} \ldots D_{h_l} f(x) \in F
     \end{equation}
     is uniformly continuous on bounded sets. Then $f$ is $C^k$ in the Frechet sense.
 \end{proposition}
+\begin{proof}[Outline of the proof]
+    Clearly $f$ is Frechet differentiable because of Proposition\ref{theo:FrechetDirectional}.
+    The commutative property of partial derivatives can be used to show multilinearity and conclude with Proposition\ref{theo:multiFrechetDiff}.
+
+\end{proof}
