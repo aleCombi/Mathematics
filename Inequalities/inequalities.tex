@@ -54,8 +54,14 @@
     \end{equation}
 \end{proposition}
 \begin{proof}[Outline of the proof]
-    Split $\sum_i^n (a_i + b_i)^p = \sum_i^{n-1} a_i (a_i + b_i)^p + \sum_i^{n-1} b_i (a_i + b_i)^p.$
+    Split $\sum_i^n (a_i + b_i)^p = \sum_i^n a_i (a_i + b_i)^{p-1} + \sum_i^n b_i (a_i + b_i)^{p-1}.$
     Then using Holder on both addends yields the thesis.
 \end{proof}
 
+\begin{proposition}
+    For $a$ and $b$ in $\R^n$, $|a|_p \le |a|_q$ if $p \ge q.$
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    Simply use $a_i^p \le a_i^q M^{p-q}$ and $M \le |x|_p$ with $M = \max_i a_i.$ 
+\end{proof}
 \end{document}

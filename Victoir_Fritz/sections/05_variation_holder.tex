@@ -1,7 +1,7 @@
 \section{Variation and Holder spaces}
 
 \begin{proposition}
-    Assume $x: [0,T] \rightarrow E$ is $\alpha$-Holder continuous, with $\alpha 1$ or continuous with finite $p$-variation with $p \in (0, 1).$
+    Assume $x: [0,T] \rightarrow E$ is $\alpha$-Holder continuous, with $\alpha > 1$ or continuous with finite $p$-variation with $p \in (0, 1).$
     Then $x$ is constant, $x(\cdot) \equiv x_0.$
 \end{proposition}
 
@@ -17,15 +17,22 @@
 \end{proposition}
 
 \begin{proposition}[Interpolation]
-        Let $x \in C([0,T], E)$. Then if $1 \leq p \leq p' < \infty,$
+        Let $x \in C([0,T], E)$. Then if $1 \leq p < p' < \infty,$
     \begin{equation}
         |x|_{p'-var, [0,T]} \leq |x|_{p-var, [0,T]}^{p/p'} \cdot |x|_{0,[0,T]}^{1 - p/p'}. 
     \end{equation} 
-    Furthermore, if $0 \leq \alpha' \leq \alpha \leq 1,$
+    Furthermore, if $0 \leq \alpha' > \alpha \leq 1,$
     \begin{equation}
         |x|_{\alpha-Hol} \leq |x|_{\alpha'-Hol}^{\alpha' / \alpha} \cdot |x|_{0,[0,T]}^{1 - \alpha' / \alpha}.
     \end{equation}
 \end{proposition}
+
+Observe that from the Interpolation inequality it follows that uniform convergence with a uniform $p$-variation bound implies $p'$-variation convergence for all $p' > p$.
+Similar can be said for $\alpha-Holder$ spaces.
+
+\begin{observation}
+    In the case $p=1$ we used extensively that controls such that $d(x_s, x_t) \leq \omega(s,t)$ dominate the $1-variation.$ One can easily see here that controls such that $d(x_s, x_t)^p \leq \omega(s,t)$ dominate the $p-variation$ elevated at $p$ (that is, the control of the next proposition).
+\end{observation}
 
 \begin{proposition}
     Let $p \geq 1$ and $x \in C([0,T], E)$.
@@ -51,7 +58,7 @@
     \end{itemize}
 \end{proof}
 
-\begin{proposition}[Control function from $p$-variation]
+\begin{proposition}[Control function from $p$-variation]\label{prop:pVarIsControl}
     Let $(E,d)$ be a metric space, $p \geq 1$ and $x: [0,T] \rightarrow E$ be a continuous path of bounded $p$-variation. Then
     \begin{equation}
         \omega_{x,p}(s,t) = |x|_{p-var}^p
@@ -62,25 +69,19 @@
     This Proposition generalized Proposition \ref{theo:1varcontrol}.
     Superadditivity works similar to $p=1$.
     Continuity from inside is similar to $p=1$.
-    We prove continuity from outside.
+    Continuity from outside is proved in the following steps:
     \begin{itemize}
-        \item $\omega_{x,p}(t,t^+) = 0$.
-        We wish to negate the hypothesis $\omega_{x,p}(t,t^+) = \delta > 0$.
-        It can be seen by choosing an $h_1$ such that if $h \leq h_1$, $d(x_t,x_{t+h}) < \delta / 8.$
-        Then one can take a dissection of $[0,h_0]$ where $h_0 \leq h_1$.
-        The sum of $d(x_{t_i},x_{t_{i+1}})^p$ can be bounded from below from the hypothesis.
-        This yields a bound from below of the sum of $d(x_{t_i},x_{t_{i+1}})^p$ even excluding the first one.
-        
-        One can do the same on the first interval (dissect, bound the sum of $d(x_{t_i},x_{t_{i+1}})^p$ excluding the first one from below).
-
-        This yields two non-overlapping intervals where the sum of $d(x_{t_i},x_{t_{i+1}})^p$ is more than $3/4 \delta.$ This yields $\omega(t, t^+) \geq 3/2 \delta.$ Since $h_0$ can be chosen small at will, this contradicts the hypothesis.
-        \item Fix $s < t$ and a dissection of $[s,t+h]$ such that the $p$ power sum is higher than $\omega_{x,p}(s,t+h) - \varepsilon.$ Splitting the dissection as a dissection of $[s,t]$ and the rest and sending $h$ to zero yields the thesis.
+        \item $\omega_{x,p}(t, t^+) = 0$:
+        one finds a contradiction using the continuity of $x$ and hypothesizing it to be $>0.$
+        \item $\omega_{x,p}(s, t^+) = \omega(s, t)$,
+        simple consequence of the above.
+        \item $\omega_{x,p}(s^-, t^+) = \omega(s,t)$, using continuity from outside to the left and right.
     \end{itemize}
 \end{proof}
 
-\begin{proposition}
+\begin{proposition}\label{prop:deltaPvar}
     Let $(E,d)$ be a metric space, $p \geq 1$ and $x$ a continuous path of finite $p$-variation and $\delta > 0.$ Then
-    \begin{itemize}
+    \begin{enumerate}
         \item \begin{equation}
             \omega_{x,\delta,p}(s,t) \leq |x|_{p-var,[s,t]}^p
         \end{equation}
@@ -89,12 +90,18 @@
             \omega_{x,\delta,p}(s,t) &= \sup_{D_\delta} \sum_i |x|_{p-var,[t_i,t_{i+1}]}^p \\
             \sup_{|t - s| \leq \delta} \frac{d(x_s, x_t)}{|t - s|^{1/p}} &= \sup_{|t - s| < \delta} |x|_{1/p-Hol, [s,t]}
         \end{align}
-    \end{itemize}
+    \end{enumerate}
 \end{proposition}
+\begin{proof}[Outline of the proof]
+    \begin{enumerate}
+        \item Similar to the proof of Proposition\ref{prop:pVarIsControl}.
+        \item Use the fact that $\omega_{x,\delta,p}$ is a control.
+    \end{enumerate}
+\end{proof}
 
 \begin{proposition}\label{prop:pVarControl}
     Let $(E,d)$ be a metric space, $\omega$ a control, $p \geq 1$, $C>0$ and $x:[0,T] \rightarrow E$ a continuous path.
-    \begin{itemize}
+    \begin{enumerate}
         \item The pointwise estimate 
         \begin{equation}
             d(x_s, x_t) \leq C \omega(s,t)^{1/p} \text{ for all } s < t \text{ in } [0,T].
@@ -111,20 +118,28 @@
         \begin{equation}
             |x|_{p-var, [s,t]} \leq 2 C \left( \omega(s,t)^{1/p} \vee \omega(s,t) \right) \text{ for all } s < t \text{ in } [0,T].
         \end{equation}
-    \end{itemize}
+    \end{enumerate}
 
 \end{proposition}
+\begin{proof}[Outline of the proof]
+    \begin{enumerate}
+        \item obvious.
+        \item Take $\omega(s,t) > 1$ and split it in pieces such that $\omega(t_i, t_{i+1})=1$. These pieces can be at most $\omega(s,t)$ by superadditivity, hence the $d(x_s,x_t)$ can be controlled on each interval. Not that those interval can be at most $\omega(s,t) + 1$.
+    \end{enumerate}
+\end{proof}
 
 \begin{corollary}[Not in the book, generalized version of Lemma\ref{lem:HolderControl}]\label{lem:pHolderControl}
     If $x \in C^{1/p-Hol}([0,T], E)$, then we have:
     \begin{equation}
-        |x|_{p-var, [s,t]} \leq |x|_{1-Hol,[s,t]} |s - t|^{1/p}.
+        |x|_{p-var, [s,t]} \leq |x|_{p-Hol,[s,t]} |s - t|^{1/p}.
     \end{equation}
 \end{corollary}
 \begin{proof}
     Apply Proposition\ref{prop:pVarControl} with $\omega(u,v) = |u - v|$ and $C = |x|_{1-Hol,[s,t]}$ on the interval $[s,t]$.
-    It implies that $|x|_{p-var, [u,v]} \leq |x|_{1-Hol,[s,t]} |u - v|^{1/p}|$ for all $u, v$ in $[s,t]$, hence the thesis.
+    It implies that $|x|_{p-var, [u,v]} \leq |x|_{1-Hol,[s,t]} |u - v|^{1/p}$ for all $u, v$ in $[s,t]$, hence the thesis.
 \end{proof}
+
+The following Lemma generalizes Lemma \ref{lem:1HolSemicont} and Lemma \ref{lem:1varSemicont}.
 
 \begin{lemma}[Lower semicontinuity of $p$-var and $1/p$-Hol]
     Let $x^n$ be a sequence of paths from $[0,T]$ in $E$ of finite $p$-variation. Then
@@ -133,7 +148,7 @@
     \end{equation}
     In particular 
     \begin{equation}
-        |x|_{1/p-Hold,[s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1/p-Hol, [s,t]}.
+        |x|_{1/p-Hol,[s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1/p-Hol, [s,t]}.
     \end{equation}
 \end{lemma}
 
@@ -163,6 +178,16 @@ We show that conversely, any finite $p$-variation path can be reparametrized to 
     Let $(E,d)$ be a metric space and $x:[0,T] \rightarrow E$ a continuous path.
     Then $x$ is of finite $p$-variation if and only if there exists $h$ continuous increasing from $[0,T]$ to $[0,1]$ and $y:[0,1]\rightarrow E$ $1/p$-Holder, such that $x = y \circ h.$
 \end{proposition}
+
+Observe that in this case we have $|x|_{p-var} = |y|_{p-var} = |y|_{p-Hol}$ using Lemma \ref{lem:pHolderControl}.
+
+\begin{exercise}[Absolute continuity of order $p$]
+    A function is absolutely continuous of order $p$ if it satisfies the a.c. conditions with expontials $p$ on the conditions.
+    \begin{enumerate}
+        \item One can replace in the definition $d(x_{s_i}, x_{t_i})$ with $|x|_{p-var,[s_i,t_i]}$.
+        \item If $p > 1$, A.C. of order $p$ is equivalent to $\omega(x,\delta,p) \rightarrow 0$ as $\delta \rightarrow 0.$ Observe the with $p=1$ the limit is the $1$-variation, not $0$ in general.
+    \end{enumerate}
+\end{exercise}
 
 \subsection{Approximation in Geodesic spaces}
 
@@ -205,3 +230,188 @@ Geodesic spaces have the structure that allows to generalize piecewise linear ap
         |x^D|_{1/p-Holder,[0,T]} \le 3^{1-1/p} |x|_{1/p-Hol, [0,T]}.
     \end{equation}
 \end{proposition}
+\begin{proof}[Outline of the proof]
+    \underline{p-variation estimate}:
+    We define $\omega_D(s,t) = \left( \frac{t - s}{t_{i+1} - t_i} \right)^p \omega(t_i, t_{i+1})$ where $\omega(s,t) := |x|_{p-var,[s,t]}^p$ is the usual control.
+    Then we prove that $\omega_D$ is a control and that 
+    \begin{equation}
+        d(x_s^D, x_t^D) \le 3^{1 - 1/p} \omega^D(s,t)^{1/p}.
+    \end{equation}
+
+    \underline{Holder estimate}:
+    It follows from the $p$ variation estimate observing using $\omega^D$ and observing that 
+    \begin{equation}
+        |x|_{p-var,[s,t]} \le |x|_{1-Hol,[0,T]} |t - s|^{1/p}.
+    \end{equation}
+\end{proof}
+
+The union of the two preceding results gives the following theorem.
+
+\begin{theorem}
+    Let $E$ be a geodesic space and $x \in C^{p-var}([0,T],E)$, $p \ge 1$. Let $D_n$ be a sequence of dissections with $|D_n| \rightarrow 0$.
+    Then $x^{D_n}$ converges to $x$ "uniformly with uniform p-variation bounds", that is
+    \begin{align}
+        &\sup_{t \in [0,T]} d \left( x_t^{D_n}, x_t \right) \rightarrow 0 \\
+        &\sup_n |x^{D_n}|_{p-var, [0,T]} \le 3^{1 - 1/p} |x|_{p-var, [0,T]}.
+    \end{align}
+    If $x$ is $1/p$-Holder
+    \begin{equation}
+        \sup_n |x^{D_n}|_{1/p-Hol, [0,T]} \le 3^{1 - 1/p} |x|_{1/p-Hol, [0,T]}.
+    \end{equation}
+\end{theorem}
+
+\subsection{Holder and $p$-variation paths on $\R^d$}
+
+\begin{theorem}
+    \begin{itemize}
+        \item $C^{p-var}([0,T], \R^d)$ is Banach with norm $x \mapsto |x_0| + |x|_{p-var,[0,T]}.$ The closed subspace of paths starting from zero is also Banach.
+        \item $C^{1/p-Hol}([0,T], \R^d)$ is Banach with norm  $x \mapsto |x_0| + |x|_{1/p-Hol,[0,T]}.$ The closed subspace of paths starting from zero is also Banach.
+    \end{itemize}
+    These Banach spaces are not separable.
+\end{theorem}
+
+\begin{example}[Uncountable family of distant functions]
+    Take
+    \begin{equation}
+        f_\varepsilon(t) = \sum_{k \ge 1} \varepsilon_k 2^{- k / p} \sin(2^k \pi t),\ t \in [0,1],
+    \end{equation}
+    where $\varepsilon \in \{-1, 1\}^\N$.
+    Then
+    \begin{equation}
+        f_\varepsilon \in C^{1/p-Hol}([0,1],\R^d) \subset C^{p-var}([0,1],\R^d)
+    \end{equation}
+    and if $\varepsilon' \neq \varepsilon$
+    \begin{equation}
+        2 < |f_\varepsilon - f_{\varepsilon'}|_{p-var,[0,1]} \le |f_\varepsilon - f_{\varepsilon'}|_{1/p-Hol,[0,1]}.
+    \end{equation}
+\end{example}
+\begin{proof}{Outline of the proof}
+    Split terms where $k$ is bigger of smaller than $|\log_2(t-s)|$.
+    Where $k$ is smaller, we have
+    \begin{equation}
+        |\sin(2^k \pi t) - \sin(2^k \pi s)| \le 2^k \pi |t - s|
+    \end{equation}
+    thanks to the mean value theorem.
+    The second part can be controlled with $2$.
+    
+    On can easily see that:
+    \begin{equation}
+        \sum_{i > k} 2^{-i} = 2^{-k}.
+    \end{equation}
+    If $k$ is a real number it becomes 
+    \begin{equation}
+        \sum_{i > k} 2^{-i} = \sum_{i > \lfloor k \rfloor} 2^{-i} = 2^{-\lfloor k \rfloor} > 2^{-k}
+    \end{equation}
+    Also, since we pick $k = |\log_2(t-s)|$ and $0 \le s < t \le 1$, we have $t - s < 1$, hence $k = - \log(t - s)$.
+    Thus $2^{-k} = (t - s).$
+
+    To distance the $f_\varepsilon$-s, pick the smallest $j$ where $\varepsilon_j \ne \varepsilon'_j$ and the dissection $t_i = i2^{-j-1},\ i = 1,\ldots,2^{j+1}.$
+    It follows that 
+    \begin{equation}
+        |(f_\varepsilon - f_{\varepsilon'})(t_i) - (f_\varepsilon - f_{\varepsilon'})(t_{i+1})| = 
+        |\varepsilon_j - \varepsilon'_j| 2^{-j/p} |\sin(2^j \pi t_{i+1}) - \sin(2^j \pi t_i)| =
+        2 \cdot 2^{-j/p}.
+    \end{equation}
+\end{proof}
+
+\subsubsection{Compactness}
+
+\begin{lemma}
+    Consider $(x_n) \subset C([0,T], \R^d)$ and assume $x_n \rightarrow x \in C([0,T], \R^d)$ uniformly.
+    \begin{itemize}
+        \item Assume $\sup_n |x_n|_{p-var} < \infty.$ Then for all $p' > p$ we have $x_n \rightarrow x$ in $p-$variation.
+        \item Assume $\sup_n |x_n|_{\alpha-Hol} < \infty.$ Then for all $\alpha' < \alpha$ we have $x_n \rightarrow x$ in $\alpha-Hol$.
+    \end{itemize}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Finite $p$-variation follows by the lower semicontinuity result. Interpolation is enough to conclude.
+\end{proof}
+
+\begin{proposition}[Compactness]
+    \begin{itemize}
+        \item Assume $(x_n)$ is equicontinuous, bounded and $\sup_n |x_n|_{p-var} < \infty.$
+        Then $x_n$ converges in $p' > p$ variation along a subsequence to some $x \in C^{p-var}.$
+        \item Assume $(x_n)$ is bounded and $\sup_n |x_n|_{\alpha-Hol} < \infty.$
+        Then $x_n$ converges in $\alpha' < \alpha$ Holder norm along a subsequence to some $x \in C^{\alpha-Hol}.$
+    \end{itemize}
+\end{proposition}
+
+\begin{corollary}
+    \begin{itemize}
+        \item Assume $(x^n), x \in C^{p-var}([0,T],\R^d)$ such that $\sup_n |x_n|_{p-var} < \infty$ and $x_n$ converges uniformly to $x$. Then for $p' > p$
+        \begin{equation}
+            \sup_{s \leq t} \left| |x^n|_{p-var,[s,t]} - |x|_{p-var,[s,t]} \right| \rightarrow 0 \text{ as } n \rightarrow \infty.
+        \end{equation} 
+        Equivalently, $|x^n|_{p-var,[\cdot,\cdot]}$ converges uniformly to $|x|_{p-var,[\cdot,\cdot]}$ in $\Delta_T = \{ (s,t): 0 \leq s \leq t \leq T \}$, aka the triangle (which is a good domain for Ascoli-Arzelà).
+        Furthermore, $|x^n|_{p-var,[\cdot,\cdot]}$ varying $n$ is a equicontinuous set of functions $\Delta_T \rightarrow \R$ and for all $\delta > 0$ there exists a $\varepsilon > 0$ 
+        \begin{equation}
+            \sup_n |x^n|_{p'-var,[s,t]} < \varepsilon.
+        \end{equation}
+        This is a consequence of equicontinuity.
+        \item Similar result holds for Holder continuity with $0 < \alpha' < \alpha.$
+    \end{itemize}
+\end{corollary}
+\begin{proof}{Outline of the proof}
+    \begin{itemize}
+        \item From interpolation, $|x_n - x|_{p-var,[s,t]}$ converges to $0$ if $p' > p$ uniformly over $(s,t)$. Asoli-Arzelà helps to conclude equicontinuity.
+    \end{itemize}
+\end{proof}
+
+\subsubsection{Closure of smooth paths in variation norm}
+
+Let us consider the closure of smooth paths in $C^{p-var}$ and $C^{\alpha-Hol}$, $C^{0,p-var}$ and $C^{0,\alpha-Hol}$ respectively.
+
+Recall that with $p = 1$ and $\alpha = 1$ we had absolutely continuous functions and $C^1$ functions respectively.
+
+\begin{lemma}
+    Let $p > 1.$
+    \begin{itemize}
+        \item Let $\Omega$ be a set in $C^{1-var}([0,T],\R^d)$ such that $C^{0,1-var}([0,T],\R^d) \subset \overline{\Omega}^{1-var}$ (its closure in $1$-var includes absolutely continuous functions). Then
+        \begin{equation}
+            \overline{\Omega}^{p-var} = C^{0, p-var}([0,T], \R^d).
+        \end{equation}
+        \item Let $\Omega$ be a set in $C^{1-Hol}([0,T],\R^d)$ such that $C^{0,1-Hol}([0,T],\R^d) \subset \overline{\Omega}^{1-Hol}$ (its closure in $1$-Hol includes $C^1$ functions). Then
+        \begin{equation}
+            \overline{\Omega}^{1/p-Hol} = C^{0, 1/p-Hol}([0,T], \R^d).
+        \end{equation}
+    \end{itemize}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    It is essential to see that $C^{1-var} \subset \overline{C^\infty}^{p-var}.$
+    Observe that $1$-var functions can be approximated uniformly with uniformly bounded $1$-variation using mollifiers. Using interpolation, one can see that this implies convergence in $p-var$ for all $p > 1.$
+\end{proof}
+
+\begin{theorem}[Wiener characterization]
+    Let $x \in C^{p-var}([0,T], \R^d)$ with $p > 1.$ The following statements are equivalent:
+    \begin{enumerate}
+        \item $x \in C^{0,p-var}([0,T], \R^d)$,
+        \item $\lim_{\delta \rightarrow 0} \sup_{|D| < \delta} \sum_i |x|_{p-var,[t_i, t_{i+1}]}^p = 0$
+        \item $\lim_{\delta \rightarrow 0} \sup_{|D| < \delta} \sum_i d(x_{t_i}, x_{t_{i+1}})^p = 0$
+        \item $\lim_{|D| \rightarrow 0} d_{p-var}(x^D, x) = 0.$
+    \end{enumerate}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    The equivalence between 2 and 3 has been proved in Proposition \ref{prop:deltaPvar}.
+    4 implies 1 because we proved that the $p-$var closure of $C^{1-var}$ is $C^{0,p-var}$.
+    The reverse is the $p$-case of Corollary \ref{cor:PLapprox}, that is PL approximations converge in $p$-variation. 
+
+    We want to prove 1 $\Rightarrow$ 3.
+    It can be proved using $(a + b)^p \leq 2^{p-1} (a^p + b^p)$ (convexity of $x \mapsto x^p$).
+    On $d(x_{t_i},x_{t_{i+1}}) = d(y_{t_i}, y_{t_{i+1}}) + (d(x_{t_i}, x_{t_{i+1}}) - d(y_{t_i}, y_{t_{i+1}}))$.
+    Taking the sum and the sup on the second term gives $d_{p-var}(x,y)$.
+    If $y$ is a $C^\infty$ approximator in $p$-variation, using 3 in smooth functions is enough to conclude.
+\end{proof}
+
+\begin{corollary}
+    For $p > 1$, we have the following set inclusions,
+    \begin{align}
+        \cup_{1 \le q < p} C^{q-var}([0,T], \R^d) &\subset C^{0,p-var}([0,T], \R^d) \\
+        &\subset C^{p-var}([0,T], \R^d) \subset \cap_{q > p} C^{q-var}([0,T], \R^d).
+    \end{align}
+\end{corollary}
+
+\begin{proposition}
+    Let $p \ge 1$. The spaces $C^{0,p-var}$ and $C^{0,1/p-Hol}$ are separable Banach spaces (hence Polish).
+\end{proposition}
+
+\subsection{Generalized variation}

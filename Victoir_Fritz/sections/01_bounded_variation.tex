@@ -30,6 +30,7 @@ Hence I can divide $H$ based on mapping between elements of the partition and $\
 
 Use total boundedness and pick the continuity module of the centers of $\varepsilon$-balls.
 \end{itemize}
+Observe that this proof only uses compactness and metricity of $[0,T],$ hence can be generalized to a compact metric domain.
 \end{proof}
 
 \subsection{Continuous paths of bounded variation on
@@ -67,7 +68,7 @@ The notion of \textit{controls} is introduced, which is useful to bound the 1-va
     To show continuity, one can define 1-variation "from inside" as $|x|_{1-var; [s^+,t^-]}$ and show it is also a control.
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{lem:1varSemicont}
     Assume $(x^n)$ is a sequence of paths in $C^{1-var}([0,T],E)$. If $x^n \rightarrow x$ pointwise, then for all $s < t$ we have:
     \begin{equation}
         |x|_{1-var; [s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1-var; [s,t]}.
@@ -110,7 +111,7 @@ Restrict $x$ to $[s,t]$ and control it with $(u,v) \mapsto |x|_{1-Hol,[s,t]}|u-v
     One can additionally prove that that $|x|_{1-var,[0,T]}=|y|_{1-Hol,[0,1]}$.
 \end{proof}
 
-\begin{lemma}
+\begin{lemma}\label{lem:1HolSemicont}
     Assume $(x^n)$ is a sequence of paths from $[0,T] \rightarrow E$ of finite $1$-variation. Assume $x^n \rightarrow x$ pointwise. Then for all $s < t$ we have:
     \begin{equation}
         |x|_{1-Hol, [s,t]} \leq \liminf_{n \rightarrow \infty} |x^n|_{1-Hol, [s,t]}
@@ -188,7 +189,7 @@ Let $x: [0,T] \rightarrow \R^d$ be absolutely continuous. Then it can be written
 \end{equation}
 \end{proposition}
 
-\begin{corollary}
+\begin{corollary}\label{cor:PLapprox}
     Let $x \in C^{1-var}([0,T], \R^d).$ Then piecewise linear approximation converge in $1$-var norm:
     \begin{equation}
         |x - x^D|_{1-var; [0,T]} \rightarrow 0 \text{ as } |D| \rightarrow 0
