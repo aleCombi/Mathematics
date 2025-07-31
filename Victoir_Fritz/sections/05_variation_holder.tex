@@ -21,9 +21,9 @@
     \begin{equation}
         |x|_{p'-var, [0,T]} \leq |x|_{p-var, [0,T]}^{p/p'} \cdot |x|_{0,[0,T]}^{1 - p/p'}. 
     \end{equation} 
-    Furthermore, if $0 \leq \alpha' > \alpha \leq 1,$
+    Furthermore, if $0 \leq \alpha' < \alpha \leq 1,$
     \begin{equation}
-        |x|_{\alpha-Hol} \leq |x|_{\alpha'-Hol}^{\alpha' / \alpha} \cdot |x|_{0,[0,T]}^{1 - \alpha' / \alpha}.
+        |x|_{\alpha'-Hol} \leq |x|_{\alpha-Hol}^{\alpha' / \alpha} \cdot |x|_{0,[0,T]}^{1 - \alpha' / \alpha}.
     \end{equation}
 \end{proposition}
 
@@ -131,12 +131,12 @@ Similar can be said for $\alpha-Holder$ spaces.
 \begin{corollary}[Not in the book, generalized version of Lemma\ref{lem:HolderControl}]\label{lem:pHolderControl}
     If $x \in C^{1/p-Hol}([0,T], E)$, then we have:
     \begin{equation}
-        |x|_{p-var, [s,t]} \leq |x|_{p-Hol,[s,t]} |s - t|^{1/p}.
+        |x|_{p-var, [s,t]} \leq |x|_{1/p-Hol,[s,t]} |s - t|^{1/p}.
     \end{equation}
 \end{corollary}
 \begin{proof}
-    Apply Proposition\ref{prop:pVarControl} with $\omega(u,v) = |u - v|$ and $C = |x|_{1-Hol,[s,t]}$ on the interval $[s,t]$.
-    It implies that $|x|_{p-var, [u,v]} \leq |x|_{1-Hol,[s,t]} |u - v|^{1/p}$ for all $u, v$ in $[s,t]$, hence the thesis.
+    Apply Proposition\ref{prop:pVarControl} with $\omega(u,v) = |u - v|$ and $C = |x|_{1/p-Hol,[s,t]}$ on the interval $[s,t]$.
+    It implies that $|x|_{p-var, [u,v]} \leq |x|_{1/p-Hol,[s,t]} |u - v|^{1/p}$ for all $u, v$ in $[s,t]$, hence the thesis.
 \end{proof}
 
 The following Lemma generalizes Lemma \ref{lem:1HolSemicont} and Lemma \ref{lem:1varSemicont}.
@@ -188,6 +188,10 @@ Observe that in this case we have $|x|_{p-var} = |y|_{p-var} = |y|_{p-Hol}$ usin
         \item If $p > 1$, A.C. of order $p$ is equivalent to $\omega(x,\delta,p) \rightarrow 0$ as $\delta \rightarrow 0.$ Observe the with $p=1$ the limit is the $1$-variation, not $0$ in general.
     \end{enumerate}
 \end{exercise}
+\begin{observation}[Regarding the Exercise]
+    The difference with the case $p=1$ is that $\sum_D |t_{i+1} - t_i|^p \leq |D|^{p-1} T$ is small at will if $p > 1,$ while it is always $T$ if $p=1.$
+    With $p=1$ it is not true in general that absolute continuity implies $\omega(x,\delta,p) \rightarrow 0$.
+\end{observation}
 
 \subsection{Approximation in Geodesic spaces}
 
@@ -232,11 +236,13 @@ Geodesic spaces have the structure that allows to generalize piecewise linear ap
 \end{proposition}
 \begin{proof}[Outline of the proof]
     \underline{p-variation estimate}:
-    We define $\omega_D(s,t) = \left( \frac{t - s}{t_{i+1} - t_i} \right)^p \omega(t_i, t_{i+1})$ where $\omega(s,t) := |x|_{p-var,[s,t]}^p$ is the usual control.
+    We define $\omega_D(s,t) = \left( \frac{t - s}{t_{i+1} - t_i} \right)^p \omega(t_i, t_{i+1})$ where $\omega(s,t) := |x|_{p-var,[s,t]}^p$ is the usual control and $\omega_D(s,t) = \omega_D(s,t_i) + \omega(t_i,t_j) + \omega_D(t_j,t)$ if $s$ and $t$ are in different intervals of the dissection.
     Then we prove that $\omega_D$ is a control and that 
     \begin{equation}
         d(x_s^D, x_t^D) \le 3^{1 - 1/p} \omega^D(s,t)^{1/p}.
     \end{equation}
+
+    Not that the $3$ comes from the case where $s$ and $t$ are in different intervals of the dissection using $(a + b + c)^p \leq 3^{p-1} (a^p + b^p + c^p).$
 
     \underline{Holder estimate}:
     It follows from the $p$ variation estimate observing using $\omega^D$ and observing that 
@@ -245,6 +251,13 @@ Geodesic spaces have the structure that allows to generalize piecewise linear ap
     \end{equation}
 \end{proof}
 
+\begin{observation}
+    The above proof show thats:
+    \begin{equation}
+        \sup_{D_\delta} \sum |x^D|^p_{p-var,[t_i, t_{i+1}]} \leq 3^{p-1} \sup_{D_\delta} \sum |x|^p_{p-var,[t_i, t_{i+1}]}.
+    \end{equation}
+    This follows taking one dissection, proving the inequality of in $[t_i, t_{i+1}]$, taking the sum and finally the sup.
+\end{observation}
 The union of the two preceding results gives the following theorem.
 
 \begin{theorem}
@@ -415,3 +428,94 @@ Recall that with $p = 1$ and $\alpha = 1$ we had absolutely continuous functions
 \end{proposition}
 
 \subsection{Generalized variation}
+
+We generalize the notion of $p$-variation.
+
+\begin{definition}
+    Let $(E,d)$ be a metric space, $\varphi \in C([0,\infty),[0,\infty))$, $\varphi(0)=0$, strictly increasing and onto.
+    A path $x:[0,T] \rightarrow E$ is said to be of finite $\varphi$-variation in the interval $[s,t]$ if
+    \begin{equation}
+        |x|_{\varphi-var,[s,t]} = \inf \left\{ M > 0, \sup_D \sum \varphi \left[ \frac{d(x_{t_i}, x_{t_{i+1}})}{M} \right] \leq 1 \right\} < \infty.
+    \end{equation}
+\end{definition}
+
+\begin{observation}
+    The $\varphi-$variation is a seminorm if $\varphi$ is a convex function. This can be found convexly combining two elements in the sets inside the $\inf$ for $x$ and $y$ with $\lambda$ so that $\lambda 1/M_x + (1 - \lambda) 1/M_y = 1 / (M_x + M_y).$
+\end{observation}
+
+We now prove that the $\inf$ in the definition is effectively reached, therefore it is a minimum.
+
+\begin{lemma}
+    If $x \in C^{\varphi-var}([0,T], E),$ for all $M \geq |x|_{\varphi-var,[0,T]},$ 
+    \begin{equation}
+         \sup_D \sum \varphi \left[ \frac{d(x_{t_i}, x_{t_{i+1}})}{M} \right] \leq 1.
+    \end{equation}
+\end{lemma}
+
+\begin{proposition}[Controls and $\varphi$-variation]
+    The following statements are equivalent:
+    \begin{enumerate}
+        \item $x \in C^{\varphi-var}([0,T],E)$ and $M \geq |x|_{\varphi-var,[0,T]}.$
+        \item There exist a control with $\omega(0,T) \leq 1$ such that for all $s < t$,
+        \begin{equation}
+            d(x_s,x_t) \leq M \varphi^{-1}(\omega(s,t)).
+        \end{equation}
+    \end{enumerate}
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    $1 \Rightarrow 2$: Use the control $\omega_{x,\varphi}(s,t) = \sup_D \sum \varphi \left[ \frac{d(x_{t,i}, x_{t_{i+1}} )}{M} \right]$.
+    $2 \Rightarrow 1$: Analogous to the $p$-variation case.
+\end{proof}
+
+\begin{definition}[Condition $(\Delta_c)$]
+    Assume that $\varphi \in C([0,\infty),[0,\infty))$, $\varphi(0)=0$, strictly increasing and onto.
+    If for each $c > 0$ there exist a $\Delta_c \le 0$ such that $\varphi(cx) \le \Delta_c \varphi(x)$ and $\Delta_c \rightarrow 0$, we say that $\varphi$ satisfies $(\Delta_c)$.
+\end{definition}
+
+\begin{proposition}\label{phiVarCondition}
+    Let $\varphi$ satisfy $(\Delta_c)$. Then the following are equivalent:
+    \begin{enumerate}
+        \item $x \in C^{\varphi-var}$
+        \item $\exists M,\ \sup_D \sum \varphi \left[ \frac{d(x_{t,i}, x_{t_{i+1}} )}{M} \right] < \infty$.
+        \item $\forall K,\ \sup_D \sum \varphi \left[ \frac{d(x_{t,i}, x_{t_{i+1}} )}{K} \right] < \infty$.
+    \end{enumerate}
+\end{proposition}
+
+\begin{lemma}
+    Assume $\varphi$ and $\tilde{\varphi}$ satisfy $(\Delta_c)$ and $\tilde{\varphi} = O(\varphi)$ in $0^+$.
+    Then
+    \begin{equation}
+        C^{\varphi-var} \subseteq C^{\tilde{\varphi}-var}.
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    The condition, combined with Proposition \ref{phiVarCondition}, lets us restrict the $d(t_i,t_{i+1})$ at will in the sums, by getting constants out of the $\varphi$.
+\end{proof}
+
+\begin{theorem}[Relation with $p$-var]
+    Let $p \ge 1$ and $\varphi$ satisfy $(\Delta_c)$. Assume $\varphi^{-1}(\cdot)^p$ is convex on $[0,\delta]$ for some $\delta \in (0,1].$
+    Let $x \in C^{\varphi-var}.$
+    Then the control
+    \begin{equation}
+        \omega(s,t) := \sup_D \sum \varphi \left[ \frac{d(x_{t_i}, x_{t_{i+1}})}{|x|_{\varphi-var,[0,T]}} \right]
+    \end{equation}
+    satisfies $\omega(0,T) \le 1$. Moreover there exists $C = C(\varphi, p)$ constant, such that,
+    \begin{equation}
+        |x|_{p-var, [s,t]} \le C |x|_{\varphi-var,[0,T]} \phi^{-1}(\omega(s,t)).
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Observe that $\varphi \left[ \kappa \frac{d(x_s, x_t)}{|x|_{\phi-var,[0,T]}} \right] \leq \Delta_\kappa \omega(s,t).$
+    Conclude with the usual argument on $p$-variation using $\kappa$ appropriately to exploit the local convexity of $\varphi^{-1}(\cdot)^p$. 
+\end{proof}
+
+\begin{corollary}
+    Use the same hypothesis as the Theorem. Let $x \in C([0,T],E)$ and $y \in C([0,T],\tilde{E})$ such that for all $s < t$
+    \begin{equation}
+        |y|_{p-var,[s,t]} \le K |x|_{p-var,[s,t]}.
+    \end{equation}
+    Then for some constant $C = C(p,\varphi)$,
+    \begin{equation}
+        |y|_{\varphi-var,[s,t]} \le C K |x|_{\varphi-var,[s,t]}.
+    \end{equation}
+\end{corollary}
