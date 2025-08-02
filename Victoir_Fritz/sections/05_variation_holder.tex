@@ -519,3 +519,184 @@ We now prove that the $\inf$ in the definition is effectively reached, therefore
         |y|_{\varphi-var,[s,t]} \le C K |x|_{\varphi-var,[s,t]}.
     \end{equation}
 \end{corollary}
+
+\subsection{Higher dimensional variation}
+
+We now extend the discussion to the variation of a function
+\begin{equation}
+    f:[0,T]^2 \rightarrow (\R^d, | \cdot |).
+\end{equation}
+
+\begin{definition}
+    Give a rectangle $R = [s,t] \times [u,v] \subset R$, we define
+    \begin{equation}
+        f(R):= f \colvec{s,t}{u,v} := f \colvec{s}{u} + f \colvec{t}{v} - f \colvec{s}{v} - f \colvec{t}{u}.
+    \end{equation} 
+\end{definition}
+
+\begin{definition}[$p$-variation on a square]
+    Let $f:[0,T]^2 \rightarrow (\R^d, | \cdot |)$.
+    $f$ has finite $p$ variation if 
+    \begin{equation}
+        |f|_{p-var,[s,t] \times [u,v]} = \sup_{D \in \mathbb{D}[s,t], D' \in \mathbb{D}[u,v]} \left( \sum_{i,j} \left| f(R_{i,j}) \right| \right)
+    \end{equation}
+\end{definition}
+
+We extend the notion of \textit{control}.
+
+\begin{definition}[2D control]
+    Let $\Delta_T = \left\{ (s,t): 0 \leq s \leq t \leq T \right\}$. 
+    A control is a continuous map $\omega: \Delta_T \times  \Delta_T \rightarrow [0,\infty)$ which is superadditive on rectangles.
+    That is, if $R_1 \cup R_2 \subset R$ and $\R_1 \cap R_2 = \emptyset,$
+    \begin{equation}
+        \omega(R_1) + \omega(R_2) \le \omega(R),
+    \end{equation}
+    and $\omega(R)=0$ if $R$ has zero area.
+\end{definition}
+
+\begin{lemma}
+    Let $f:[0,T]^2 \rightarrow (\R^d, | \cdot |)$.
+    \begin{enumerate}
+        \item If $f$ is of finite $p$-variation, for some $p \ge 1,$
+        \begin{equation}
+            R \mapsto |f|^p_{p-var,R}
+        \end{equation}
+        is a $2D$-control.
+        \item $f$ is of finite $p$-variation if and only if there exists a $2D$-control $\omega$ such that for all rectangles $R$ 
+        \begin{equation}
+            |f(R)|^p \le \omega(R).
+        \end{equation}
+        In this case we say "$\omega$ dominates the $p$-variation of $f$".
+    \end{enumerate}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    The ideas are the same as in the $1$-dimensional case. 
+    Superadditivity is easy from the definition.
+    Continuity can be proven with a similar strategy:
+    \begin{enumerate}
+        \item \textit{Continuity from inside}:
+        Consider $|f|^p_{p-var, [s^+,t^-] \times [u^+,v^-]}.$ This can be seen to be a control, and it dominates $d(f_s,f_t)^p.$
+        \item \textit{Continuity from outside}:
+        Focus on just one of the four inputs to prove $|f|^p_{p-var, [s^-,t] \times [u,v]} = |f|^p_{p-var, [s,t] \times [u,v]}$.
+        This follows from the case where $s = t$, where $|f|^p_{p-var, [t^-,t] \times [u,v]} = |f|^p_{p-var, [s,t] \times [u,v]}$.
+        One can use the same arguments as in the $1D$ case, it suffices to use uniform continuity of $f$, hence equicontinuity of $t \rightarrow f(t,u)$ over $u$.
+    \end{enumerate}
+\end{proof}
+
+\begin{lemma}
+    A function $f \in C([0,T]^2, \R^d)$ is of finite $p$-variation if and only if   
+    \begin{equation}
+        \sup_{D \in \mathbb{D}^[0,T]} \sum_D \left| \colvec{t_i, t_{i+1}}{t_j, t_{j+1}} \right|^p < \infty.
+    \end{equation}
+
+    Moreover, the $p$-variation of $f$ is dominated by $3^{p-1}$ times
+    \begin{equation}
+        \omega([s,t] \times [u,v]) = \sup_D \sum_{[t_i,t_{i+1}] \subseteq [s,t], [t_j,t_{j+1}] \subseteq [u,v]} \left| f \colvec{t_i, t_{i+1}}{t_j, t_{j+1}} \right|^p.
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    One proves that $\omega$ is a control.
+    Then that $\omega$ dominates $|f(R)|^p$ for any rectangle $R = [s,t] \times [u,v]$ can be proven in three steps:
+    \begin{enumerate}
+        \item For $[s,t] = [u,v]$ by definition,
+        \item For $[s,t] \cap [u,v] = \emptyset$ by definition,
+        \item In the general case by splitting $f \colvec{s,t}{u,v}$ in three pieces and applying the inequatility on each one, finally using $(a + b + c)^p \le 3^{p-1} (a^p + b^p + c^p).$
+    \end{enumerate}
+\end{proof}
+
+\begin{example}
+    Given $f \in C([0,T]^2, \R^d)$, fixed $[s,t] \times [u,v]$, the $p$-variation of 
+    \begin{equation}
+        r \mapsto f \colvec{r}{u,v}
+    \end{equation}
+    is bounded by $|f|_{p-var,[s,t] \times [u,v]}$ (obvious thinking about rectangles $[t_i,t_{i+1}] \times [u,v]$).
+\end{example}
+
+\begin{observation}
+    A function $f \in C([0,T]^2,\R^d)$ of finite $p$-variation can be seen as a path $[0,T] \rightarrow C^{p-var}([0,T],\R^d).$ On can see that $f$ is of finite $2D$ $p-$variaton if an only if $t \mapsto f(t, \cdot)$ is of finite variation endowing $C^{p-var}([0,T],\R^d)$ with the $p$-variation seminorm. Not that this does not induce a distance, but $p$-variation is still well defined.
+\end{observation}
+
+\subsubsection{Approximations to 2D functions}
+
+\paragraph{Piecewise linear approximations}
+
+Recall in $1D$ that any $p$-variation path can by approximated by smooth or piecewise linear path in the sense of \textit{uniform convergence with $p$-variation bounds}, hence in $p'$-variation for all $p' > p$.
+The same holds in $2D$.
+
+\begin{definition}[$D$, $\tilde{D}$ PL approximation of a 2D function]
+    Assume $f \in C([0,T]^2,E)$ where $E$ is a normed space. Given two dissections of $[0,T]$, $D$ and $\tilde{D}$, define
+    \begin{align}
+        f^{D,\tilde{D}} \colvec{s}{t} &= f \colvec{s}{t} \text{ for all } (s,t) \in D \times \tilde{D} \\
+        f^{D,\tilde{D}} (\cdot,0) &= f^D(\cdot, 0) \\
+        f^{D,\tilde{D}} (0, \cdot) &= f^D(0, \cdot) \\
+        f^{D,\tilde{D}} \colvec{s,t}{u,v} &= \frac{t - s}{\tau_{i+1} - \tau_i} \cdot \frac{v - u}{t_{j+1} - t_j} f \colvec{\tau_i, \tau_{i+1}}{t_j, t_{j+1}} \\
+        \text{ if } (s,t) \times (u,v) &\subset (\tau_i, \tau_{i+1}) \times (t_j, t_{j+1}).
+    \end{align}
+\end{definition}
+
+\begin{proposition}
+    Let $f \in C^{p-var}([0,T]^2,E)$ and $D,\tilde{D}$ dissections of $[0,T].$ Then for all $s < t$ in $D$ and $u < v$ in $\tilde{D},$
+    \begin{equation}
+        \left| f^{D,\tilde{D}}\right| ^p_{p-var,[s,t] \times [u,v]}\leq 9^{p-1} |f|^p_{p-var,[s,t] \times [u,v]}.
+    \end{equation}
+    Moreover $f^{D,\tilde{D}}$ converges uniformly to $f$ as $|D|,|\tilde{D}| \rightarrow 0.$
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    We define a control $\omega^{D,\tilde{D}}$ as follows:
+    \begin{enumerate}
+        \item for small rectangles $[s,t] \times [u,v] \subset [t_i,t_{i+1}] \times [\tilde{t}_i,\tilde{t}_{i+1}] = I \times J$,
+        \begin{equation}
+            \omega_D([s,t] \times [u,v]) = \frac{(t - s)(u - v)}{|I \times J|} |f|_{p-var,I \times J}^p
+        \end{equation}
+        \item for vertical strips $[s,t] \times (J_1 \cup \ldots \cup J_n)$ where $[s,t] \subset [t_i, t_{i+1}]$ and $J_i \in \tilde{D}.$
+        \begin{equation}
+            \omega_D([s,t] \times (J_1 \cup \ldots \cup J_n)) = \frac{(t - s)(u - v)}{|I \times J|} |f|_{p-var,[s,t] \times (J_1 \cup \ldots \cup J_n)}^p
+        \end{equation}
+        \item analogously for horizontal strips,
+        \item finally for rectangles with endpoints in the dissections we have
+        \begin{equation}
+            \omega_D((I_1 \cup \ldots \cup I_n) \times (J_1 \cup \ldots \cup J_n)) = |f|^p_{p-var,(I_1 \cup \ldots \cup I_n) \times (J_1 \cup \ldots \cup J_n)}.
+        \end{equation}
+    \end{enumerate}
+    Finally any rectangle decomposes uniquely into $9$ rectangles of the above types, hence $\omega^{D,\tilde{D}}$ can be defined additively.
+    One can easily prove that this defines a control.
+    To conclude, simply use the convexity of $x \mapsto x^p$ when $p \ge 1:$
+    \begin{equation}
+        \left(\sum_{i = 1}^N a_i \right)^p \le N^{p-1} \sum_{i=1}^N a_i^p.
+    \end{equation}
+\end{proof}
+
+\paragraph{Mollifier approximations}
+
+\begin{definition}
+We extend a function \( f : [0,T]^2 \to \mathbb{R} \) to all of \( \mathbb{R}^2 \) by defining:
+\begin{equation}
+    f(s,t) := f\left( (s \land T) \lor 0,\ (t \land T) \lor 0 \right)
+\end{equation}
+where \( a \land b := \min(a,b) \) and \( a \lor b := \max(a,b) \).
+Note that as a consequence $f(R) = f(R \cup [0,T]^2)$ for all rectangles $R$.
+\end{definition}
+
+\begin{definition}[\( \mu,\tilde{\mu} \)-mollifiers]
+    Let \( f \in C([0,T],E) \), where \( E \) is a normed space.
+    Let \( mu, \tilde{\mu} \) probability measures on \( \R \), compactly supported.
+    We define \( f^{\mu,\tilde{\mu}} \) as 
+    \begin{equation}
+        f^{\mu, \tilde{\mu}} \colvec{s}{u} \int \int f \colvec{s - a}{t - b} d\mu(a) d\tilde{\mu}(b).
+    \end{equation}
+    Note that one can write a similar relation for rectangular increments.
+\end{definition}
+
+\begin{proposition}
+    Let \( f \in C^{p-var}([0,T]^2,E) \), where \( E \) is a normed space, extended on $\R^2.$
+    Let \( mu, \tilde{\mu} \) probability measures on \( R \), compactly supported. 
+    Then \( f^{\mu, \tilde{\mu}} \) is of finite $p$-variation, controlled by
+    \begin{equation}
+        \omega^{\mu, \tilde{\mu}} \colvec{s,t}{u,v} = \int \int \omega \colvec{s-a,t-a}{u-b,v-b} d\mu(a) d\tilde{\mu}(b),
+    \end{equation}
+    where $\mu$ is the usual $p$-variation at power $p$ control.
+    Then if $\mu_n, \tilde{\mu}_n$ converge to the Diract measure on zero, that is the integral of all continuous bounded functions converges to \( \phi(0) \), \( f^{\mu,\tilde{\mu}} \rightarrow f \) uniformly on \([0,T]^2.\)
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    Similar to the \( 1 \)-d case, bounding the increments of \( f^{\mu,\tilde{\mu}} \) with \( \omega^{\mu,\tilde{\mu}} \) using Jensen inequality.
+\end{proof}
