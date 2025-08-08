@@ -54,7 +54,10 @@ The notion of \textit{controls} is introduced, which is useful to bound the 1-va
         \item $max(\omega, \tilde{\omega})$ is not always a control,
         \item If $\alpha + \beta \geq 1,$ then $\omega^{\alpha} \tilde{\omega}^{\beta}$ is a control.
     \end{itemize}
+    Observe that for the 3rd one needs to see that convex functions valued \(0\) in \(0\) are subadditive.
+    This can be seen applying convexity definitions on \(a,b,a+h\) and \(a, a+h, b+h\). It is very elegant to do so using the three point inequality formulation of convexity.
 \end{example}
+
 
 \begin{proposition}
     Let $x:[0,T] \rightarrow E$ and $\omega$ superadditive. If $d(x_s, x_t) \leq \omega(s, t)\ \forall s < t,$ then $|x|_{1-var; [s,t]} \leq \omega(s,t).$
@@ -76,7 +79,7 @@ The notion of \textit{controls} is introduced, which is useful to bound the 1-va
     The inequality above can be strict.
 \end{lemma}
 \begin{proof}[Outline of the proof]
-    A counterexample is given by a sequence of functions oscillating $n$ times with oscillation size $1/n$.
+    A counterexample is given by a sequence of saw function with \(n\) angles of heigth \(1/n\).
 \end{proof}
 \subsubsection{Absolute continuity}
 

@@ -1,0 +1,34 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+
+\begin{document}
+
+\section*{Errata for \emph{Multidimensional Stochastic Processes as Rough Paths} (Friz–Victoir)}
+
+\begin{itemize}
+
+\item \textbf{Proposition 1.21, proof, page \_\_}:  
+In the proof, after defining the greedy subsequence
+\[
+j_0 = 0, \quad j_k = \max\{ i \ge j_{k-1} : t_i - t_{j_{k-1}} \le \delta \},
+\]
+it is claimed that the resulting subpartition has at most $\lfloor T/\delta \rfloor + 1$ intervals.
+While the mesh bound $\le \delta$ is correct, the counting bound need not hold without additional assumptions.
+
+\emph{Counterexample:}  
+Take $\delta = 1$, $T = 3$, and
+\[
+D = \{ 0,\, 2t,\, 1+t,\, 1+3t,\, 2+2t,\, 3 \}, \quad 0 < t \ll 1.
+\]
+The greedy algorithm selects
+\[
+0 \to 2t \to 1+t \to 1+3t \to 2+2t \to 3,
+\]
+which yields $5$ intervals, exceeding $\lfloor 3/1 \rfloor + 1 = 4$.
+
+This does not invalidate the proposition itself, but the intermediate bound in the proof should be revised.
+A correct universal bound for the greedy algorithm is $2\lfloor T/\delta \rfloor + 1$.
+
+\end{itemize}
+
+\end{document}

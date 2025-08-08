@@ -1,0 +1,172 @@
+\section{Young Integration}
+
+We construct \( \int_0^\cdot y dx \) where \(x \in C^{p-var}([0,T],\R^d) \) and \( y \in C^{q-var}([0,T],L(\R^d,\R^e)) \) and $\frac{1}{p} + \frac{1}{q} > 1.$
+
+\subsection{Young-Loeve estimates}
+
+\begin{lemma}\label{lem:prepYoungLoeve1}
+    Let \( \xi > 0 \) and \( \theta > 1 \). Consider \( \varrho: [0,T] \rightarrow \R \) with
+    \begin{equation}
+        \varrho(r) \le 2 \varrho(r/2) + \xi r^\theta \text{ for all } r \in [0,T]
+    \end{equation}
+    and such that \( \varrho(r) = o(r) \) as \( r \rightarrow 0^+ \).
+    Then, for all \( r \in [0,T] \)
+    \begin{equation}
+        \varrho(r) \le \frac{\xi}{1 - 2^{1-\theta}} r^\theta.
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Define \( \phi(r) = \varrho(r) / (\xi r^\theta) \), iterate and use \( \varrho(r) = o(r) \) as \( r \rightarrow 0^+ \).
+\end{proof}
+
+\begin{lemma}\label{lem:prepYoungLoeve2}
+    Let \( \Gamma: \Delta_T \rightarrow \R^e \) and assume 
+    \begin{enumerate}
+        \item there exists a control \( \hat{\omega} \) such that
+        \begin{equation}
+            \lim_{r \rightarrow 0} \sup_{(s,t) \in \Delta: \hat{\omega}(s,t) \le r} \frac{|\Gamma_{s,t}|}{r} = 0.
+        \end{equation}
+        \item there exists a control \( \omega \), \( \theta > 1, \xi > 0 \) such that
+        \begin{equation}
+            |\Gamma_{s,u}| \le |\Gamma_{s,t}| + |\Gamma_{t,u}| + \xi \omega(s,u)^\theta
+        \end{equation}
+        for all \( 0 \le s \le t \le u \le T \). 
+        Then, for all \( s < t \) 
+        \begin{equation}
+            |\Gamma_{s,t}| \le \frac{\xi}{1 - 2^{1 - \theta}} \omega(s,t)^\theta.
+        \end{equation}
+    \end{enumerate}
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Key observation here is that we can assume that \( \xi = 1 \), otherwise substitute \( \Gamma \) by \( \Gamma / \xi. \)
+    We can also assume that \( \hat{\omega} \le \frac{1}{\varepsilon} \omega \) for some \( \varepsilon > 0. \)
+    Otherwise we replace \( \omega \) with \( \omega + \varepsilon \hat{\omega} \) and let \( \varepsilon \) go to zero in the end.
+    Finally define \( \varrho(r) = \sup_{(s,t) \in \Delta: \hat{\omega}(s,t) \le r} |\Gamma_{s,t}| \) and pick \( s, t, u \) such that \( \omega(s,t), \omega(t,u) \le \omega(s,u) / 2 \) and reason using Lemma \ref{lem:prepYoungLoeve1}.
+\end{proof}
+
+We now show a first order Euler error estimate for the Riemann-Stieltjes integral.
+Note how the error only depends on the \( p \) and \( q \) variations of \( x \) and \( y \) respectively. 
+
+\begin{proposition}[Young-Loeve estimate]
+    Assume \( x \in C^{1-var}([0,T], \R^d) \) and \( y \in C^{1-var}([0,T], L(\R^d,\R^e)) \)
+    for \( p, q > 1 \) with \( \theta = 1/p + 1/q > 1 \). Defining
+    \begin{equation}
+        \Gamma_{s,t} := \int_s^t y_u dx_u - y_s x_{s,t} = \int_s^t y_{s,u} dx_u
+    \end{equation}
+    we have 
+    \begin{equation}
+        |\Gamma_{s,t}| \le \frac{1}{1 - 2^{1 - \theta}} |x|_{p-var,[s,t]} |y|_{q-var,[s,t]}.
+    \end{equation}
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    Define the control
+    \[
+        \omega(s,t) := |x|^{1/\theta}_{p-var} |y|^{1/\theta}_{q-var}.
+    \]
+
+    Then consider \( \Gamma_{s,u} - \Gamma_{s,t} - \Gamma_{t,u} = y_{s,t} x_{s,t} \).
+    Define \( \tilde{\omega}(s,t) = |x|_{1-var,[s,t]} + |y|_{1-var,[s,t]}. \)
+    Finally apply Lemma \ref{lem:prepYoungLoeve2}.
+\end{proof}
+
+\subsection{Young Integrals}
+
+\begin{definition}[Young Integral]
+    Given \( x \in C^{p-var}([0,T], \R^d) \) and \( y \in C^{q-var}([0,T], L(\R^d,\R^e)) \)
+    we say that \( z \) is an indefinite Young integral of \( y \) against \( x \) if there exists a sequence \((x_n, y_n) \subset C^{1-var}([0,T],\R^d) \times C^{1-var}([0,T],L(\R^d,\R^e))\) such that
+    \begin{align}
+        |x_n - x|_\infty \rightarrow 0 \text{ and } \sup_n |x_n|_{p-var} < \infty, \\
+        |y_n - y|_\infty \rightarrow 0 \text{ and } \sup_n |y_n|_{q-var} < \infty, \\
+        \text{and} \\   
+        \int_0^\cdot y^n dx^n \rightarrow z \text{ uniformly on [0,T] as } n \rightarrow \infty.
+    \end{align}
+    If \( z \) is unique we define it to be \( \int_0^\cdot y dx\) and wew define \( \int_s^t y dx \) accordingly.
+ \end{definition}
+ 
+ \begin{theorem}[Young-Loeve]
+    Given \(x \in C^{p-var}, y in C^{q-var}\) with \(\theta = 1/p + 1/q > 1\) there exists a unique Young integral and the Young Loeve estimate is valid:
+    \begin{equation}
+        \left|\int_s^t y_u dx_u - y_s x_{s,t} \right| \le \frac{1}{1 - 2^{1 - \theta}} |x|_{p-var,[s,t]} |y|_{q-var,[s,t]}.
+    \end{equation}
+
+    Moreover, the Young integral has finite \(p\)-variation and
+    \begin{align}
+        \left|\int_0^cdot y dx \right|_{p-var,[s,t]} &\le C |x|_{p-var,[s,t]} (|y|_{q-var,[s,t]} + |y|_{\infty,[s,t]}) \\
+        &\le 2C |x|_{p-var,[s,t]} (|y|_{q-var,[s,t]} + |y_0|).
+    \end{align}
+    where \(C = C(p,q)\).
+ \end{theorem}
+ \begin{proof}[Outline of the proof]
+    Consider \(z_n = \int_0^\cdot y_n dx_n\).
+    It can be shown to satisfy the Young-Loeve estimate with \(p+\varepsilon, q+\varepsilon\) for small enough \(\varepsilon>0\).
+    It follows that LHS of the estimate goes to \(0\) with \(t - s \rightarrow 0\), uniformly in \(n\).
+    Equicontinuity of the integrals follows.
+    Take the limit thanks to Ascoli Arzela and prove the Young-Loeve estimate for the limit (with \(\varepsilon \rightarrow 0\)).
+    To prove uniqueness, one consider a dissection and bound \(z_T - \tilde{z}_T \) using the control \(\omega(s,t) = |x|^{1-\theta}_{p-var,[s,t]} |y|^{1-\theta}_{q-var,[s,t]}\) and the Young-Loeve estimate.
+    To prove the \(p\)-variation bound, simply apply Young-Loeve estimate and observe that one obtains \(|z_{s,t}^p \le \text{ a control }\).
+ \end{proof}
+
+ \subsection{Continuity properties of Young integrals}
+
+ We start establishing a trivial consequence of the definitions.
+
+ \begin{proposition}
+    Given \(x \in C^{p-var}([0,T], \R^d)\) and \(y \in C^{q-var}([0,T], L(\R^d,\R^e))\) with \(1/p + 1/q > 1\), the map 
+    \begin{equation}
+        (x,y) \in C^{p-var}([0,T], \R^d) \times C^{q-var}([0,T], L(\R^d,\R^e)) \mapsto \int_0^\cdot y dx \in C^{p-var}([0,T], \R^d)
+    \end{equation}
+    is continuous using \(p\) and \(q\)-variation norms and bilinear. As a consequence, it is Lipschitz continuous and Frechet smooth.
+ \end{proposition}
+
+ We turn to uniform convergence with uniform bounds.
+ This is another immediate consequence of Young-Loeve theorem.
+ \begin{proposition}
+    Assume \(x_n,x \in C^{p-var}([0,T], \R^d)\) and \(y_n,y \in C^{q-var}([0,T], L(\R^d,\R^e))\) such that
+    \begin{align}
+        |x_n - x|_\infty \rightarrow 0 \text{ and } \sup_n |x_n|_{p-var} < \infty, \\
+        |y_n - y|_\infty \rightarrow 0 \text{ and } \sup_n |y_n|_{q-var} < \infty.
+    \end{align}
+    and \(1/p + 1/q > 1\).
+    Then 
+    \begin{equation}
+        \lim_{n \rightarrow \infty} \left| \int_0^\cdot y^n dx^n - \int_0^cdot y dx \right|_{\infty,[0,T]} = 0 \text{ and } \sup_n \left| \int_0^\cdot y^n dx^n \right|_{p-var,[0,T]} < \infty.
+    \end{equation}
+ \end{proposition}
+
+\subsection{Young-Lóeve-Towghi estimates and 2D Young integrals}
+
+We extend Lemma \ref{lem:prepYoungLoeve2} to the 2D case.
+
+\begin{lemma}\label{lem:prepYoungLoeve2D}
+    Let \(\Gamma:\{ 0 \le s \le t \le T\}^2 \rightarrow \R^e.\) be such that 
+    \begin{enumerate}
+        \item for some control \(\hat{omega}\),
+        \begin{equation}
+            \lim_{r \rightarrow 0} \sup_{\hat{omega}(R) \le r} \frac{|\Gamma(R)|}{r} = 0.
+        \end{equation}
+        \item for some control \(\omega\) and some real \(\theta > 1\), for all rectangles \(R\) being the union of two essentially disjoint rectangles \(R_1,R_2\)
+        \begin{equation}
+            |\Gamma(R)| \le |\Gamma(R_1)| + |\Gamma(R_2)| + \xi \omega(R)^\theta. 
+        \end{equation}
+    \end{enumerate}
+    Then for all rectangles \(R \in [0,T]^2\) 
+    \begin{equation}
+        |\Gamma(R)| \le \frac{\xi}{1 - 2^{1- \theta}} \omega(R)^\theta.
+    \end{equation}
+\end{lemma}
+
+We now prove 2D Young-Loeve estimates.
+\begin{proposition}
+    Let
+    \begin{equation}
+        x \in C^{1-var}([0,T]^2,\R^d),\ y \in C^{1-var}([0,T]^2,L(\R^e,\R^d)).
+    \end{equation}
+    Given \(R = [s,t] \times [u,v]\), define
+    \begin{equation}
+        \Gamma(R) = \int_R y \colvec{s,\cdot}{u,\cdot} dx.
+    \end{equation}
+    Then for all rectangles \(R\) and \(p,q \ge 1\) such that \(\theta:= 1/p + 1/q > 1\),
+    \begin{equation}
+        |\Gamma(R)| \le \left( \frac{1}{1-2^{1 - \theta}} \right)^2 |y|_{q-var,R} |x|_{p-var,R}
+    \end{equation}
+\end{proposition}

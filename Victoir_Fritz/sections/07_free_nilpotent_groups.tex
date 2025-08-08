@@ -1,0 +1,151 @@
+\section{Free Nilpotent Groups}
+
+\begin{definition}[Iterated integral]
+    Consider a path \(x \in C^{1-var}([0,T],\R^d).\)
+    The \(k\)-th iterated integral on the segment \([s,t]\) is
+    \begin{equation}
+        \bf{g}^{k;i_1,\ldots,i_k}:= \int_s^t \int_s^{u_k} \ldots \int_s^{u_2} dx^{i_1}_{u_1} \ldots dx^{i_k}_{u_k}.
+    \end{equation}
+    The collection of all such iterated integrals up to level \(N\) is called \textit{Step-N signature} and is defined as
+    \begin{equation}
+        \bf{g} = \left\{ \bf{g}^{k;i_1,\ldots,i_k}: 1 \le k \le N; i_1, \ldots, i_k \in \{1,\ldots,d\} \right\}.
+    \end{equation}
+    It is denoted by \(S_N(x)_{s,t}\).
+\end{definition}
+
+\begin{example}[Relations between iterated integrals]
+    Consider the Step-2 signature \(\bf{x}:=S_2(x)_{s,t} \).
+    \begin{enumerate}
+        \item Thanks to integration by parts:
+        \begin{equation}
+            \bf{x}_{s,t}^{2;i,j} + \bf{x}_{s,t}^{2;j,i} = x^i_{s,t} + x^j_{s,t}
+        \end{equation}
+        \item Since at level \(1\) we have \(\bf{x}_{t,u}^{1;i} := x^i_{s,t}\), that is vectorially 
+        \(\bf{x}_{t,u}^{1} := x_{s,t}\):
+        \begin{equation}
+            \bf{x}_{s,t}^{1;i} + \bf{x}_{t,u}^{1;i} = \bf{x}_{s,u}^{1;i}
+        \end{equation}
+        \item Similarly at level \(2\) we have
+        \begin{equation}
+            \bf{x}_{s,u}^{2;i,j} = \bf{x}_{s,t}^{2;i,j} + \bf{x}_{t,u}^{2;i,j} + \bf{x}_{s,t}^{1;i} \bf{x}_{t,u}^{1;j}
+        \end{equation}
+        Subtracting the equation obtained by exhanging \(i\) and \(j\), dividing by \(2\) and denoting by \(A\) the antisimmetric part of the matrix \(\bf{x}_{s,u}^{2;i,j}\) we get
+        \begin{equation}
+            A^{i,j}_{s,u} = A^{i,j}_{s,t} + A^{i,j}_{t,u} + \frac{1}{2} \left( x^i_{s,t} x^j_{t,u} - x^j_{s,t} x^i_{t,u} \right).
+        \end{equation}
+        Observe that this has a geometric interpretation in terms of areas between segments and the curve.
+    \end{enumerate}
+\end{example}
+
+\subsection{Step-N signatures and truncated tensor algebras}
+
+\subsubsection{Definition of \(S_N\)}
+
+\begin{definition}
+    The \textit{Step-N signature} of \(\gamma \in C^{1-var}(s,t],\R^d\) is given by
+    \begin{align}
+        S_N(\gamma) &= \left( 1, \int_{s<u<t} dx_u, \ldots, \int_{s < u_1 < \ldots < u_1 <t} dx_{u_1} \otimes \ldots \otimes dx_{u_k} \right) \\
+        &\in \otimes_{k=0}^N (\R^d)^{\otimes k}.
+    \end{align}  
+    Here we have identified the set of \(k\)-iterated integrals as a tensor in \((\R^d)^{\otimes k}\), using the canonical basis of \((\R^d)^{\otimes k}\) and denoting:
+    \begin{equation}
+        \int_{s < u_1 < \ldots < u_1 <t} dx_{u_1} \otimes \ldots \otimes dx_{u_k} := \sum_{i_1,\ldots,i_k} \left( \int_{s < u_1 < \ldots < u_1 <t} dx_{u_1} \ldots dx_{u_k} \right) (e_{i_1} \otimes \ldots \otimes e_{i_k}).
+    \end{equation}
+\end{definition}
+
+\subsubsection{Basic properties of \(S_N\)}
+
+\begin{proposition}
+    Let \( x \in C^{1-var}([0,T],\R^d)\). Then for fixed \(s \in [0,T]\)
+    \begin{equation}
+        \begin{cases}
+            dS_N(x)_{s,t} = S_N(x)_{s,t} \otimes dx_t, \\
+            S_N(x)_{s,s} = 1.
+        \end{cases}
+    \end{equation}
+    Observe that this is equivalent to 
+    \begin{equation}
+        dS_N(x)_{s,t} = \sum_{i=1}^d U_i\left(S_N(x)_{s,t}\right) dx^i_t.
+    \end{equation}
+    where \(U_i\) is the vector fields on \(T^N(\R^d)\), \(x \mapsto x \otimes e_i \).
+\end{proposition}
+\begin{proof}
+    Consider level \(k\) and note that the level \(k\) of \(\int_s^t S_N(x)_{s,r} dx_r\) is
+    \begin{equation}
+        \pi_k \left( \int_s^t S_N(x)_{s,r} \otimes dx_r \right) = \int_s^t \pi_{k-1}(S_N(x)_{s,r}) \otimes dx_r.
+    \end{equation}
+\end{proof}
+
+\begin{proposition}[Change of variable]
+    Let \(x\) be a continuous path of bounded variation, \(\phi:[0,T] \rightarrow [T_1,T_2]\) a non-decreasing surjection, and \(x_t^\phi:=x_{\phi(t)}\) the reparametrization.
+    Then
+    \begin{equation}
+        S_N(x)_{\phi(s),\phi(t)} = S_N(x^\phi)_{s,t}.
+    \end{equation}
+\end{proposition}
+
+This means that the signature is actually defined modulo reparametrization.
+
+\begin{definition}[Concatenation]
+    Given paths \(\gamma \in C^{1-var}([0,T],\R^d), \eta \in C^{1-var}([T,2T],\R^d) \) we define
+    \begin{equation}
+        \gamma \sqcup \eta(t) =
+        \begin{cases}
+            \gamma(t) \text{ if } t \in [0,T] \\
+            \eta(t) - \eta(T) + \gamma(T) \text{ if } t \in [T,2T].
+        \end{cases}
+    \end{equation}
+\end{definition}
+
+One can obviously redefine it on any parametrizations.
+
+\begin{theorem}[Chen]
+    Given \(\gamma \in C^{1-var}([0,T], \R^d)\), \(\eta \in C^{1-var}([T,2T], \R^d)\),
+    \begin{equation}
+        S_N(\gamma \sqcup \eta)_{0,2T} = S_N(\gamma)_{0,T} \otimes S_N(\eta)_{T,2T}.
+    \end{equation}
+    Equivalently if \(x \in C^{1-var}([0,T],\R^d)\)
+    \begin{equation}
+        S_N(x)_{s,u} = S_N(x)_{s,t} \otimes S_N(x)_{t,u}.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    The proof can be done by induction.
+    The key observation is that in \(T^{N+1}(\R^d)\):
+    \begin{equation}
+        \int_s^u S_N(x)_{s,r} \otimes dx_r = \int_s^u S_{N+1}(x)_{s,r} \otimes dx_r.
+    \end{equation}
+    This occurs because the RHS tensor has no level \(0\). Hence in the tensor product, level \(N+1\) of the LHS gives no contributions. A similar argument yields:
+    \begin{equation}
+        S_N(x)_{s,t} \otimes \int_s^u S_N(x)_{s,r} \otimes dx_r = S_{N+1}(x)_{s,t} \otimes \int_s^u S_N(x)_{s,r} \otimes dx_r 
+    \end{equation}
+\end{proof}
+
+\begin{proposition}{Inverse}
+    Let \(x \in C^{1-var}\) and \(\overleftarrow{x}(t) = x(T-t)\) its inverse path. Then
+    \begin{equation}
+        S_N(x)_{0,T} \otimes S_N(\overleftarrow{x})_{0,T} = 1.
+    \end{equation} 
+\end{proposition}
+\begin{proof}{Outline of the proof}
+    This is a consequence of the corresponing ODE result, being \(S_N\) the result of a ODE driven by \(x\).
+\end{proof}
+
+\begin{definition}[Dilation]
+    The dilation map with \(\lambda \in \R\)
+    \begin{equation}
+        \delta_\lambda:T^N(\R^d) \rightarrow T^N(\R^d)
+    \end{equation}
+    is defined as \(\pi_k(\delta_\lambda((g))) = \lambda^k \pi_k(g).\)
+\end{definition}
+
+\begin{example}
+    \begin{equation}
+        \delta_k S_N(x)_{s,t} = S_N(\lambda x)_{s,t}.
+    \end{equation}
+\end{example}
+
+\begin{proposition}
+    Let \((x_n) \subset C^{1-var}([0,1],\R^d), \sup_n |x_n|_{1-var,[0,1]} < \infty\), uniformly convergent to some \(x \in C^{1-var}([0,T],\R^d)\).
+    Then \(S_N(x_n)_{0,\cdot}\) converges uniformly to \(S_N(x)_{0,\cdot}\).
+\end{proposition}
