@@ -1,10 +1,24 @@
 \documentclass[12pt]{article}
 \usepackage{amsmath,amssymb,amsthm}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{bm}        % bold math symbols
+\usepackage{enumitem}  % better list control
+\usepackage{microtype} % better spacing
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\newcommand{\concat}{\mathbin{\raisebox{.25ex}{$\smallfrown$}}}
 
 \newtheorem{theorem}{Theorem}[section]
+\newtheorem{corollary}{Corollary}[section]
 \newtheorem{proposition}[theorem]{Proposition}
 \newtheorem{lemma}[theorem]{Lemma}
 \newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem*{remark}{Remark}
 
 \begin{document}
 
@@ -26,100 +40,7 @@ swap the order of integration (Fubini), and identify the weight $(1-\theta)^N$
 as the measure of a simplex in the $(\theta_1,\dots,\theta_{N+1})$ integration domain.
 \end{proof}
 
-\begin{lemma}[Special cases]
-For $N=1$, the remainder reduces to
-\[
-R_2 = h^2 \int_0^1 (1-\theta) f''(a+\theta h)\,d\theta.
-\]
-For $f''$ constant, this gives the familiar $\frac{1}{2}f''(a)h^2$ term.
-\end{lemma}
-
 \medskip
-
-\subsection*{Remark on the tensor notation in multivariate Taylor expansions}
-
-In the one-dimensional Taylor theorem, the $k$-th derivative $f^{(k)}(a)$ is a scalar 
-and the monomial term is $h^k \in \mathbb{R}$. 
-In the multivariate case $F:\mathbb{R}^d \to \mathbb{R}^m$, the $k$-th derivative 
-at $a$ is a \emph{$k$-linear map} 
-\[
-D^kF(a) \in \mathcal{L}\big((\mathbb{R}^d)^k, \mathbb{R}^m\big),
-\]
-i.e.\ an element of the Banach space of bounded $k$-linear maps 
-$(\mathbb{R}^d)^k \to \mathbb{R}^m$.
-
-Formally, starting from the Fr\'echet derivative definition,
-\[
-D^1F(a) \in \mathcal{L}(\mathbb{R}^d, \mathbb{R}^m), \quad
-D^2F(a) \in \mathcal{L}\big(\mathbb{R}^d, \mathcal{L}(\mathbb{R}^d, \mathbb{R}^m)\big),
-\]
-and so on. Using the canonical isomorphisms
-\[
-\mathcal{L}\big(\mathbb{R}^d, \mathcal{L}(\mathbb{R}^d, G)\big) 
-\;\cong\; \mathcal{L}(\mathbb{R}^d \times \mathbb{R}^d, G),
-\]
-we can ``flatten'' this to $D^kF(a) \in \mathcal{L}((\mathbb{R}^d)^k, \mathbb{R}^m)$.
-
-Given a vector $h\in\mathbb{R}^d$, the notation
-\[
-D^kF(a)[h^{\otimes k}]
-\]
-means that we evaluate $D^kF(a)$ on $k$ identical arguments $h$, 
-and $h^{\otimes k} \in (\mathbb{R}^d)^{\otimes k}$ denotes the 
-\emph{$k$-fold tensor power} of $h$. 
-This notation is convenient because:
-\begin{itemize}
-\item in the scalar case $d=1$, $h^{\otimes k}$ reduces to $h^k$;
-\item $D^kF(a)$ can be viewed as an element of the dual of $(\mathbb{R}^d)^{\otimes k}$, 
-acting linearly on $h^{\otimes k}$.
-\end{itemize}
-
-\paragraph{Connection to ODE expansions.}
-In the expansion of an ODE driven by a $d$-dimensional bounded variation path
-\[
-dy_t = \sum_{i=1}^d V_i(y_t)\,dx_t^i,
-\]
-the role of the monomial $h^{\otimes k}$ is played by the 
-\emph{iterated integrals} of $x$,
-\[
-\mathbf{X}^{i_1,\dots,i_k}_{s,t} 
-:= \int_{s<u_1<\cdots<u_k<t} dx^{i_1}_{u_1} \cdots dx^{i_k}_{u_k} \in (\mathbb{R}^d)^{\otimes k}.
-\]
-The coefficients $D^kF(a)$ become \emph{compositions of directional derivatives}:
-\[
-D^kF(a)[e_{i_1},\dots,e_{i_k}] 
-= \big(D_{V_{i_k}}\cdots D_{V_{i_1}}\mathrm{Id}\big)(a),
-\]
-where $\{e_i\}$ is the standard basis of $\mathbb{R}^d$ and $D_{V_i}$ denotes the derivative along $V_i$.
-Thus, the multivariate Taylor series
-\[
-\sum_{k=0}^N \frac{1}{k!} D^kF(a)[h^{\otimes k}]
-\]
-is replaced in the ODE setting by the \emph{Chen--Taylor expansion}
-\[
-\sum_{k=0}^N \ \sum_{i_1,\dots,i_k} 
-\big(D_{V_{i_k}}\cdots D_{V_{i_1}}\mathrm{Id}\big)(y_s) \ \mathbf{X}^{i_1,\dots,i_k}_{s,t}.
-\]
-The tensor power $h^{\otimes k}$ is thus replaced by the $k$-th level of the 
-\emph{signature} of the driving path $x$.
-
-\subsection{Chain rules (Fr\'echet viewpoint)}
-
-\begin{theorem}[Chain rule, first order]
-Let $G:U\subset\mathbb{R}^p\to\mathbb{R}^m$ and $F:V\subset\mathbb{R}^m\to\mathbb{R}^n$
-be $C^1$, with $G(U)\subset V$. Then $F\circ G$ is $C^1$ and
-\[
-D(F\circ G)(x) \;=\; DF(G(x)) \circ DG(x).
-\]
-Equivalently, for $h\in\mathbb{R}^p$,
-\[
-D(F\circ G)(x)[h] \;=\; DF(G(x))\big[\,DG(x)[h]\,\big].
-\]
-\end{theorem}
-
-\begin{proof}[Outline of the Proof]
-Use the definition of Fr\'echet derivative and the linear approximation error for $F$ and $G$, then collect $o(\|h\|)$ terms.
-\end{proof}
 
 \begin{proposition}[Second-order chain rule]
 If $F\in C^2$ and $G\in C^2$, then $F\circ G\in C^2$ and for $h,k\in\mathbb{R}^p$,
@@ -154,21 +75,11 @@ Induct on $k$, using the bilinear product rule and symmetry of Fr\'echet derivat
 
 \paragraph{Corollaries for paths.}
 Let $y:[0,1]\to\mathbb{R}^m$ be $C^{N}$ and set $g(t):=F(y(t))$.
-Then $g^{(k)}(t)=D^{k}F(y(t))[y'(t)^{\otimes k}]$ for $k\le N$.
-In particular, for an affine path $y(t)=a+th$,
+For an affine path $y(t)=a+th$,
 \[
 g^{(k)}(t)=D^{k}F(a+th)\big[h^{\otimes k}\big],
 \]
 which is exactly the identity used in the multivariate Taylor derivation.
-
-\paragraph{BV-driven ODE (chain rule along the flow).}
-If $x:[0,T]\to\mathbb{R}^d$ has bounded variation and
-$dy_t=\sum_{i=1}^d V_i(y_t)\,dx_t^i$ with smooth $V_i$, then for any $F\in C^1$,
-\[
-dF(y_t) \;=\; \sum_{i=1}^d DF(y_t)\big[V_i(y_t)\big]\,dx_t^i,
-\]
-i.e.\ $F(y_t)-F(y_s)=\sum_i \int_s^t DF(y_u)[V_i(y_u)]\,dx_u^i$ (plain Riemann--Stieltjes).
-
 
 \subsection{Multivariate case}
 
@@ -253,151 +164,335 @@ then the remainder satisfies
 \]
 \end{proposition}
 
-\medskip
-
-\subsection{Application: ODE driven by BV paths}
-
-\begin{theorem}[Chen--Taylor expansion from the integral form]
-Let $x:[0,T]\to\mathbb{R}^d$ be of bounded variation and $V_1,\dots,V_d\in C^{N+1}_b(\mathbb{R}^m;\mathbb{R}^m)$.
-For $s<t$ the solution of
+\section*{Setup and notation}
+Let $V:\mathbb{R}^e\to\mathbb{R}^e$ be $C^\infty$, and let $x:[0,T]\to\mathbb{R}$ be of bounded variation. Consider
 \[
-y_t \;=\; y_s \;+\; \sum_{i=1}^d \int_s^t V_i(y_u)\,dx_u^i
-\]
-admits, for the $k$-fold iterated Riemann--Stieltjes integrals
-\(
-\mathbf X^{i_1,\dots,i_k}_{s,t}:=\int_{s<u_1<\cdots<u_k<t} dx_{u_1}^{i_1}\cdots dx_{u_k}^{i_k},
-\)
-the expansion
-\[
-y_t \;=\; y_s \;+\; \sum_{k=1}^N \ \sum_{i_1,\dots,i_k=1}^d
-\big(D_{V_{i_k}}\cdots D_{V_{i_1}}\mathrm{Id}\big)(y_s)\ \mathbf X^{i_1,\dots,i_k}_{s,t}
-\;+\; R^{(N)}_{s,t},
-\]
-with $\|R^{(N)}_{s,t}\|\le C_N\,\mathrm{Var}(x;[s,t])^{N+1}$. Here $D_{V}F:=(DF)\cdot V$.
-\end{theorem}
-
-\begin{proof}[Outline of the Proof (from the integral form, showing the chain rule)]
-Fix $s<t$. Start directly from
-\[
-y_t-y_s \;=\; \sum_{i=1}^d \int_s^t V_i(y_u)\,dx_u^i.
+y_t \;=\; y_s + \int_s^t V(y_u)\,dx_u .
 \]
 
-\emph{Level 1.}  
-Apply the $0$-th order Taylor formula at $y_s$:
+\begin{lemma}[Fa\`a di Bruno for iterates of a derivation]\label{lem:FDB-L-general} 
+Let $\mathcal{L}_V U := DU[V]$ for a smooth vector field $V:\mathbb{R}^e\to\mathbb{R}^e$, and let $I(y)=y$ denote the identity map. For $m\ge1$ write $\mathcal{L}_V^{m}I$ for the $m$-fold iterate of $\mathcal{L}_V$ applied to $I$ (so $\mathcal{L}_V I=V$ and $\mathcal{L}_V^{m}I=\mathcal{L}_V^{m-1}V$).
+For any smooth $W:\mathbb{R}^e\to\mathbb{R}^r$ and any $N\ge1$,
 \[
-V_i(y_u)
-= V_i(y_s) 
-+ \underbrace{\int_0^1 
-    DV_i\!\big(y_s+\theta(y_u-y_s)\big)
-    [\,y_u-y_s\,]\,d\theta}_{=:E_i(s,u)}.
+\boxed{\;
+\frac{1}{N!}\,\mathcal{L}_V^{N}W
+=\sum_{j=1}^{N}\frac{1}{j!}\!\!\sum_{\substack{m_1+\cdots+m_j=N\\ m_i\ge1}}
+\frac{1}{m_1!\cdots m_j!}\;
+D^{j}W\big[\mathcal{L}_V^{m_1}I,\ldots,\mathcal{L}_V^{m_j}I\big].\;}
 \]
-Integrating in $u$ gives
-\[
-y_t
-= y_s + \sum_i V_i(y_s)\,\mathbf X^i_{s,t} 
-  + \sum_i \int_s^t E_i(s,u)\,dx_u^i,
-\]
-i.e.\ the Euler term with coefficient 
-$D_{V_i}\mathrm{Id}(y_s) = V_i(y_s)$,  
-plus a remainder $\mathcal O(\omega^2)$,  
-where $\omega := \mathrm{Var}(x;[s,t])$.
+\end{lemma}
 
-\medskip
-\emph{Level 2 (explicit substitution into $E_i$; chain rule appears).}  
-Let $h(u) := y_u-y_s$.  
-From the integral form,
-\[
-h(u) \;=\; \sum_{j=1}^d \int_s^u V_j(y_v)\,dx_v^j.
-\]
-Decompose
-\[
-V_j(y_v)
-= V_j(y_s) + \Delta_j(s,v),
-\quad
-\Delta_j(s,v)
-:= \int_0^1 DV_j\!\big(y_s+\lambda(y_v-y_s)\big)
-   [\,y_v-y_s\,]\,d\lambda.
-\]
-
-Then
-\begin{align*}
-\int_s^t E_i(s,u)\,dx_u^i
-&= \int_s^t \!\int_0^1 
-       DV_i\!\big(y_s+\theta h(u)\big)
-       \Big[\,\sum_j \int_s^u 
-             \big(V_j(y_s)+\Delta_j(s,v)\big)\,dx_v^j
-       \Big]
-     d\theta\,dx_u^i \\
-&= \sum_j A_{i,j} + \sum_j B_{i,j},
-\end{align*}
-where
-\begin{align*}
-A_{i,j} 
-&:= \int_s^t \!\int_0^1 
-       DV_i\!\big(y_s+\theta h(u)\big)
-       [\,V_j(y_s)\,]\,d\theta 
-       \;\Big(\int_s^u dx_v^j\Big)\,dx_u^i, \\
-B_{i,j} 
-&:= \int_s^t \!\int_0^1 
-       DV_i\!\big(y_s+\theta h(u)\big)
-       \Big[\,\int_s^u \Delta_j(s,v)\,dx_v^j\Big]
-       d\theta\,dx_u^i.
-\end{align*}
+\begin{proof}[Proof by induction on $N$]
+\emph{Base $N=1$.} $(1/1!)\,\mathcal{L}_V W=DW[V]$, and the right-hand side has only $j=1$, $m_1=1$.
 
 \smallskip
-\noindent\textit{Main second-order term (from $A_{i,j}$).}  
-Split
+\emph{Inductive step.} Let
 \[
-A_{i,j}
-= \int_s^t DV_i(y_s)[V_j(y_s)]
-    \;\Big(\int_s^u dx_v^j\Big)\,dx_u^i
- + \mathcal O(\omega^3).
+\mathcal{F}_N
+:=\sum_{j=1}^{N}\frac{1}{j!}\!\!\sum_{m_1+\cdots+m_j=N}
+\frac{1}{m_1!\cdots m_j!}\;
+D^{j}W\big[\mathcal{L}_V^{m_1}I,\ldots,\mathcal{L}_V^{m_j}I\big].
 \]
-The leading part equals
+Assume $\mathcal{F}_N=\frac{1}{N!}\mathcal{L}_V^{N}W$.
+
+\noindent
+\noindent\textbf{Step 1 (expanded: Fr\'echet chain/product rule).}
+Fix the ordered tuple $(m_1,\dots,m_j)$ and set
 \[
-DV_i(y_s)[V_j(y_s)]\,\mathbf X^{j,i}_{s,t}
-= \big(D_{V_j}V_i\big)(y_s)\,\mathbf X^{j,i}_{s,t}
-= \big(D_{V_j}D_{V_i}\mathrm{Id}\big)(y_s)\,\mathbf X^{j,i}_{s,t},
+U_i(y):=(\mathcal{L}_V^{m_i}I)(y),\qquad
+Z(y):=D^{j}W(y)\big[\,U_1(y),\dots,U_j(y)\,\big].
 \]
-by the chain rule and $V_i = D_{V_i}\mathrm{Id}$.
+Introduce
+\[
+G:\ \mathbb{R}^e\times(\mathbb{R}^e)^j\to\mathbb{R}^r,
+\qquad
+G(y;u_1,\dots,u_j):=D^{j}W(y)[u_1,\dots,u_j],
+\]
+\[
+\Phi(y):=\big(y,\ U_1(y),\dots,U_j(y)\big),
+\]
+so that \(Z=G\circ \Phi\).
 
 \smallskip
-\noindent\textit{Error terms (from $B_{i,j}$).}  
-From $\|\Delta_j(s,v)\| \lesssim \omega(s,v)$,  
+\emph{Differentiate each piece.}
+For $H=(h_0,h_1,\dots,h_j)$,
 \[
-\left\|\int_s^u \Delta_j(s,v)\,dx_v^j\right\| 
-\lesssim \omega(s,u)^2,
+DG(y;u_1,\dots,u_j)[H]
+=
+D^{j+1}W(y)[h_0,u_1,\dots,u_j]
+\;+\;\sum_{i=1}^j D^{j}W(y)[u_1,\dots,h_i,\dots,u_j],
 \]
-so $B_{i,j} = \mathcal O(\omega^3)$ after integration.
+by multilinearity/symmetry of $D^jW$.
+Also,
+\[
+D\Phi(y)[h]=\big(h,\ DU_1(y)[h],\dots,DU_j(y)[h]\big).
+\]
 
 \smallskip
-Collecting terms over $i,j$ yields the level-2 contribution
+\emph{Apply the chain rule with the derivation $\mathcal{L}_V=DU[V]$.}
+Since $(\mathcal{L}_VZ)(y)=DZ(y)[V(y)]=DG(\Phi(y))\big[D\Phi(y)[V(y)]\big]$, we get
 \[
-\sum_{i,j} 
-   \big(D_{V_j}D_{V_i}\mathrm{Id}\big)(y_s)\,\mathbf X^{j,i}_{s,t}
+\begin{aligned}
+\mathcal{L}_VZ(y)
+&= D^{j+1}W(y)\big[V(y),U_1(y),\dots,U_j(y)\big]\\
+&\quad+\sum_{i=1}^j D^{j}W(y)\big[U_1(y),\dots,DU_i(y)[V(y)],\dots,U_j(y)\big].
+\end{aligned}
 \]
-plus a remainder $\mathcal O(\omega^3)$.
 
-\medskip
-\emph{Level 3 and higher.}  
-Proceed similarly:  
-retain higher Taylor terms, substitute $h$ by its lower-order approximation, freeze coefficients at $y_s$, and integrate.  
-Each derivative of $V$ applied to frozen vectors $V_\bullet(y_s)$ turns into a composition $D_{V_\bullet}\cdots D_{V_i}\mathrm{Id}$ by the chain rule.  
-Nested integrals produce $\mathbf X^{\cdot}_{s,t}$, while terms with extra $h$ factors go into the higher-order remainder.  
-Induction completes the proof.
+\smallskip
+\emph{Identify the $DU_i(y)[V(y)]$ terms.}
+By definition of $\mathcal{L}_V$ and iterates,
+\[
+DU_i(y)[V(y)] \;=\; (\mathcal{L}_V U_i)(y)
+\;=\; \mathcal{L}_V\big(\mathcal{L}_V^{m_i}I\big)(y)
+\;=\; (\mathcal{L}_V^{m_i+1}I)(y).
+\]
+
+\smallskip
+\emph{Conclusion.} Plugging this into the previous line yields
+\[
+\boxed{%
+\begin{aligned}
+\mathcal{L}_V\!\Big(D^{j}W(y)[U_1(y),\dots,U_j(y)]\Big)
+&= D^{j+1}W(y)\big[V(y),U_1(y),\dots,U_j(y)\big]\\
+&\quad + \sum_{i=1}^j D^{j}W(y)\big[U_1(y),\dots,\mathcal{L}_V^{m_i+1}I(y),\dots,U_j(y)\big].
+\end{aligned}}
+\]
+
+\noindent
+\textbf{Step 2.} Summing gives
+\[
+\begin{aligned}
+\mathcal{L}_V\mathcal{F}_N
+&= \sum_{j=1}^{N}\frac{1}{j!}
+   \sum_{m_1+\cdots+m_j=N}\frac{1}{m_1!\cdots m_j!}
+   \Big\{ \\
+&\qquad D^{j+1}W\big[V,\mathcal{L}_V^{m_1}I,\ldots,\mathcal{L}_V^{m_j}I\big] \\
+&\qquad + \sum_{i=1}^j
+   D^{j}W\big[\mathcal{L}_V^{m_1}I,\ldots,\mathcal{L}_V^{m_i+1}I,\ldots,\mathcal{L}_V^{m_j}I\big]
+   \Big\}.
+\end{aligned}
+\tag{$\ast$}
+\]
+
+\noindent
+\textbf{Step 3.} \emph{Insert-a-1 reindexing:} set $j':=j+1$, $(n_1,\dots,n_{j'})=(1,m_1,\dots,m_j)$.
+By symmetry of $D^{j'}W$, this is exactly the sub-sum of the $(N\!+\!1)$-case with at least one $n_\ell=1$, with weight $1/j'!$.
+
+\noindent
+\textbf{Step 4.} \emph{Bump-one reindexing:} for each $i$, set $n_i:=m_i+1$, $n_\ell:=m_\ell$ ($\ell\neq i$).
+Summing over $i$ exhausts all tuples with every $n_\ell\ge2$, again with the correct $1/j'!$ weight after symmetrisation.
+
+\noindent
+\textbf{Step 5.} Hence $\mathcal{L}_V\mathcal{F}_N=(N\!+\!1)\mathcal{F}_{N+1}$.
+
+\noindent
+\textbf{Step 6.} By the induction hypothesis,
+$\mathcal{L}_V\mathcal{F}_N=(1/N!)\mathcal{L}_V^{\,N+1}W$, so $\mathcal{F}_{N+1}=(1/(N\!+\!1)!)\mathcal{L}_V^{\,N+1}W$.
 \end{proof}
 
 
-\begin{proposition}[Remainder bound]
-Let $\omega(s,t) := \mathrm{Var}(x;[s,t])$ be the variation of $x$ on $[s,t]$.
-Then there exists $C_N>0$ (depending on $\sup\|D^\ell V_i\|$, $\ell\le N+1$) such that
+\begin{theorem}[RS expansion along a scalar control]\label{thm:CN}
+For each $N\ge1$ and $t$ near $s$,
 \[
-\|R^{(N)}_{s,t}\| \le C_N \ \omega(s,t)^{N+1}.
+\boxed{\;
+y_t
+= y_s+\sum_{m=1}^{N}\frac{(x_t-x_s)^m}{m!}\,\mathcal{L}_V^{m}I(y_s)
+\;+\;o\big(|x_t-x_s|^{N}\big).
+\;}
 \]
-If $x$ is $C^1$, then $\omega(s,t) \lesssim |t-s|$, so $\|R^{(N)}_{s,t}\| = O(|t-s|^{N+1})$.
-\end{proposition}
+\end{theorem}
 
-\medskip
-\noindent\textbf{Comment.} This expansion is the smooth-path analogue of the signature/rough path expansion: the coefficients are given by iterated Lie derivatives of the identity along the vector fields $V_i$, and the ``monomials'' are the iterated integrals of the driving signal $x$.
+\begin{proof}
+We prove by induction on $N$.
+
+\emph{Base $N=1$.} Taylor to order $0$ at $y_s$ gives $V(y_u)=V(y_s)+o(1)$ as $u\downarrow s$, so
+\[
+y_t-y_s=\int_s^t V(y_u)\,dx_u=V(y_s)(x_t-x_s)+o(|x_t-x_s|).
+\]
+
+\noindent\textit{RS identity (1D).} For $q\ge0$ and BV $x$,
+\[
+\int_s^t (x_u-x_s)^q\,dx_u=\frac{(x_t-x_s)^{q+1}}{q+1}.
+\]
+
+\emph{Inductive step $C^N\Rightarrow C^{N+1}$.}
+Assume
+\[
+y_u-y_s=\sum_{m=1}^{N}\frac{(x_u-x_s)^m}{m!}\,\mathcal{L}_V^{m}I(y_s)+o(|x_u-x_s|^{N})
+\quad\text{for }u\in[s,t].
+\tag{$C^N@u$}
+\]
+Taylor of $V$ at $y_s$ to order $N$:
+\[
+V(y_u)=\sum_{j=0}^{N}\frac{1}{j!}D^{j}V(y_s)\big[(y_u-y_s)^{\otimes j}\big]
++o(\|y_u-y_s\|^{N}).
+\tag{$T^N$}
+\]
+Insert $(T^N)$ into the integral equation and substitute $(C^N@u)$ in each $(y_u-y_s)^{\otimes j}$, expand multilinearly, and integrate termwise. For $q:=m_1+\cdots+m_j$,
+\[
+\int_s^t (x_u-x_s)^q\,dx_u=\frac{(x_t-x_s)^{q+1}}{q+1}.
+\]
+Thus the contribution at order $N\!+\!1$ (i.e.\ $q=N$) has coefficient
+\[
+\sum_{j=1}^{N}\frac{1}{j!}\!\!\sum_{\substack{m_1+\cdots+m_j=N\\ m_i\ge1}}
+\frac{1}{m_1!\cdots m_j!}\;
+D^{j}V(y_s)\big[\mathcal{L}_V^{m_1}I,\dots,\mathcal{L}_V^{m_j}I\big].
+\]
+By Lemma~\ref{lem:FDB-L-general}, this equals $\frac{1}{N!}\,\mathcal{L}_V^{N}V(y_s)=\frac{1}{N!}\,\mathcal{L}_V^{N+1}I(y_s)$, hence the new term is
+\[
+\frac{(x_t-x_s)^{N+1}}{(N+1)!}\,\mathcal{L}_V^{N+1}I(y_s).
+\]
+All remaining pieces are $o(|x_t-x_s|^{N+1})$, which proves the $(N\!+\!1)$ case.
+\end{proof}
+
+\begin{remark}
+The $o(|x_t-x_s|^{N})$ in Theorem~\ref{thm:CN} is uniform as $t\downarrow s$
+and comes from integrating $o(\|y_u-y_s\|^{N})$ against a BV measure $dx_u$,
+using $\|y_u-y_s\|\lesssim |x_u-x_s|$ on small intervals.
+Everything is in Fr\'echet notation; symmetry of $D^jV$ lets us fix any order of arguments when grouping contributions.
+\end{remark}
+
+\section*{Multidimensional driver: $x:[0,T]\to\mathbb{R}^d$ and $V=(V_1,\dots,V_d)$}
+
+Let $V_i:\mathbb{R}^e\to\mathbb{R}^e$ be $C^\infty$ and define the first-order differential operators (derivations)
+\[
+L_i U := DU[\;V_i\;],\qquad i=1,\dots,d.
+\]
+For a \emph{word} $I=i_1\cdots i_m$ (length $|I|=m\ge1$) on the alphabet $\{1,\dots,d\}$ set
+\[
+L_I:=L_{i_1}\cdots L_{i_m},\qquad
+V_I:=L_{i_1}\cdots L_{i_{m-1}}\,V_{i_m}\quad(\text{with }V_{i}:=V_i).
+\]
+For $m=0$ use the empty word $\emptyset$ with $L_{\emptyset}:=\mathrm{Id}$.
+
+\noindent\textit{Ordered contiguous block partitions.}
+If $I=i_1\cdots i_m$ and $1\le j\le m$, an ordered $j$-block partition of $I$
+is specified by indices $1\le r_1<\cdots<r_{j-1}<m$ and
+\[
+I^{(1)}:=i_1\cdots i_{r_1},\quad
+I^{(2)}:=i_{r_1+1}\cdots i_{r_2},\ \dots,\ 
+I^{(j)}:=i_{r_{j-1}+1}\cdots i_m.
+\]
+We write $I=I^{(1)}\|\cdots\| I^{(j)}$.
+
+For $x\in \mathrm{BV}([s,t];\mathbb{R}^d)$ define the iterated Riemann–Stieltjes integrals
+\[
+X^I_{s,t}
+:=\!\!\int_{s<u_1<\cdots<u_m<t}\!\!dx^{i_1}_{u_1}\cdots dx^{i_m}_{u_m},\qquad X^{\emptyset}_{s,t}:=1.
+\]
+
+\begin{lemma}[Word Fa\`a di Bruno for noncommuting derivations]\label{lem:word-FDB}
+For any smooth vector field $W$ and any word $I=i_1\cdots i_m$ with $m\ge1$,
+\[
+\boxed{\;
+L_I W
+=\sum_{j=1}^{m}\ \sum_{I=I^{(1)}\|\cdots\| I^{(j)}}
+D^{\,j}W\big[\,V_{I^{(1)}},\dots,V_{I^{(j)}}\,\big].
+\;}
+\]
+\emph{Proof (expanded sketch).}
+\begin{enumerate}[leftmargin=*, itemsep=0.25em]
+\item \textbf{Base $m=1$.} $L_{i_1}W=DW[V_{i_1}]$, which is the $j=1$ term with partition $I^{(1)}=i_1$.
+\item \textbf{Induction hypothesis.} Assume the statement for words of length $m-1$.
+\item \textbf{Decompose.} Write $I=i_1 I'$ with $|I'|=m-1$ so that $L_I W=L_{i_1}(L_{I'}W)$.
+\item \textbf{Apply the IH.} Expand $L_{I'}W=\sum_{j=1}^{m-1}\ \sum_{I'=J^{(1)}\|\cdots\|J^{(j)}} D^{j}W[\,V_{J^{(1)}},\dots,V_{J^{(j)}}\,]$.
+\item \textbf{Act with $L_{i_1}$.} Use the chain/product rule:
+\[
+L_{i_1}\!\Big(D^{j}W[\cdots]\Big)
+= D^{j+1}W\big[V_{i_1},\cdots\big] + \sum_{r=1}^j D^{j}W\big[\cdots,\,L_{i_1}V_{J^{(r)}},\,\cdots\big].
+\]
+\item \textbf{Identify blocks.} Note $L_{i_1}V_{J^{(r)}}=V_{i_1 J^{(r)}}$ (prepend $i_1$ to the $r$-th block).
+\item \textbf{Match partitions.} The first term inserts a new leading block $(i_1)$ giving partitions $I=(i_1)\|J^{(1)}\|\cdots\|J^{(j)}$.
+The second term merges $i_1$ into the $r$-th block, giving $I=J^{(1)}\|\cdots\|(i_1J^{(r)})\|\cdots\|J^{(j)}$.
+\item \textbf{Exhaustion.} As $j$ and the partition of $I'$ vary, these two constructions produce \emph{all} ordered contiguous block partitions of $I$.
+\item \textbf{Conclude.} Summing all contributions yields the stated formula for $|I|=m$.
+\end{enumerate}
+\end{lemma}
+
+\begin{lemma}[Time-ordering by Fubini (shuffle with appended letter)]\label{lem:fubini-append}
+Let $x:[0,T]\to\mathbb{R}^d$ be of bounded variation. For nonempty words $J_1,\ldots,J_j$ over $\{1,\ldots,d\}$ and $k\in\{1,\ldots,d\}$,
+\[
+\int_s^t X^{J_1}_{s,u}\cdots X^{J_j}_{s,u}\,dx^k_u
+\;=\;
+\sum_{\sigma\in\mathrm{Sh}(J_1,\ldots,J_j)}
+X^{\sigma(J_1,\ldots,J_j)\,k}_{s,t},
+\]
+where $\mathrm{Sh}(J_1,\ldots,J_j)$ is the set of \emph{shuffles} (merges) that preserve the internal order within each $J_\ell$.
+\end{lemma}
+
+\begin{proof}
+Write $J_\ell=(i^{(\ell)}_1\cdots i^{(\ell)}_{m_\ell})$ and $M:=m_1+\cdots+m_j$.
+For each $\ell$,
+\[
+X^{J_\ell}_{s,u}
+=\int_{s<u^{(\ell)}_1<\cdots<u^{(\ell)}_{m_\ell}<u}
+dx^{\,i^{(\ell)}_1}_{u^{(\ell)}_1}\cdots dx^{\,i^{(\ell)}_{m_\ell}}_{u^{(\ell)}_{m_\ell}}.
+\]
+Thus
+\[
+\int_s^t X^{J_1}_{s,u}\cdots X^{J_j}_{s,u}\,dx^k_u
+=
+\int_{s<u^{(\ell)}_r<u<t\ \forall\,\ell,r}
+\Big(\prod_{\ell=1}^j\prod_{r=1}^{m_\ell} dx^{\,i^{(\ell)}_r}_{u^{(\ell)}_r}\Big)\,dx^{\,k}_u,
+\]
+where the domain imposes the order inside each block $J_\ell$ and the constraint $u^{(\ell)}_{m_\ell}<u$ for all $\ell$ (so $u$ is the largest time).
+
+Since $x$ has bounded variation, each $dx^i$ defines a finite signed (Lebesgue–Stieltjes) measure on $[s,t]$, and the product measure over the finite-volume domain above has finite total variation. Hence Tonelli/Fubini apply, allowing us to reorder integrations and decompose the domain into a disjoint union of simplexes indexed by shuffles:
+\[
+\big\{s< u^{(\ell)}_r < u < t\big\}
+=\bigsqcup_{\sigma\in\mathrm{Sh}(J_1,\ldots,J_j)}
+\big\{s< v_1<\cdots<v_M<u<t\big\},
+\]
+where on the $\sigma$-piece the sequence
+\(
+(dx^{\,i^{(\ell)}_r}_{u^{(\ell)}_r})_{\ell,r}
+\)
+is read in the merged order $\sigma(J_1,\ldots,J_j)$.
+On each such piece we therefore get
+\[
+\int_{s<v_1<\cdots<v_M<u<t}
+dx^{\,(\sigma(J_1,\ldots,J_j))_1}_{v_1}\cdots
+dx^{\,(\sigma(J_1,\ldots,J_j))_M}_{v_M}\,dx^{\,k}_u
+=
+X^{\sigma(J_1,\ldots,J_j)\,k}_{s,t}.
+\]
+Summing over $\sigma$ yields the claim.
+\end{proof}
+
+\begin{theorem}[RS expansion for $dy=\sum_{i=1}^d V_i(y)\,dx^i$]\label{thm:multidim-CN}
+Let $x:[0,T]\to\mathbb{R}^d$ be of bounded variation and $V_i\in C^\infty$.
+Then for each $N\ge1$ and $t$ near $s$,
+\[
+\boxed{\;
+y_t
+= y_s \;+\; \sum_{1\le |I|\le N} V_I(y_s)\,X^I_{s,t}
+\;+\; R_N(s,t),
+\qquad R_N(s,t)=o\!\Big(\sum_{|I|=N} |X^I_{s,t}|\Big).
+\;}
+\]
+\emph{Proof (expanded scheme).}
+\begin{enumerate}[leftmargin=*, itemsep=0.25em]
+\item Write the equation in integral form: $y_t-y_s=\int_s^t \sum_{k=1}^d V_k(y_u)\,dx^k_u$.
+\item Fix $N$ and assume the inductive hypothesis on $[s,u]$: $y_u-y_s=\sum_{1\le |J|\le N} V_J(y_s)\,X^J_{s,u}+o$.
+\item Taylor-expand each $V_k$ at $y_s$ to order $N$: $V_k(y_u)=\sum_{j=0}^{N}\frac{1}{j!}D^{j}V_k(y_s)[(y_u-y_s)^{\otimes j}]+o$.
+\item Substitute the Taylor series into the integral equation.
+\item In each term $D^{j}V_k(y_s)[(y_u-y_s)^{\otimes j}]$, substitute the inductive expansion of $y_u-y_s$, take the $j$-fold tensor power, and expand multilinearly; retain combinations with total inner degree $\le N$.
+% Replace Step 6 in the proof of Theorem~\ref{thm:multidim-CN} with:
+\item
+By Lemma~\ref{lem:fubini-append},
+\[
+\int_s^t X^{J_1}_{s,u}\cdots X^{J_j}_{s,u}\,dx^k_u
+=
+\sum_{\sigma\in\mathrm{Sh}(J_1,\ldots,J_j)}
+X^{\sigma(J_1,\ldots,J_j)\,k}_{s,t}.
+\]
+Consequently, the coefficient of a fixed word $I$ is obtained by summing over those shuffles that produce $I$; equivalently, this is the sum over \emph{ordered block partitions} $I=J_1\|\cdots\|J_j\,k$, which is the form used in the next step.
+\item The tensor coefficient attached to $X^{I}_{s,t}$ equals $\sum \frac{1}{j!}\,D^{j}V_k(y_s)[V_{J_1},\dots,V_{J_j}]$ over all ordered block partitions $I=J_1\|\cdots\|J_j\,k$.
+\item Apply Lemma~\ref{lem:word-FDB} with $W=V_k$ and the inner word $I^-:=J_1\cdots J_j$ to collapse the sum to $L_{I^-}V_k(y_s)=V_{I}(y_s)$.
+\item Collect all words $|I|\le N$ to obtain $y_t-y_s=\sum_{1\le |I|\le N} V_I(y_s)X^I_{s,t}+R_N(s,t)$.
+\item Bound the remainder as $o\!\big(\sum_{|I|=N}|X^I_{s,t}|\big)$ by grouping terms of total degree $\ge N+1$ and using small-interval estimates and BV norms.
+\end{enumerate}
+\end{theorem}
 
 \end{document}
