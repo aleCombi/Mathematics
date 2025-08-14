@@ -149,3 +149,142 @@ One can obviously redefine it on any parametrizations.
     Let \((x_n) \subset C^{1-var}([0,1],\R^d), \sup_n |x_n|_{1-var,[0,1]} < \infty\), uniformly convergent to some \(x \in C^{1-var}([0,T],\R^d)\).
     Then \(S_N(x_n)_{0,\cdot}\) converges uniformly to \(S_N(x)_{0,\cdot}\).
 \end{proposition}
+
+\subsection{Lie algebra \(\mathfrak{t}^N(\R^d)\) and Lie group \(1 + \mathfrak{t}^N(\R^d)\)}
+
+\begin{definition}
+    \begin{equation}
+        \mathfrak{t}^N(\R^d) = \{ g \in T^N(\R^d): \pi_0(g) = 0 \}
+    \end{equation}
+\end{definition}
+
+\subsubsection{The group \(1 + \mathfrak{t}^N(\R^d)\)}
+
+\begin{lemma}
+    Any element \(1 + a \in 1 + \mathfrak{t}^N(\R^d)\) has an inverse with respect to \(\otimes\) given by
+    \begin{equation}
+        (1 + a)^{-1} = \sum_{k=0}^{N} (-1)^{k} a^{\otimes k}.
+    \end{equation}
+\end{lemma}
+
+\begin{proposition}
+    The space \(1 + \mathfrak{t}^N(\R^d)\) is a Lie group (group which is a smooth manifold with smooth group operation and inversion) with respect to \(\otimes\).
+\end{proposition}
+\begin{proof}[Outline of the proof]
+    \(1 + \mathfrak{t}^N(\R^d)\) is an affine subspace of \(T^N(\R^d)\), diffeomorphic to \(\mathfrak{t}^N(\R^d)\) which is diffeomorphic to \(\R^{d + d^2 + ... + d^N}\), hence a smooth manifold.
+    That \(\otimes\) and \(^{-1}\) are smooth follows from because writing them in cohordinates they are polynomial.
+    The topology is induced by the metric \(\sup(\pi_i(g - h))\) induced by the norm on \(T^N\).
+    Note that it is equivalent to the usual euclinean norm.
+\end{proof}
+
+\subsubsection{The Lie algebra \(\mathfrak{t}^N(\R^d)\) and the exponential map}
+
+\begin{proposition}
+    \(\mathfrak{t}^N(\R^d), +, ., [\cdot, \cdot] \) is a Lie algebra.
+    That is the commutator (Lie bracket) \([g,h] := g \otimes h - h \otimes g\) satisfies the Jacobi identity:
+    \begin{equation}
+        [g,[h,k]] + [h,[k,g]] + [k,[h,g]] = 0.
+    \end{equation}
+\end{proposition}
+
+\begin{definition}
+    The exponential is defined as
+    \begin{align}
+        \exp&: \mathfrak{t}^N(\R^d) \rightarrow 1 + \mathfrak{t}^N(\R^d) \\
+        a &\mapsto 1 + \sum_{k=1}^N \frac{a^{\otimes k}}{k!}.
+    \end{align}
+    The logarithm is defined as
+    \begin{align}
+        \log&: 1 + \mathfrak{t}^N(\R^d) \rightarrow \mathfrak{t}^N(\R^d) \\
+        1 + a &\mapsto \sum_{k=1}^N (-1)^{k+1} \frac{a^{\otimes k}}{k}.
+    \end{align}
+\end{definition}
+
+\begin{lemma}
+    The exponential and logarithm are inverse of one another.
+\end{lemma}
+\begin{proof}
+    Consider the algebra of formal power series, where the relation holds (e.g. this can be proved via derivation of the composition, which is constantly \(1\)).
+    Then observe that those maps commute with the quotient, making the result trivial.
+\end{proof}
+
+\begin{example}
+    Fix \(a \in \R^d \simeq \pi_1(\mathfrak{t}^N(\R^d))\). The step-N signature of \(t \in [0,1] \mapsto ta\) is
+    \begin{align}
+        S_N(x)_{0,1} &= 1 + \sum_{k=1}^N \int_{0 < r_1 < \ldots < r_k < 1} dx_{r_1} \otimes \ldots \otimes dx_{r_k} \\
+        &= \exp(a).
+    \end{align}
+\end{example}
+
+\subsubsection{The Cambpell-Baker-Hausdorff formula}
+
+\begin{definition}[\(\ad\) map]
+    The linear map 
+    \begin{equation}
+        (\ad a) d : d \in \mathfrak{t}^N(\R^d) \mapsto [a,d] \in \mathfrak{t}^N(\R^d).
+    \end{equation}
+\end{definition}
+
+\begin{lemma}
+    For all \(a, d \in \mathfrak{t}^N(\R^d)\) we have
+    \begin{equation}
+        \exp(a) \otimes d \otimes \exp(-a) = e^{\ad a} d
+    \end{equation}
+    where
+    \begin{equation}
+        e^{\ad a} \equiv \sum_{n \ge 0} \frac{1}{n!} (\ad a)^n.
+    \end{equation}
+    As a consequence 
+    \begin{equation}
+        e^{\ad c} = e^{\ad a} \circ e^{\ad b}
+    \end{equation}
+    where \(c = \log(\exp(a) \otimes \exp(b))\).
+\end{lemma}
+\begin{proof}[Outline of the proof]
+    Define \(\rho_t = \exp(at) \otimes d \otimes \exp(-at)\) and take its derivative in \(t\).
+    Note that its derivative is \( (\ad a) \rho_t \).
+\end{proof}
+
+\begin{lemma}
+    Assume \(t \mapsto c_t \mathfrak{t}^N(\R^d)\) is continuously differentiable.
+    Then 
+    \begin{equation}
+        \exp(c_t) \otimes \frac{d}{dt} \exp(-c_t) = - G (\ad a) \dot{c_t}.
+    \end{equation}
+    where 
+    \begin{equation}
+        G(z) = \frac{e^z - 1}{z} = \sum_{n \ge 0} \frac{1}{(n+1)!} z^n.
+    \end{equation}
+\end{lemma}
+\begin{proof}[Outline of proof]
+    Set \( b_{s,t} = \exp(s c_t) \otimes \frac{d}{dt} \exp(-s c_t) \) and take the derivative in \(s\).
+    The result is the equation
+    \[
+    \frac{d}{ds} b_{s,t} = [c_t, b_{s,t}] - \dot{c_t} = (\ad c_t) (b_{s,t}) - \dot{c_t}.
+    \]
+    Now note that \((\ad c_t)\) is a linear operator, hence on can use a variation-of-constant (Duhamel) method to solve the equation.
+\end{proof}
+
+\begin{theorem}[Cambpell-Baker-Hausdorff]
+    Let \(a, b \in \mathfrak{t}^N(\R^d)\). Then
+    \begin{equation}
+        \log[\exp(a) \otimes \exp(b)] = b + \int_0^1 H(e^{t \ad a} \circ e^{\ad b}) a dt 
+    \end{equation}
+    where
+    \begin{equation}
+        H(z) = \frac{\ln z}{z - 1} = \sum_{n \ge 0} \frac{(-1)^n}{n + 1} (z - 1)^n.
+    \end{equation}
+\end{theorem}
+\begin{proof}[Outline of the proof]
+    Consider that on both sides we have actually finite series, or polynomials of degree less or equal than \(N\).
+    Hence it's sufficient to prove the equation for \(a,b\) in a neighbourhood of \(0\).
+    Consider \(c_t := \log(e^{ta} \otimes e^b).\)
+    It satisfies \( \exp(c_t) \otimes \frac{d}{dt} \exp(-c_t) = -a.\)
+    Using the Lemma we get \(a = G(\ad c_t) \dot{c}_t.\)
+    From the previous Lemma we also have \( \ad c_t = \ln( e^{t \ad a} \circ e^{\ad b})\).
+    Observe that \( G(\ln(z)) H(z) = 1\) near \(z = 1\). Hence we can get
+    \[
+        \dot{c}_t = H(e^{t \ad a} \circ e^{\ad b}) a.
+    \]
+    Integrating yields thesis.
+\end{proof}
