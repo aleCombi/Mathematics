@@ -495,4 +495,31 @@ Consequently, the coefficient of a fixed word $I$ is obtained by summing over th
 \end{enumerate}
 \end{theorem}
 
+
+\section{Variation of constant}
+
+Consider the differential equation 
+\[
+   \dot{y}_s = A y_s + h,
+\]
+where \(A\) is a linear operator. 
+We can consider the transform \(u_s = \exp(-sA) y_s\).
+The equation becomes
+\[
+   \dot{u}_s = \exp(-sA) h.
+\]
+Integrating yields 
+\[
+   y_s = \exp(sA) y_0 + \int_0^s \exp((s - u)A) h du.
+\]
+
+In case \(h\) is constant we have:
+\[
+   \int_0^s \exp((s - u)A) h du = f_s(A)h.
+\]
+and 
+\[
+   f_s(z) := \frac{\exp(sz) - 1}{z} = \sum_{k=0}^\infty \frac{s^{k+1}}{(k+1)!} z^{k}.
+\]
+
 \end{document}
