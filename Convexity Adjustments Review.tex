@@ -1,0 +1,510 @@
+\documentclass[reviewdoc]{pmv_report} %draftcopy,showlabels
+
+\newcommand{\ZcbD}{\mathit{P}^{D}}
+\newcommand{\ZcbF}{\mathit{P}^{F}}
+\newcommand{\ZcbCtD}{\mathit{P}^{\text{\mathcal{C},CtD}}}
+\newcommand{\ZcbFund}{\mathit{P}^{\text{Fund}}}
+
+\newcommand{\DcFund}{\mathit{\alpha}^{\text{Fund}}}
+\newcommand{\DcCmp}{\mathit{\alpha}^{\text{cmp}}}
+
+
+\newcommand{\DiscD}{\mathit{D\!F}^{D}}
+\newcommand{\DiscF}{\mathit{D\!F}^{F}}
+\newcommand{\DiscCtD}{\mathit{D\!F}^{\mathcal{C},\text{CtD}}}
+%\newcommand{\CF}{\mathit{C\!F}}
+%\newcommand{\ZcbF}{\mathit{P}^{F}}
+\newcommand{\DcF}{\mathit{\alpha}^{F}}
+
+\newcommand{\Disc}{\mathit{D\!F}^{\text{d}}}
+\newcommand{\Discf}{\mathit{D\!F}^{\text{f}}}
+\newcommand{\Zcbf}{\mathit{P}^{\text{f}}}
+\newcommand{\FV}{\mathit{F\!V}}
+\newcommand{\nCF}{n}
+\newcommand{\RF}{\mathit{R\!F}}
+\newcommand{\RL}{\mathit{R\!L}}
+\newcommand{\accrued}{I_{\text{accrued}}}
+
+\DeclareMathOperator{\AvgSwap}{V_{\text{avg-swap}}}
+\DeclareMathOperator{\CmpSwap}{V_{\text{cmp-swap}}}
+\DeclareMathOperator{\TenorSwap}{V_{\text{tenor-swap}}}
+\DeclareMathOperator{\Swap}{V_{\text{swap}}}
+\DeclareMathOperator{\CMS}{V_{\text{CMS}}}
+\DeclareMathOperator{\Fxd}{V_{\text{fxd}}}
+\DeclareMathOperator{\Flt}{V_{\text{flt}}}
+\DeclareMathOperator{\ZCBPO}{V_{\text{ZCBPO}}}
+\DeclareMathOperator{\BankAccount}{\mathcal{B}}
+\DeclareMathOperator{\Margin}{\mathcal{M}}
+\DeclareMathOperator{\Annuity}{\mathcal{A}}
+\DeclareMathOperator{\SwapRate}{\mathcal{S}}
+\DeclareMathOperator{\ShiftedSwapRate}{\mathcal{X}}
+
+\begin{document}
+
+\Title{Review Report}
+\System{Murex, Quark}
+\Subject{Convexity Adjustments}
+\SignOff{Not Applicable}
+\Settings{Not Applicable}
+\ColophonEntry{1.0}{S. Borst}{PMV team}{Initial review.}{2021/11/22}
+\ColophonEntry{2.0}{S. Borst, N. Borovykh, A. Combi}{PMV team}{Update for periodic review 2022.}{2022/11/22}
+\ColophonEntry{3.0}{S. Borst, N. Borovykh, A. Combi, Y. Smirnova}{PMV team}{Update for periodic review 2023.}{2023/11/20}
+\ColophonEntry{4.0}{S. Borst, A. Combi, D. Le}{PMV team}{Update for periodic review 2024.}{2024/11/18}
+\ColophonEntry{5.0}{A. Combi, D. Le, M. Blokland}{FMT team}{Update for periodic review 2025.}{2025/10/09}
+\ColophonEntry{6.0}{A. Combi, A. Atanasov, D. Le}{FMT team}{Update for periodic review 2026.}{2026/03/02}
+
+\newcommand{\cintroParI}{
+For the pricing of financial derivatives, commonly expectations of stochastic variables (e.g., stochastic rates) have to be calculated.
+The stochastic variable (or underlying) has a corresponding underlying measure, often referred to as the natural measure.
+If the expectation of a stochastic variable is calculated under a different measure than the natural measure, this gives rise to a convexity adjustment.
+For the pricing of financial derivatives, neglecting convexity adjustments can lead to incorrect prices and sensitivities.
+}
+\newcommand{\cintroParII}{
+For efficiency purposes, it is desirable to have simple numerical calculations, preferably analytical, in order to calculate the Net Present Value (NPV) and sensitivities for derivatives.
+To do so, often additional approximations are necessary.
+These additional approximations can only be taken if the required accuracy is still achieved.
+The type of additional approximations of interest is the approximation of neglecting a convexity adjustment.
+A convexity adjustment is a non-linear term in the valuation.
+By neglecting a convexity adjustment, a risk-factor is removed from the valuation, since the impact of volatility and/or correlation is being ignored.
+However, the impact of doing so can be negligible under specific conditions.
+When giving sign-off for pricing functions that can be used to calculate the NPV and sensitivities for derivatives these specific conditions are key.
+Typically, FMT imposes limitations such that these specific conditions are met.
+Meaning that within the limitations, neglecting a convexity adjustment is justifiable.
+}
+\newcommand{\cintroParIII}
+{
+FMT always spends considerable time and effort on this important topic during validations and periodic reviews.
+As such, many analyses and limitations are in place.
+}
+\newcommand{\cintroParIV}
+{
+As of 2021, FMT maintains an overview with information about the calculated and neglected convexity adjustments, and the associated validation deliverables, that are in place for currently signed-off pricing functions.
+Every calculated and neglected convexity adjustment should be properly explained within at least one validation report.
+Furthermore, if required, an impact analysis should be available and proper limitations should be imposed.
+}
+\newcommand{\cintroParV}
+{
+The convexity adjustment overview, \textit{ConvexityAdjustments.xlsx}~\cite{ConvexityAdjustmentsWb}, enables FMT to assess where further improvements are necessary.
+These improvements should in principle be made during validations.
+However, they can also be made during model category reviews and system level item reviews, such as this one.
+}
+\newcommand{\cintroParVI}
+{
+The main goal of this periodic review is to keep the convexity adjustment overview up-to-date.
+Furthermore, this report also explains the importance of convexity adjustments from a general perspective.
+The focus of this report is not on individual convexity adjustments, it will not contain information about the impact of neglecting each convexity adjustment.
+This should be reflected by the validation deliverables, the validation report and associated settings tables.
+Only a high-level summary of this information should be added to the convexity adjustment overview.
+}
+\newcommand{\issueactionI}
+{
+  \item[\textbf{Issue 1}] It needs to be checked if the convexity adjustment overview is up-to-date for the pricing systems that are in scope.
+  \item[\textbf{Action 1}] 
+  Scanning all the completed validations of the last year, no new pricing functions were identified that neglect or calculate convexity adjustments.
+  The check has been performed using the following \href{https://dev.azure.com/raboweb/PMVProjectList/_queries/query-edit/74d5a50c-a3c2-420f-9457-adedbd2cbcad/}{query }, which will require according readjustments on the dates for the next periodic review cycle.
+  Currently the issue is resolved, but needs to be revisited during the next periodic review cycle.
+}
+\newcommand{\issueactionII}
+{
+  \item[\textbf{Issue 2}] One neglected convexity adjustment, \textit{No convexity for floating rates with non-standard rate conventions}, deserves special attention as it has not been handled during any validation or periodic review thus far.
+  This item is part of the convexity adjustment overview but it is not explained within any Murex validation report, nor were any limitations imposed.
+  \item[\textbf{Action 2}] The neglected convexity adjustment, \textit{No convexity for floating rates with non-standard rate conventions}, was already added to the convexity adjustments overview during the periodic review of 2021.
+  For now these explanations and derivations are included in this specific report.
+  However, the idea is to move these explanations and derivations to the validation report of the pricing function \Func{IRSVanilla}~\cite{Mx.IRSVanilla}.
+  The rewrite of this validation report is a separate project on FMT's project list, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/2190248/}{Epic 2190248} and is still ongoing.
+  A related validation project has been completed in 2025, where part of the documentation work was done, \href{https://dev.azure.com/raboweb/PMVProjectList/_queries/edit/8426332/?queryId=8e2ff833-e1de-48da-acc4-4fccd21dbb92}{Epic 8426332}.
+  However, there is still more work required as the rewrite will include adding comprehensive testing for some neglected convexity adjustments that could also result in imposing additional limitations.
+  This issue remains open.
+}
+\newcommand{\issueactionIII}
+{
+  \item[\textbf{Issue 3}] The convexity adjustment overview shows that for some convexity adjustments, the validation deliverables are lacking (e.g., explanation in a validation report is incomplete, impact analysis is missing).
+  \item[\textbf{Action 3}] \item[\textbf{Action 3}] The setup of the comprehensive testing repository has been completed this year, see \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/8192740}{Epic 8192740}.
+  The idea of this repository is that it is as self-contained as possible, such that it is easy to recreate comprehensive tests.
+  Two comprehensive tests related to convexity adjustments have already been moved to this repository, one for Murex and one for Quark.
+  Moving all comprehensive tests related to convexity adjustments is still a substantial amount of work.
+  The expectation is that this can now also be done as part of ongoing related validations.
+  In 2025, some additional work was done to track a list of analyses that were done in the past but are still in Excel sheets or scripts.
+  This way it is easier to keep track of what has been done and what still needs to be moved to the comprehensive testing repo. 
+  Furthermore, in 2025 some examples on convexity adjustments were removed from this report, with the goal of keeping it more focused and concise. These explanations can still be found in the 2024 document~\cite{ReviewConvexityAdjustments2024} and should be eventually moved to the relevant validation documents.
+  This issue remains open.
+}
+
+\newcommand{\issueactionIV}
+{
+\item[\textbf{Issue 4}] The neglecting of convexity adjustments can be viewed as model weaknesses.
+  As per the model risk reserve policy~\cite{PolicyModelRiskReserves}, FMT should consider proposing a model risk reserve in case of a model weakness.
+  Currently, no model risk reserves are in place related to these model weaknesses.
+  \item[\textbf{Action 4}] Most limitations related to convexity adjustments that have been imposed by FMT, which are a mitigating factor, are currently not being checked by Product Control (PC) as far as FMT is aware.
+  Reason being, that PC is not checking market data for Murex and Quark.
+  To mitigate the effect of these violations, a model risk reserve should be taken.
+  FMT planned to create a generic pricing library which will include a generic Monte-Carlo framework.
+  This is a separate project on FMT's project list, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/2459425/}{Epic 2459425}.
+  The hope is that this library can eventually also help with determining whether a model risk reserve is deemed necessary for a particular model.
+  This project is currently on hold and it is not clear if it will be worked on next year as the primary focus is currently on the new comprehensive testing repo, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/8192740}{Epic 8192740}.
+  This issue remains open.
+}
+
+\newcommand{\cintro}{
+\cintroParI
+\newline\newline
+\cintroParII
+\newline\newline
+\cintroParIII
+\newline\newline
+\cintroParIV
+\newline\newline
+\cintroParV
+\newline\newline
+\cintroParVI
+\newline\newline
+During this year's review, it has been checked if the convexity adjustment overview is still up-to-date.
+The majority of the time has been spend on improving validation reports with respect to (neglected) convexity adjustments and on working on a new repository which aims to improve the maintenance in the (re)creation of comprehensive tests.
+A rigorous definition of what a convexity adjustment is and what the fundamental sources of convexity are, has been added to this report.
+\newline\newline
+The list below summarizes the issues encountered during the review and the actions taken by FMT.
+\begin{itemize}
+  \issueactionI
+  \issueactionII
+  \issueactionIII
+  \issueactionIV
+\end{itemize}
+This concludes the review for 2025.
+The review will be continued in 2026.
+}
+\ConclusionsIntro{
+\cintro
+}
+
+\makecoverpage
+
+\section{Introduction}
+\label{sec:intro}
+\cintroParI
+
+\cintroParIII
+
+\cintroParIV
+
+\cintroParV
+
+\cintroParVI
+
+Convexity adjustments are a broader topic that can be relevant for any pricing system.
+This depends on the pricing models/functions contained within the pricing system.
+The convexity adjustments review topic is a reoccurring system level periodic review item.
+Pricing systems are only included in the convexity adjustment overview if there is interest in, and substantial use of, the pricing system.
+
+The convexity adjustment overview consists of two types of convexity adjustments:
+\begin{itemize}
+  \item Neglected convexity adjustments;
+  \item Calculated convexity adjustments.
+\end{itemize}
+The overview mainly consists of neglected convexity adjustments, because both for Murex and Quark there are a lot of relatively simple pricing functions in use, which do not take convexity adjustments into account.
+There are some more complex pricing functions in Quark that do take a convexity adjustment into account (e.g., \Func{PMV\_Quark\_AvgCapFloor}, \Func{PMV\_Quark\_RateAdj2}).
+
+The outline of this document is as follows.
+First, in Section~\ref{sec:tooling}, the tooling is discussed which FMT uses to create the convexity adjustment overview.
+Next, in Section~\ref{sec:scope}, it is explained which pricing systems are considered to be in scope for the convexity adjustment overview.
+Furthermore, the completeness of the convexity adjustment overview is discussed.
+Then, in Section~\ref{sec:explanation}, the concept of convexity adjustments is discussed in detail.
+Some specific examples will be given.
+Section~\ref{sec:updateDeliverables} is dedicated to provide updates on the validation deliverables regarding convexity adjustments.
+Next, in Section~\ref{sec:overview}, it is presented what kind of information is incorporated in the convexity adjustment overview.
+After that, in Section~\ref{sec:otherTopics}, the focus will be on topics that relate to convexity adjustments that FMT is not able to address at this stage.
+Finally, Section~\ref{sec:conclusions}, summarizes the main results and conclusions that have been obtained for this review.
+
+\section{Tooling}
+\label{sec:tooling}
+In this section, the tooling that is used by FMT to create the convexity adjustment overview is discussed.
+
+In order to create and maintain the convexity adjustment overview, the \texttt{PMV Model Inventory Application} is used.
+Details regarding the \texttt{PMV Model Inventory Application} can be found in~\cite{PMVMIGuidelines}.
+
+To give some insight into how the \texttt{PMV Model Inventory Application} is used with respect to the convexity adjustment overview, several screenshots of the Graphical User Interface (GUI) are shown below.
+The \textit{Home} screen is depicted in Figure~\ref{fig:PMVMIAppHome}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.9\textwidth]
+{figures/PMVMIAppHome.png}
+\end{center}
+\caption{The \texttt{PMV Model Inventory Application} \textit{Home} screen.}\label{fig:PMVMIAppHome}
+\end{figure}
+
+The specific information of all convexity adjustments can be filled in via a form which is depicted in Figure~\ref{fig:PmvInvAppConvAdjProp}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=\textwidth]
+{figures/PmvInvAppConvAdjProp.png}
+\end{center}
+\caption{The \texttt{PMV Model Inventory Application} \textit{Convexity Adjustments} properties screen.}\label{fig:PmvInvAppConvAdjProp}
+\end{figure}
+
+The convexity adjustment can be mapped to pricing functions using the GUI which is shown in Figure~\ref{fig:PmvInvAppConvAdjMap}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.8\textwidth]
+{figures/PmvInvAppConvAdjMap.png}
+\end{center}
+\caption{The \texttt{PMV Model Inventory Application} convexity adjustments to pricing functions mappings screen.}\label{fig:PmvInvAppConvAdjMap}
+\end{figure}
+
+All information regarding convexity adjustments and the mapping to pricing functions is stored in database tables.
+To get the full overview an Excel export file can be created, \textit{ConvexityAdjustments.xlsx}~\cite{ConvexityAdjustmentsWb}.
+The Excel file can be created via the GUI as is shown in Figure~\ref{fig:PMVMIAppCreateExports}.
+
+\begin{figure}[H]
+\begin{center}
+\includegraphics[width=0.9\textwidth]
+{figures/PMVMIAppCreateExports.png}
+\end{center}
+\caption{The \texttt{PMV Model Inventory Application} Official Exports screen.}\label{fig:PMVMIAppCreateExports}
+\end{figure}
+
+\section{Scope \& Completeness}
+\label{sec:scope}
+In this section it is explained which pricing systems are in scope for the convexity adjustments overview, and if the overview is complete.
+
+During the convexity adjustment periodic review, FMT needs to assess which pricing systems are in scope for the convexity adjustments overview, only pricing systems for which this has added value should be in scope.
+Furthermore, it needs to be checked if the convexity adjustment overview is up-to-date for the pricing systems that are in scope.
+
+\subsection{Murex}
+\label{sec:murexInScope}
+Murex is the pricing system, used for P\&L, that will eventually replace most pricing systems and is the system for which FMT is getting many new validation requests.
+Therefore, the (neglected) convexity adjustments of Murex are included in the overview.
+
+For the pricing system Murex, the convexity adjustments are available in the overview since the 2021 periodic review.
+
+The overview has been checked and it turned out that it was up-to-date.
+
+\subsection{Quark}
+\label{sec:quarkInScope}
+It is expected that the pricing system Quark, which is used for P\&L, will continue to see a lot of usage in the future.
+Therefore, the (neglected) convexity adjustments of Quark are included in the overview.
+
+For the pricing system Quark, the convexity adjustments are available in the overview since the 2022 periodic review.
+
+The overview has been checked and it turned out that it was up-to-date.
+
+\subsection{Other Systems}
+\label{sec:notInScope}
+Besides Murex and Quark, there are other pricing systems in use at Rabobank.
+It is even possible that FMT would get a validation request for pricing functions of a completely new pricing system.
+Though, this is unlikely because Rabobank is in the process of deprecating most pricing systems and instead use Murex.
+Still, it could happen in practice that FMT is requested to validate pricing functions for a new system which neglect or calculate convexity adjustments.
+
+Currently, the following pricing systems besides Murex and Quark are in use: QuIC and RAM+.
+The pricing system Sophis and Luna were decommissioned in Q2 2024.
+The pricing system Sophis was used for P\&L purposes, mainly for commodity products.
+All Sophis trades have been migrated to Murex.
+The pricing system Luna was used for regulatory calculations in Brazil.
+
+It was already concluded in the periodic review of 2022 that interest to make improvements for these pricing systems within Rabobank, compared to Murex and Quark, is low:
+\begin{itemize}
+  \item \textit{QuIC}: The pricing system QuIC is used for the calculation of credit exposures.
+  In QuIC several simplifying design choices and approximations are made, e.g., volatility skew is not included, simplified approach for handling yield curves, use of proxy pricers.
+  As such, the calculation errors resulting from neglecting convexity adjustments are minor compared to the errors that are introduced by these other approximations.
+  QuIC might be replaced by Murex in the future.
+  \item \textit{RAM+}: The single pricing function validated by FMT in the pricing system RAM+ is used to calculate the Initial Margin.
+  There are no convexity adjustments associated with this pricing function.
+\end{itemize}
+
+\subsection{Issues}
+\label{sec:InScopeIssues}
+Summary of the issues and actions:
+\begin{itemize}
+  \issueactionI
+\end{itemize}
+
+\section{Convexity Adjustments Explained}
+\label{sec:explanation}
+In this section, the concept of convexity adjustments will be discussed in detail.
+Also, some specific examples will be given.
+In the periodic review document of 2024~\cite{ReviewConvexityAdjustments2024}, more examples of convexity adjustments were discussed in detail.
+
+\subsection{A General Definition of the Convexity Adjustment}
+\label{sec:convexAdjDef}
+
+We work within a filtered probability space $(\Omega, \mathcal{F}, \{\mathcal{F}_t\}_{t \in [0,T]}, \mathbb{P})$ that models the market's uncertainty, with the filtration $\{\mathcal{F}_t\}$ representing the flow of information over time. Let $Y_T$ be a claim at time $T$, represented as an $\mathcal{F}_T$-measurable random variable.
+
+Let $N_t$ be the value of a numeraire asset and let $\mathbb{Q}^N$ be the equivalent martingale measure associated with it.
+Let us consider a stochastic process $X_t$, which can be for instance a forward rate, a swap rate, or any other relevant financial variable.
+We define the discounted claim as $f(X_T) = Y_T / N_T$, where $Y_T$ is the terminal payoff.
+
+The \textbf{Convexity Adjustment} ($CA_t$) is the correction applied to a naive valuation, defined as the difference between the current value of the discounted payoff function and its true expected value under the pricing measure:
+\begin{equation}
+    \boxed{CA_t := f(X_t) - E^N_t \left[ f(X_T) \right]}
+\end{equation}
+The adjustment is zero if and only if $f(X_t)$ is a martingale under the measure $\mathbb{Q}^N$. 
+
+\subsection{Two Sources of Convexity}
+
+\subsubsection*{Source 1: Curvature in the Payoff Function}
+Here, the adjustment arises because the payoff is a non-linear function of an underlying variable that is otherwise a martingale under our pricing measure.
+This case is defined by the following conditions:
+\begin{itemize}
+    \item The payoff function $f$ is \textbf{non-linear} (strictly convex or concave, at least locally).
+    \item The underlying process $X_t$ \textbf{is a martingale} under the pricing measure $\mathbb{Q}^N$, which implies $E^N_t [X_T] = X_t$.
+\end{itemize}
+
+\textbf{Mechanism:} The adjustment is a direct result of Jensen's Inequality. Because $f$ is non-linear, the expectation of the function is not equal to the function of the expectation. Substituting the martingale property into the adjustment formula highlights this:
+\begin{equation}
+    CA_t = f(X_t) - E^N_t \left[ f(X_T) \right] = f\left(E^N_t [X_T]\right) - E^N_t \left[ f(X_T) \right] \neq 0
+\end{equation}
+An option payoff, such as $f(x) = \max(x-K, 0)$, is a classic example of this effect, other examples are non-standard rate conventions.
+
+\subsubsection*{Source 2: Curvature in the Pricing Measure}
+Here, the payoff function is linear, but an adjustment is required because the underlying variable is not a martingale under our chosen pricing measure.
+This case is defined by the following conditions:
+\begin{itemize}
+    \item The payoff function $f$ is \textbf{linear} (e.g., $f(x)=x$).
+    \item The underlying process $X_t$ \textbf{is not a martingale} under the pricing measure $\mathbb{Q}^N$ (i.e., $E^N_t [X_T] \neq X_t$). However, $X_t$ is typically a martingale under a different measure, often called its ``natural'' measure, $\mathbb{Q}^M$.
+\end{itemize}
+
+\textbf{Mechanism:} As $f$ is linear, we can swap the function and expectation operators: $E^N_t [f(X_T)] = f(E^N_t [X_T])$. The adjustment formula becomes:
+\begin{equation}
+    CA_t = f(X_t) - f\left(E^N_t [X_T]\right)
+\end{equation}
+For a simple identity payoff $f(x)=x$, this is $CA_t = X_t - E^N_t [X_T]$. The adjustment is non-zero because the change of measure from the "natural" martingale measure $\mathbb{Q}^M$ to the required pricing measure $\mathbb{Q}^N$ induces a drift in the process $X_t$.
+
+\paragraph*{Examples: CMS Rate.}
+This adjustment is crucial for pricing Constant Maturity Swap (CMS) rates.
+\begin{itemize}
+    \item \textbf{The Underlying ($X_t$):} A par swap rate, $S_t$.
+    \item \textbf{The Measures:} The swap rate $S_t$ is a martingale under its ``natural'' measure, the \textbf{swap measure} ($\mathbb{Q}^M$), where the numeraire is an annuity. However, to value a single coupon payment received at time $T$, we must price under the \textbf{T-forward measure} ($\mathbb{Q}^N$).
+    \item \textbf{Conclusion:} Because the pricing measure ($\mathbb{Q}^N$) differs from the natural martingale measure ($\mathbb{Q}^M$), the swap rate $S_t$ is no longer a martingale and develops a drift. A convexity adjustment is therefore required to find its correct expectation, $E^N_t[S_T]$, even when the payoff function is linear ($f(x)=x$).
+\end{itemize}
+
+\subsection{Issues}
+In principle no issues in this periodic review are mentioned regarding the convexity adjustments themselves, since that is precisely what the convexity adjustment overview is for.
+However, for the \textit{No convexity for floating rates with non-standard rate conventions} item we make an exception.
+Reason being, that this was one of the main drivers to create the convexity adjustment overview and the fact that currently this issue is not reflected in any validation report.
+
+Summary of the issues and actions:
+\begin{itemize}
+  \issueactionII
+\end{itemize}
+
+\section{Updates to Validation Deliverables}
+\label{sec:updateDeliverables}
+The convexity adjustment overview shows that for some convexity adjustments, the validation deliverables are lacking (e.g., explanation in a validation report is incomplete, impact analysis is missing).
+
+In the periodic review of 2023 FMT looked into detail at several comprehensive tests in validation reports.
+It was observed that the main issue is the fact that the underlying files that are used to create the comprehensive tests are not maintained in an effective way.
+Most are not under version control and more importantly it is difficult to recreate comprehensive tests for new input data.
+Therefore, FMT created a new repo better maintain all materials related to comprehensive testing.
+The idea of this repo is that it will be as self-contained as possible, such that it easy to recreate comprehensive tests.
+FMT is working on moving tests to this new repo, which is still a substantial amount of work.
+The progress is tracked via a separate project on FMT's project list, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/8192740}{Epic 8192740}.
+
+\subsection{Issues}
+Summary of the issues and actions:
+\begin{itemize}
+  \issueactionIII
+\end{itemize}
+
+\section{Convexity Adjustments Overview Information}
+\label{sec:overview}
+In this section some information will be given regarding the convexity adjustment overview.
+
+\subsection{Excel File}
+\label{sec:excelFile}
+In Section~\ref{sec:tooling} it was explained that the convexity adjustments overview can be exported as a \textit{ConvexityAdjustments.xlsx} Excel file~\cite{ConvexityAdjustmentsWb}.
+This Excel file has two worksheets:
+\begin{itemize}
+  \item \textbf{Info}: the \textit{Info} worksheet gives an explanation of the content that can be found in the \textit{Main} worksheet.
+  \item \textbf{Main}: the \textit{Main} worksheet is the actual overview of all the convexity adjustments, this sheet has several columns.
+\end{itemize}
+
+The following columns can be found in the convexity adjustment overview.
+\begin{itemize}
+  \item \textbf{Name}: name of the (neglected) convexity adjustment.
+  \item \textbf{Description}: description of the (neglected) convexity adjustment.
+  \item \textbf{Pricing System}: list of pricing systems for which this convexity adjustment is relevant.
+  \item \textbf{Explanation in Reports}: information regarding if the explanation in the validation reports is sufficient.
+  \item \textbf{Limitation Info}: information regarding the limitations associated with this convexity adjustment.
+  \item \textbf{Impact Analysis Info}: information regarding if impact analyses are available and what the status is of these
+    analyses.
+  \item \textbf{PC Checking}: information regarding if Product Control is checking limitations associated with this convexity adjustment.
+  \item \textbf{FMT Opinion}: opinion of FMT regarding the status of this convexity adjustment.
+  \item \textbf{Additional Remarks}: additional remarks that are relevant.
+  \item \textbf{Pricing Function}: list of pricing functions for which this convexity adjustment is relevant.
+\end{itemize}
+
+\subsection{Number of Convexity Adjustments}
+\label{sec:numberOfConvexityAdjustments}
+In Table~\ref{table:numberOfConvexityAdjustments} a high level overview is given of the number of convexity adjustments per pricing system as of November 2024.
+
+\begin{table}[htb!]
+\footnotesize
+\centering
+\begin{tabular}{l|l|l|l}
+  \toprule[0.05cm]
+  \textbf{Pricing System} & \textbf{\# Neglected CAs} &{\textbf{\# Calculated CAs}} & {\textbf{\# Total CAs}} \\
+  \hline\hline
+  \textit{Murex Only}     & 7  & 1 & 8 \\ \hline
+  \textit{Quark Only}     & 1  & 3 & 4 \\ \hline
+  \textit{Murex \& Quark} & 10 & 0 & 10 \\ \hline \hline
+  \textit{All}            & 18 & 4 & 22 \\
+  \bottomrule[0.05cm]
+\end{tabular}
+\caption{Overview of the number of convexity adjustments (CAs) per pricing system as of November 2024.
+Convexity adjustments can apply to a single or multiple pricing systems.}
+\label{table:numberOfConvexityAdjustments}
+\end{table}
+
+In Table~\ref{table:numberOfConvexityAdjustments} it can be seen that there are quite some (neglected) convexity adjustments associated with pricing functions, in total 22 convexity adjustments.
+Only 4 calculated convexity adjustments, and 18 neglected convexity adjustments.
+Of the 18 neglected convexity adjustments, 7 apply only to Murex, 1 applies only to Quark, and the remaining 10 apply to both Murex and Quark.
+These counts are subject to change in the future, since more pricing functions can be requested for validation and pricing functions can also be retired.
+Furthermore, change in insight could lead to redefine the currently formulated convexity adjustments.
+In the periodic review document of 2024~\cite{ReviewConvexityAdjustments2024}, a few examples of entries to this table were given.
+
+\subsection{Model Risk Reserve}
+\label{sec:modelRiskReserve}
+
+As per the Model Risk Reserve policy~\cite{PolicyModelRiskReserves} FMT is responsible for detecting model weaknesses and proposing a model risk reserve, if material.
+The approximations related to neglecting convexity adjustments are natural candidates for model risk reserves, since these can be regarded as a model weakness.
+Currently, no model risk reserves are in place related to these model weaknesses.
+
+A complicating factor is that most limitations related to convexity adjustments that have been imposed by FMT, which are a mitigating factor, are currently not being checked by Product Control (PC).
+Reason being, that for most convexity adjustments, limitations need to be checked for market data and payoff functions.
+PC is not checking market data for Murex and Quark.
+Currently, it is unknown to what degree the limitations associated with convexity adjustments are being violated.
+PC is working on improving the checking of limitations but this is a large topic and the limitations related to convexity adjustments are the most complicated ones.
+As such, it is not expected that these limitations will be checked in the near future.
+
+Taking a model risk reserve does not absolve PC from their responsibility to properly check the limitations in place.
+In fact, in FMT's opinion checking these limitations is very important.
+The models in production are only suitable for use within the signed-off settings, this is precisely the reason why the limitations are imposed.
+
+The current replication libraries of FMT are heavily linked to the design of the pricing systems and their input.
+Therefore, they are not flexible enough such that they can be easily used for generic analyses.
+In practice, one would want to have a generic Monte-Carlo framework that could be used to make such generic analyses.
+
+The development of a generic pricing library which will include a generic Monte-Carlo framework is a separate project on FMT's project list, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/2459425/}{Epic 2459425}.
+This will mainly be developed to improve the comprehensive testing that is being done by FMT as part of some validations.
+The hope is that this library can eventually also help with determining whether a model risk reserve is deemed necessary for a particular model.
+Note that this is a very large project and is currently on hold.
+It is not clear if it will be worked on next year as the primary focus is currently on the new comprehensive testing repo, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/8192740}{Epic 8192740}.
+As such, it is expected that it will still take considerable time before this can be used in the model risk reserve process.
+
+\subsection{Issues}
+\label{sec:otherTopicsIssues}
+Summary of the issues and actions:
+\begin{itemize}
+  \issueactionIV
+\end{itemize}
+
+\section{Conclusion}\label{sec:conclusions}
+See Executive Summary.
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{\bibAll}
+\newpage
+
+\end{document} 

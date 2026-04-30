@@ -1,0 +1,586 @@
+\documentclass[reviewdoc]{pmv_report}  %draftcopy,reviewdoc
+
+\begin{document}
+\Title{Periodic Review Report}
+\System{Quark, QuIC, Murex}
+\Subject{Bond Model}
+%\SubTitle{This overwrites the total subtitle}
+
+%\Review{Yield Curves}{}
+\SignOff{Not applicable.}
+\Settings{Not applicable.}
+
+
+\ColophonEntry{1.0}{F. Fang}{PMV}{Initial review.}{2015/08/04}
+\ColophonEntry{1.1}{S. Borst}{PMV}{The updated version for the review cycle of 2016.}{2016/11/03}
+\ColophonEntry{1.2}{S. Borst, T. van der Zwaard}{PMV}{The updated version for the review cycle of 2017.}{2017/09/22}
+\ColophonEntry{1.3}{S. Borst, T. van der Zwaard}{PMV}{The updated version for the review cycle of 2018.}{2018/10/01}
+\ColophonEntry{1.4}{D. Weise, T. van der Zwaard}{PMV}{The updated version for the review cycle of 2020.}{2020/06/23}
+\ColophonEntry{1.5}{N. Borovykh, Y. Smirnova, C. Acay}{PMV}{The updated version for the review cycle of 2023.}{2023/10/17}
+\ColophonEntry{1.6}{C. Acay, D. Roy Choudhury}{PMV}{The updated version for the review cycle of 2026.}{2026/01/12}
+
+\newcommand{\conc}{
+The ``Bond model'' category is used for pricing bonds and bond derivatives within Rabobank: the purpose being either P\&L and risk calculations (Quark), credit exposure calculations (QuIC), or all of the above (Murex).
+\newline\newline
+The main modelling part of the Bond model is the Z-spread term structure model~\cite{Quark.BondLibrary}.
+The main assumption in this model is the strippable cash flow methodology.
+Credit-risky bonds, especially bonds with deteriorating credit rating (depressed bonds), deserve special attention.
+Contractually the cash flows are fixed for credit risky bonds.
+However, technically the future cash flows are not fixed in reality and depend on the default event of the bond issuer.
+The Z-spread term structure model does not link the issuer's creditworthiness information such as Credit Default Swap (CDS) spread to the bond price in contrast to models based on survival-based methods, which are gradually picked up by practitioners for risky bonds.
+\newline\newline
+However, this periodic review confirmed that the model is still acceptable for credit-risky bonds.
+The main reason is that the model itself has very limited impact to P\&L calculations, since the market price of a bond is usually available.
+
+No survival-based model implementation or formal feasibility study was undertaken between the 2023 and 2026 review cycles.
+As part of this 2026 review, PMV has conducted a structured assessment of three concrete alternative models that could address the known limitations of the Z-spread framework.
+These are detailed in Section~\ref{sec:AlternativeModels}: a Reduced-Form Intensity model (Duffie-Singleton), an Option-Adjusted Spread (OAS) model, and a Stochastic CPR extension.
+Each alternative is evaluated for mathematical merit, data feasibility within Rabobank's existing infrastructure, and the additional risk sensitivities it would generate.
+These alternatives are proposed as improvement points for future review cycles; the Z-spread model remains acceptable for current P\&L calculation purposes.
+\newline\newline
+Meanwhile, the best practice for option embedded bonds is the Option Adjusted Spread (OAS) model according to the literature~\cite{Hayre04}, which is more advanced than Z-spread based model in that it takes into account the price of the embedded option.
+However, embedded options are not available in Quark. Only the ``value-to-call'' functionality has been added to \textit{BuildABS} and is under validation.
+The project can be found on the project list (\href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/2188640}{Epic 2188640}).
+PC has confirmed (December 2025) that this is being used in production, and the project should thus stay on the project list.
+\newline\newline
+Further, for Asset Backed Securities (ABSs), a Constant Prepayment Rate (CPR) is assumed to model the future prepayment of the notional.
+The value for the CPR parameter is set manually for each ISIN, which uniquely identifies a security, since it cannot be calibrated from market instruments.
+Therefore, the CPR parameter should be seen as an expert input~\cite{Quark.BondLibrary}.
+The values of the CPR parameter are updated by Risk Management Utrecht on an annual basis.
+PMV will report to the Model Governance Committee if the update has taken place with the same frequency.
+\newline\newline
+Currently on PMV's project list there are several projects that relate to the Quark Bond library.
+At the moment, 8 validations have been started, one with low, one with high and the rest with medium priority.
+The validations that have started are in fact on hold, as PMV's priority is now with high priority Quark projects only.
+In the near future, this project list should be cleaned up, from the Bond model perspective at that time the current projects need to be re-assessed whether they are still required or not.
+At this stage no further action is taken.
+\newline\newline
+In QuIC, the Z-spread model is also used for pricing bond related derivatives~\cite{Quic.IRBondFutures}.
+This periodic review confirmed that the model is sufficient as well in QuIC, for the same reasons as were mentioned for Quark.
+Furthermore, in credit risk exposure calculations the main model risk lies in the simulation of the risk factors instead of the pricing functions themselves.
+\newline\newline
+In 2020 PMV has completed the initial validation of the bond library in Murex.
+Currently there are 2 functions that use the Bond model: \textit{BondFuture} and \textit{BondDeal}.
+For the \textit{BondFuture} function,  only one periodic review item is defined for average bond futures.
+During the validation, several bugs were spotted for average bond futures, which are only meant to be traded on the Australian market.
+Murex provided the bug fixes, until validating the provided fixes, the average bond futures are not signed off.
+
+The list below summarizes the issues encountered during the review and the actions taken by PMV.
+\begin{itemize}
+\item[\textbf{Issue 1}] PMV will check with Risk Management if the values for the CPR parameter have been updated.
+The values of the CPR parameter are updated on an annual basis.
+\item[\textbf{Action 1}] The value for the CPR parameter is set manually since it cannot be calibrated from market instruments, the CPR parameter should be seen as an expert input.
+    During the 2023 periodic review it turned out that RM Utrecht was no longer actively reviewing the CPR parameters of ABS bonds.
+    Though, in September 2023 RM Utrecht started to set-up a process around settlement and approval of the CPR parameters in ABS bonds.
+    It's RM Utrecht's expectation to have a new process in place at the latest by end of Q4 2023.
+    As of January 2026, the process is operational, and PMV continues to monitor the annual updates.
+\item[\textbf{Issue 2}] There are multiple Quark interfaces used across Rabobank, and it is not guaranteed these interfaces are using the signed off functions and there is a lack of monitoring or control over the static data QSDM~\cite{MemoMultiInterfaceQuark}.
+In 2016, it was concluded that the likelihood of a large loss is very low since there are additional controls in place and the fact that the additional added logic that is added to the interfaces is limited.
+A reserve of Euro 100K is taken, the details can be found in~\cite{ModelRiskReserve20160630}.
+\item[\textbf{Action 2}] In November 2025, the Model Risk Reserve YE 2025 report confirmed that the reserve of Euro 100K is still in place for unvalidated features of the COM interface.
+This issue is regarded as resolved.
+\end{itemize}
+}
+\ConclusionsIntro{\conc}
+\makecoverpage
+
+\section{Introduction}
+
+This document describes the periodic review of the model category ``Bond model''.
+
+The main modelling part of the Bond model is the ``Z-spread'' (``zero-volatility spread'') term structure model.
+The ``Z-spread'' term structure model is one of the conventional term structure measures.
+It is commonly used to quote and analyze relative value among credit bonds against ``risk-free'' government bonds.
+The main model assumption is the strippable cash flow valuation methodology, namely a bond's cash flows are assumed to be completely fixed in all future states.
+
+Further, for asset backed securities (ABSs), a constant prepayment rate (CPR) is assumed to model the future prepayment of the notional.
+
+The Bond model is used by Rabobank in three pricing systems: Quark, QuIC and Murex.
+Quark is an in-house built system used for P\&L and risk calculations, while QuIC is a vendor system used for credit exposure calculations for OTC derivatives and repos.
+And lastly, Murex is a vendor used for P\&L and risk calculations, as well as XVA computations.
+
+In this periodic review, we try to answer the following questions:
+\begin{itemize}
+\item[-] Are the model assumptions still acceptable under current market situations?
+\item[-] Is the model still the best market practice for bonds?
+\end{itemize}
+
+
+\section{Model Description}
+
+The ``Z-spread'' term structure model which is the main modelling part of the Bond model is one of the conventional term structure measures.
+The main model assumption is the strippable cash flow valuation methodology, that is, a bond's cash flows are assumed to be completely fixed in all future states.
+Therefore an interest-bearing bond can be completely replicated by a portfolio of zero coupon bonds with maturities chosen to match the contractual cash flows  and the notional chosen to equal the cash flow payment amounts.
+The present value of this portfolio should coincide with the present value of the bond, i.e.
+\begin{align}
+\PV_{\text{riskfree}} &=\sum_{i=1}^{N} \CF(t_i)\DF(t_i), \label{eq:strippable}
+\end{align}
+where $\CF(\tau)$ is the cash flow to be paid at time $\tau$ and $\DF(\tau)$ is the discount factor at time $\tau$.
+
+The strippable cash flow methodology is commonly extended to credit-risky bonds by assuming that they can be priced using a similarly defined ``risky discount function'', $\DF_{\text{risky}}(t)$.
+Since equation (\ref{eq:strippable}) is deterministic, one can express the risky discount function, without loss of generality, as a product of the risk-free base discount function and the risky excess discount function:
+\begin{equation}\label{eq:PVrisky}
+\PV_{\text{risky}} = \sum_{i=1}^{N} \CF(t_i)\DF_{\text{risky}}(t_i),
+\end{equation}
+with
+\begin{equation}\label{eq:Zrisky}
+\DF_{\text{risky}}(t) = \DF(t)\cdot \DF_{\text{excess}}(t).
+\end{equation}
+The Z-spread term structure model uses the following definition of $\DF_{\text{excess}}(t)$:
+\begin{equation}\label{eq:Zexcess}
+  \DF_{\text{excess}}(t) = e^{-z(t)\cdot t},
+\end{equation}
+where $z$ is the Z-spread.
+
+Note that, although the model is called ``term-structure model'', in both Quark and QuIC this Z-spread is assumed to be a constant value for all $t$ until the bond's maturity.
+The current assumption in Quark is that the Z-spread is unique to each bond, rather than be unique to each issuer.
+This is because two bonds by the same issuer maturing on the same
+date usually have different Z-spreads, so building a Z-spread term structure is not a good idea, as interpolation in Z-spread is not possible.
+
+The Z-spread of a bond is backed out from its observed market price via calibration: the Z-spread is the particular value of $z$ that minimizes the difference between calculated price via equation (\ref{eq:PVrisky}) and the market price of the bond.
+In other words, this $z$ value is the constant spread one can add on top of the discounting curve such that the exact market price of the bond can be backed out using the new discount factors.
+
+Further, for ABSs, a constant prepayment rate (CPR) is assumed to model the future prepayment of the notional.
+The value for the CPR parameter is set manually since it cannot be calibrated from market instruments, therefore the CPR parameter should be seen as an expert input.
+
+For vanilla FRNs and floating rate linked ABSs, Quark floors each floating coupon payment
+(being reference rate plus margin) at zero. This is called an implicit floor, whereby coupon payments
+are floored in practice even though they are not contractually stated as such. Rabobank,
+among other bond issuers, have started to apply this zero floor on vanilla FRNs in the recent
+years, in the presence of negative short-term floating rates. The issuers chose to floor
+the coupons by zero so that investors do not need to pay interests to them, which is rather
+counter-intuitive. Motivation behind this is either not to lose investors or not to damage the
+issuer's reputation and thus its credit rating. Note that this implicit flooring only happens to
+vanilla floaters and not to structured bonds, which need explicit caps/floors (meaning the documentation
+spells out the floor). In Quark the choice is made to reflect this optionality in a pricing setting by means of the Z-spread.
+This means that when calculating the Z-spread including floors, a volatility object is
+needed.
+
+\section{Quark}\label{sec:Quark}
+Quark is an in-house built system used for P\&L and risk calculations.
+All pricing functions for bonds and bond derivatives in Quark are using the Bond model.
+To determine which pricing functions that belong to the Bond model category are used in production, Rabobank's books (110) which are used for AVA calculations on a quarterly basis were analyzed.
+The books/trades are analyzed as per 31-12-2025. In Table~\ref{table:QuarkBondTradesProduction} an overview is presented of all Quark trades in production that are using the Bond Model.\mynote{
+\begin{table}[htb!]
+\footnotesize
+\centering
+\begin{tabular}{l|l|l|l|l|l}
+  \toprule[0.05cm]
+  \textbf{Function} & {\textbf{Notional short}} & {\textbf{Notional long}} & {\textbf{Notional}} & {\textbf{MtM}} & \textbf{\# Trades} \\
+  \hline\hline
+  \textit{BondTrade}       & -299.73 m &  1.07 bn & 766.77 m & 142.91 m & 2231 \\ \hline
+  \textit{BondFuture}      & 0 &  0  & 0  & 0 & 0 \\ \hline
+  \textit{BondFutureTrade} & 0 &  0  & 0  & 0 & 0 \\
+  \bottomrule[0.05cm]
+\end{tabular}
+\caption{Overview of Quark trades that are using the Bond Model as of December 2025. All amounts are in Euros.}
+\label{table:QuarkBondTradesProduction}
+\end{table}}
+
+Here ``Notional short'' is the sum of all negative notional per trade, ``Notional long'' is the sum of all positive notional per trade, ``Notional'' is the sum of the absolute notional per trade, ``MtM'' is the sum of the mark-to-market values per trade and ``\# Trades'' is the number of total trades. From Table~\ref{table:QuarkBondTradesProduction} we can conclude that as of December 2025, only \textit{BondTrade} is actively used in production from the Bond model category in Quark. \textit{BondFuture} and \textit{BondFutureTrade} show zero notional and zero trades, indicating these functions are no longer actively traded in Quark — consistent with the ongoing migration of bond futures to Murex.
+
+Furthermore, \textit{BondFutureOption}~\cite{BondFutureOption} and \textit{BondOption}~\cite{Quark.BondOption} have review items defined, but these items belong to the lognormal model category, not the bond model category.
+Also, these functions are currently not in use though being signed off.
+Therefore, these review items are not addressed in this review.
+
+In Quark there are several periodic review items regarding the Bond model. The details regarding these periodic review items can be found in a designated subsection.
+A summary of the results of the review concerning these periodic review items is given below:
+\begin{enumerate}
+  \item No link between bond and CDS spread.
+  \begin{itemize}
+    \item \textit{Affected functions}: \textit{BuildBond}, \textit{BuildFRN}, \textit{BuildABS}, \textit{BuildFxdABS}~\cite{Quark.BondLibrary} and all functions using the objects that are build with these functions.
+    \item \textit{Result of the review}: P\&L-wise the impact is really limited, because for most bonds the MtM prices are observable from the market.
+The impact is in the credit sensitivities.
+In the model there is no link between the credit worthiness of the bond issuer such as CDS spread and the price of the bond, whereas CDSs are very liquid instruments one can use to hedge the credit risk in bonds.
+Even though the Z-spread term structure model does not include CDS spreads to the bond price, PMV considers the Z-spread term structure model to be sufficient for P\&L calculation purposes.
+In the future it could be considered to implement a survival probability based method that relaxes the assumption of strippable/fixed cash flows and links CDS spread to bonds.
+  \end{itemize}
+  \item PMV will check with Risk Management if the values for the CPR parameter have been updated. The values of the CPR parameter are updated on an annual basis.
+  \begin{itemize}
+    \item \textit{Affected functions}: \textit{BuildABS}, \textit{BuildFxdABS}~\cite{Quark.BondLibrary} and all functions using the objects that are build with these functions.
+    \item \textit{Result of the review}:
+    The value for the CPR parameter is set manually for each ISIN, which uniquely identifies a security,  since it cannot be calibrated from market instruments, the CPR parameter should be seen as an expert input~\cite{Quark.BondLibrary}. During the 2023 periodic review it turned out that RM Utrecht were no longer  actively reviewing the CPR parameters of ABS bonds. Though, in September 2023 RM Utrecht has started to set-up a process around settlement and approval of the CPR parameters in ABS bonds. It's RM Utrecht's expectation to have new process in place at the latest by end of Q4 2023. As of November 2025, RM Utrecht confirmed that an annual review of CPR assumptions for external RMBSs was conducted.
+%        Rishi Patel from RM has confirmed (December 2019) that in the 2019 Stress Test Annual Review the ABS bonds were fully approved (September 2019), where the current stress test assumptions/parameters and CPR rates remained unchanged from the 2018 review. FM MGC has been informed in March 2020 that the CPR rates have been updated in 2019~\cite{TopInfoPriMod20200309}.
+%        The Data Management team has been requested to update the CPR's for all active ABS bonds.
+%        Responsibilities for the annual review of the CPR rates moved from RM London to RM Utrecht in 2019.
+%        RM Utrecht stated that no review of CPR rates took place yet in 2020.
+%        Discussions with RM Utrecht are ongoing about this responsibility.
+  \end{itemize}
+\end{enumerate}
+
+As was mentioned before the details regarding these two periodic review items are described in the sections below, additionally the questions posted in the beginning of this report are answered.
+However, first two non-related periodic review issues are presented.
+
+\subsection{Non-related Periodic Review Issues}
+
+\subsubsection{Bond related projects on the project list}
+
+
+Currently on PMV's project list there are several projects that relate to the Quark Bond library.
+Given the ongoing migration of trades to Murex and the shift in PMV priorities, the project list for the Quark Bond library should be reassessed in the current review cycle.
+Projects that are no longer relevant (e.g., related to functions with zero active trades) should be formally closed or deprioritised.
+%TODO: Confirm updated status of Quark Bond library project list items with team.
+At this stage, no further action beyond re-assessment is taken.
+
+\subsubsection{Callable/ puttable bonds}
+
+For bonds with embedded options, the most widely used valuation measure is the option-adjusted spread (OAS)~\cite{Hayre04}.
+
+One way to define the OAS is to explicitly define the stochastic model for the short rates process to value the embedded option, and to assume that the risk-free interest rate in this model is bumped up or down by a constant amount across all future times, such that after discounting the variable bond plus option cash flows with the total interest rate plus OAS one gets the market observed present value of the bond.
+
+When the evolution of the short rate becomes a deterministic function, the random cash flows reduce to the deterministic cash flows, and the OAS coincides with the Z-spread
+calculation.
+The difference between the full OAS calculated value under stochastic interest rates and the Z-spread calculated under zero volatility assumption reflects the time value of the embedded option.
+
+Currently the Quark bond library does not support optionality in bonds.
+The idea is that a callable/puttable bond should be booked as a normal bond plus an interest rate cap/floor.
+
+\vspace{0.5cm}
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+        \textbf{TODO (2026 Review MUST DO):} 2023 stated this "is under validation" with medium priority. \textbf{Action required:} Has this validation finished between 2023 and 2026? Find validation report and change "is under validation" to "was validated", or confirm it was cancelled.
+    }%
+}
+\vspace{0.5cm}
+
+As a request of Risk Management (RM), FEng has implemented the ``value-to-call'' functionality for ABSs and has submitted it for validation. This project is currently under validation with medium priority. PC~\footnote{Confirmed by Adil Kerimov.} has confirmed (December 2025) that this is being used in production, and the project should thus stay on the project list.
+
+\subsubsection{Quark's Multiple Interface Issue and QSDM Data Quality}
+In 2015 it was discovered during the ongoing validation of the Quark bond library that there are multiple Quark interfaces used across Rabobank, and it is not guaranteed these interfaces are using the signed off functions.
+To be specific via the COM object interface a limited amount of logic is added to the more basic Quark objects\footnote{This holds true for all market objects not just Bond objects.}.
+This limited amount of additional logic is not validated by PMV. Furthermore, there is a lack of monitoring or control over the static data QSDM (Quark Static Database Management).
+A bond object was built when the transaction was done and not updated any more afterwards.
+More details can be found in~\cite{MemoMultiInterfaceQuark}.
+
+PMV initialized a discussion between several stakeholders: PMV, RM, FEng, PC and IT.
+Several meetings were held to discuss these issues among others~\cite{MinutesBondMeetingsQuark}.
+Some issues have been fixed such as CPR for ABSs.
+Risk Management will on an annual basis update the values for the CPR parameter and send them to the Data Management Team, who will update QSDM accordingly.
+The root cause of this issue is lack of proper control over static data, which is supposed to be something performed by PC, not Risk.
+The MGC (Model Governance Committee) was also informed on this issue in the meeting of 28th of June 2016~\cite{MinutesMGC20160628}. The MGC asked CRG (Control Rabobank Group) to investigate the possible impact.
+It was decided for the impact to be included in the model risk reserve.
+It was concluded that the likelihood of a large loss is very low since there are additional controls in place and the fact that the additional added logic that is added to the interfaces is limited.
+A reserve of Euro 100K is taken, the details can be found in~\cite{ModelRiskReserve20221206}.
+In November 2025, the Model Risk Reserve YE 2025 report confirmed that the reserve of Euro 100K is still in place for unvalidated features of the COM interface.
+
+\subsection{No link between bond and CDS spread}
+
+The assumption of strippable/fixed cash flows is valid for risk-free bonds with no embedded options, as they can be contractually stripped, separating their coupons and notional cash flows.
+
+Bond price can be quoted in different ways: clean price as a percentage of face value, bond yield, or spread against a base curve.
+The standard market practice in analyzing investment grade credit bonds is to use a spread against a base curve, which is usually a treasury or swap curve~\cite{Berd09}.
+Among many definitions of spread measures used by practitioners who analyze credit bonds, the most robust and consistent one is the Z-spread for bonds with no embedded options.
+
+While the Z-spread term structure is commonly used to quote and analyze relative value among credit bonds, it is well known that these measures become inadequate for distressed credits for which the market convention reverts back
+to quoting bond prices directly rather than the spreads~\cite{Berd09}.
+
+This reverting of the market convention reflects a fundamental flaw in the conventional credit valuation methodology, namely the assumption that a credit bond can be priced as a portfolio of cash flows discounted at a risky rate.
+The reason why this assumption is incorrect is that the credit-risky bonds do not have fixed cash flows, in fact their cash flows are variable and dependent on the future default risk even if contractually fixed.
+This methodological breakdown holds for any credit rating, whether investment grade, or very risky with deteriorating credit rating, with the errors being relatively small for investment grade bonds trading near par but growing rapidly with the rise in default risk expectations.
+
+What has been gradually picked up by practitioners are survival-based models~\cite{Scho04}, which link the creditworthiness information that is available in the Credit Default Swap (CDS) market to the bond's price.
+
+\paragraph{Model Risk Assessment} \mbox{}\\
+Although the model assumption is technically not correct for credit-risky bonds, the model is still considered to be acceptable in Quark:
+\begin{itemize}
+\item[-] P\&L-wise the impact is really limited because for most bonds the MtM prices are observable from the market.
+
+The function \textit{BondTrade} calculates the bond price in two steps: Firstly, Z-spread is  backed out from
+the current market price of the bond; Secondly, equation (\ref{eq:Zrisky}) is applied to discount all cash flows
+ after today's date using both the Z-spread and the yield curve.
+
+Note that the market price of a bond is also associated to a settlement date.
+For example, Germany government bonds, also known as ``BUND'' bonds, are settled per ``T+2'', meaning that the price of a BUND bond that one can observe today from the exchange does not take into account coupons to be paid between today and 2 business days after today.
+
+When there is no cash flow paid between today's date and the bond's settlement date, this 2-step approach effectively just takes in the market price and returns it again. Otherwise, the present value of the extra cash flow to be paid between today and bond's settlement date will be added on top of the market price of the bond as the fair value of the bond.
+
+It's worth mentioning that, even when there is an extra cash flow between today's date and the bond's settlement date, the Z-spread term structure model gives very close prices as other conventional methods, in that the discount
+factor $DF_{\text{excess}}$  gets very close to 1.
+
+\item[-] The impact is in credit sensitivities.
+In the model there is no link between the credit worthiness of the bond issuer such as CDS spread and the price of the bond, whereas CDSs are very liquid instruments one can use to hedge the credit risk in bonds.
+
+Especially for bonds with deteriorating credit rating, a large change in Z-spread can be observed from one day to another, explanation behind this is hard to find in the literature.
+
+
+\end{itemize}
+
+
+
+Therefore, the conclusions are:
+\begin{itemize}
+\item [-] The Z-spread term structure model is still sufficient for P\&L calculation purpose.
+\item [-] No survival-based model was implemented between 2023 and 2026. Section~\ref{sec:AlternativeModels} of this report now provides a structured assessment of three alternative models --- Reduced-Form Intensity, OAS, and Stochastic CPR --- as concrete improvement points for future review cycles.
+\end{itemize}
+
+
+\subsection{CPR}
+ABSs and mortgage-backed securities (MBSs) are two important types of asset classes.
+MBSs are securities created from the pooling of mortgages, and
+then sold to interested investors, whereas ABSs have evolved out of MBSs and are created from the pooling of non-mortgage assets like credit card payments.
+Both ABSs and MBSs have prepayment risks,
+thereby reducing the interest of the loan.
+Prepayment risk is the risk of borrowers paying more than their required monthly payments.
+
+The functions \textit{BuildFxdABS} and \textit{BuildABS} are used to create ABSs.
+Bond yields are typically quoted as a spread to a comparable Treasury. It is market convention
+to compare ABSs to Treasuries with maturity close to the Weighted Average Life (WAL)
+of the ABS. The WAL is defined as the average time that one monetary unit of principal is
+outstanding. So the WAL can be used to compute the average time over which the notional
+amount of a bond is returned. Note that for an ordinary (fixed) bond the WAL is simply the
+time to maturity. For an ABS this is not the case since an ABS returns notional not in one lump
+sum (or ``bullet payment'') but in uncertain monthly increments. The WAL of an ABS is very
+sensitive to the assumed CPR value.
+
+The following agreement between PMV and  Risk Management Utrecht has been defined, for details see ~\cite{Quark.BondLibrary}:
+\begin{itemize}
+\item
+For asset backed securities (ABSs), a constant prepayment rate (CPR) is assumed
+to model the future prepayment of the notional.
+The value for the CPR parameter is set manually since it cannot be calibrated from market instruments,
+therefore the CPR parameter should be seen as an expert input.
+The values of the CPR parameter are updated by Risk Management Utrecht on an annual basis.
+PMV will show the FM MGC adherence to this agreement on a yearly basis
+\end{itemize}
+The value for the CPR parameter is set manually for each ISIN, which uniquely identifies a security.
+Since it cannot be calibrated from market instruments, the CPR parameter should be seen as an expert input.
+
+Prior to 2020, RM London managed the CPR values for actively traded ABSs, which were loaded into QSDM by the Data Management Team. In 2019, responsibility for the annual CPR review moved to RM Utrecht.
+During the 2023 periodic review it was found that RM Utrecht were no longer actively reviewing the CPR parameters of ABS bonds. In September 2023, RM Utrecht started to rebuild the process around settlement and approval of the CPR parameters.
+In the 2026 review cycle, PMV verified with RM Utrecht that the annual CPR review process is now operational: as of November 2025, an annual review of CPR assumptions for external RMBSs was conducted and confirmed.
+
+\section{QuIC}\label{sec:QuIC}
+QuIC is a vendor system and is used for calculating credit exposures (Expected Exposure, Potential Future Exposure, etc.) for OTC derivatives and Repos.
+Three payoff functions are making use of the Bond model: \textit{IRBondFutures}~\cite{Quic.IRBondFutures}, \textit{SFTAssetLeg}~\cite{Quic.SFTAssetLeg} and \textit{SFTCashLeg}~\cite{Quic.SFTCashLeg}.
+
+These functions enable the usage of deterministic spread (Z-spread) in discounting the bond cash flows via the ``rCalibrationPrice'' input field of the bond object \textit{ObservableBond}~\cite{Quic.ObservableBond}. When this field is provided, the spread will be calibrated to match the provided price, similar to the first step as in the \textit{BondTrade} function of Quark~\cite{Quark.BondLibrary}.
+
+In QuIC there are no periodic review items defined regarding the Bond model.
+However, the same drawbacks of this model with respect to the Z-spread as explained in Section~\ref{sec:Quark} holds true for these functions.
+The model is considered to be sufficient, for the same reasons as stated for Quark. Also, for credit exposure calculation purpose, the main model risk lies in the scenario generation of risk factors (inputs for the pricing functions) and not in the pricing functions themselves.
+
+\section{Murex}\label{sec:Murex}
+Murex is a vendor system used for P\&L and risk calculations, as well as XVA computations.
+All pricing functions for bonds and bond derivatives in Murex are using the Bond model.
+To determine which pricing functions that belong to the Bond model category are used in production, Rabobank's books in Murex are analyzed as per 31-12-2025.
+In Table~\ref{table:MurexBondTradesProduction} an overview is presented of all Murex trades in production that are using the Bond Model.
+\begin{table}[htb!]
+\footnotesize
+\centering
+\begin{tabular}{l|l|l|l|l|l}
+  \toprule[0.05cm]
+  \textbf{Function} & {\textbf{Notional short}} & {\textbf{Notional long}} & {\textbf{Notional}} & {\textbf{MtM}} & \textbf{\# Trades} \\
+  \hline\hline
+  \textit{BondDeal}       & -277.00 bn &  286.82 bn & 563.91 bn & -5.74 bn & 2412  \\ \hline
+  \textit{BondFuture}     & -3.34 bn &  3.24 bn & 6.58 bn & 89.09 k & 1352  \\ \hline
+  \bottomrule[0.05cm]
+\end{tabular}
+\caption{Overview of trades that are using the Bond Model as of December 2025. All amounts are in Euros.}
+\label{table:MurexBondTradesProduction}
+\end{table}
+
+Here ``Notional short'' is the sum of all negative notional per trade, ``Notional long'' is the sum of all positive notional per trade, ``Notional'' is the sum of the absolute notional per trade, ``MtM'' is the sum of the mark-to-market values per trade and, ``\# Trades'' is the number of total trades. From Table~\ref{table:MurexBondTradesProduction} we can conclude that currently only 2 pricing functions are used in production that belongs to the Bond model category: \textit{BondFuture}~\cite{Mx.BondFutures}, \textit{BondDeal}~\cite{Mx.BondProducts}.
+
+
+A major finding of the 2026 review is the massive migration of bond trades from Quark to Murex. While in the 2023 review, Quark held approximately €12bn in notional compared to Murex's €13.98bn, by the end of 2025 Quark's active notional dropped to ~€766m, whereas Murex's volume exploded to ~€564bn. The validation of the bond library in Murex was performed by PMV, successfully facilitating this significant shift in where the bank's model risk lies.
+For \textit{BondFuture} in Murex there is only one periodic review item defined for average bond futures.
+
+\vspace{0.5cm}
+\noindent\fbox{%
+    \parbox{\textwidth}{%
+        \textbf{TODO (2026 Review MUST DO):} 2023 stated "Murex provided the bug fixes, until validating the provided fixes the average bond futures are not signed off." \textbf{Action required:} Did PMV validate these fixes between 2023 and 2026? If yes, update the text to state they are now signed off.
+    }%
+}
+\vspace{0.5cm}
+
+During the validation, several bugs were spotted for average bond futures, which are only meant to be traded on the Australian market.
+Murex provided the bug fixes, until validating the provided fixes the average bond futures are not signed off.
+
+\section{Alternative Models for Consideration}\label{sec:AlternativeModels}
+
+The Z-spread framework, while adequate for P\&L on liquid vanilla bonds where market prices are directly observable, exhibits structural limitations that have been acknowledged in successive review cycles.
+This section proposes three specific alternative models as improvement points for future consideration.
+Each alternative is assessed on mathematical merit, data feasibility given Rabobank's existing infrastructure (Quark, QuIC, Murex, Bloomberg, Markit), and the additional risk sensitivities it would generate.
+
+\emph{These models are proposed as complements to the Z-spread, not as full replacements.}
+The Z-spread remains the appropriate baseline for liquid bullet bonds where MtM prices are observable.
+
+\subsection{Reduced-Form Intensity Model (Duffie-Singleton)}\label{sec:ReducedForm}
+
+\paragraph{Limitation addressed.}
+The Z-spread model has no link between the bond price and the issuer's CDS spread (see Section~\ref{sec:Quark}, Issue~1).
+For bonds with deteriorating credit rating, the Z-spread can exhibit large day-to-day jumps whose economic driver is difficult to decompose.
+A reduced-form intensity model directly links bond valuation to the issuer's observable default probabilities.
+
+\paragraph{Mathematical formulation.}
+Under the Recovery of Market Value (RMV) assumption of Duffie and Singleton~\cite{Scho04}, the risk-adjusted present value of a bond is:
+\begin{equation}\label{eq:intensity}
+  V_t = \mathbb{E}^{\mathbb{Q}}_t \left[ \sum_{t_i > t} \CF(t_i) \exp\!\left( -\int_t^{t_i} \big(r_u + \lambda_u (1 - R)\big)\, du \right) \right],
+\end{equation}
+where $r_u$ is the risk-free short rate, $\lambda_u$ is the hazard rate (instantaneous probability of default), and $R$ is the recovery rate.
+The hazard rate curve $\lambda(t)$ is bootstrapped from the issuer's CDS par spread curve, analogously to how zero rates are bootstrapped from swap rates.
+
+\paragraph{Data requirements and feasibility.}
+\begin{itemize}
+  \item \textbf{CDS par spread curve} --- available from IHS Markit for most investment-grade and liquid high-yield issuers.
+    \emph{Constraint:} many structured ABS issuers and smaller corporates do not have liquid CDS curves.
+    The model is therefore applicable primarily to the subset of credits that are actively quoted in the CDS market.
+  \item \textbf{Recovery rate ($R$)} --- standard Markit/Moody's assumptions (typically 40\% for senior unsecured).
+    Already implicitly used in Rabobank's credit risk calculations.
+  \item \textbf{Risk-free OIS curve} --- already available from LCH/CME and used in the current Z-spread calibration.
+\end{itemize}
+
+\paragraph{Additional risk sensitivities.}
+\begin{itemize}
+  \item \textbf{Credit Spread 01 (CS01)}: sensitivity of the bond price to a 1\,bp parallel shift in the issuer's CDS curve.
+    This Greek directly supports credit hedging via CDS, which the Z-spread model cannot produce.
+  \item \textbf{Jump-to-Default (JtD)}: the instantaneous P\&L loss if the issuer defaults (par minus recovery).
+  \item \textbf{Recovery Delta}: sensitivity to a change in the assumed recovery rate $R$.
+\end{itemize}
+
+\paragraph{Implementation considerations.}
+Murex natively supports hazard-rate-based bond pricing via its credit module.
+Enabling this for the relevant subset of credits would require configuring CDS curve feeds from Markit into Murex and defining the CDS--bond mapping.
+For Quark, a bespoke implementation of the hazard-rate bootstrap and the pricing formula~(\ref{eq:intensity}) would be needed.
+
+\subsection{Option-Adjusted Spread (OAS) via Stochastic Short Rates}\label{sec:OAS}
+
+\paragraph{Limitation addressed.}
+Callable and puttable bonds are currently approximated in Quark by booking a plain bond plus a separate interest rate cap/floor.
+This disjointed approach creates unhedged basis risk because the embedded option is not priced consistently within the bond's own cash flow structure.
+Similarly, the implicit zero-floor on vanilla FRNs requires injecting an exogenous volatility object to adjust the Z-spread, rather than modelling the floor as an integral part of the valuation.
+
+\paragraph{Mathematical formulation.}
+Assume the short rate $r_t$ follows a mean-reverting stochastic process (e.g., Hull-White one-factor):
+\begin{equation}\label{eq:HullWhite}
+  dr_t = \big(\theta(t) - a\, r_t\big)\, dt + \sigma\, dW^{\mathbb{Q}}_t,
+\end{equation}
+where $\theta(t)$ is calibrated to fit the initial OIS term structure, $a$ is the mean-reversion speed, and $\sigma$ is the short-rate volatility.
+The OAS is the constant spread $s_{\text{oas}}$ such that the Monte Carlo expectation over simulated rate paths equals the observed market price:
+\begin{equation}\label{eq:OAS}
+  P_{\text{market}} = \mathbb{E}^{\mathbb{Q}} \left[ \sum_{i=1}^{N} \CF_i(r_t) \cdot \exp\!\left( -\int_0^{t_i} \big(r_u + s_{\text{oas}}\big)\, du \right) \right],
+\end{equation}
+where the path-dependent cash flows $\CF_i(r_t)$ naturally incorporate the exercise decisions of embedded call/put options and the zero-floor on FRN coupons along each simulated path.
+When rates are deterministic ($\sigma = 0$), the OAS reduces identically to the Z-spread.
+
+\paragraph{Data requirements and feasibility.}
+\begin{itemize}
+  \item \textbf{Swaption volatility surface} --- available from Bloomberg VCUB or ICAP.
+    Used to calibrate the Hull-White parameters ($a$, $\sigma$).
+    \emph{Constraint:} during periods of acute market stress, the swaption surface can become illiquid or stale for certain tenors.
+    A fallback to Z-spread plus the existing cap/floor proxy would be required in such scenarios.
+  \item \textbf{OIS zero curve} --- already available.
+  \item \textbf{Bond market price} --- already available.
+\end{itemize}
+
+\paragraph{Additional risk sensitivities.}
+\begin{itemize}
+  \item \textbf{IR DV01 / Convexity}: key-rate sensitivities along the OIS curve, accounting for embedded option exercise.
+  \item \textbf{Swaption Vega}: sensitivity to the swaption volatility surface.
+    Critical for the implicit FRN floor, where the current Z-spread approach cannot isolate the optionality component.
+  \item \textbf{OAS-01}: price sensitivity specifically to a 1\,bp widening of the option-adjusted spread.
+\end{itemize}
+
+\paragraph{Implementation considerations.}
+Murex supports OAS-based pricing via its Monte Carlo bond pricing engine.
+Activating this module for callable/puttable bonds and FRNs with implicit floors would require onboarding swaption volatility feeds and configuring the Hull-White calibration.
+For Quark, a full Monte Carlo engine would be a significant development effort; given the ongoing migration of bond trades to Murex (see Table~\ref{table:MurexBondTradesProduction}), it may be more pragmatic to implement OAS exclusively in Murex.
+
+\subsection{Stochastic CPR Extension for ABS/MBS}\label{sec:StochasticCPR}
+
+\paragraph{Limitation addressed.}
+The current ABS valuation uses a static Constant Prepayment Rate (CPR) provided by RM Utrecht as an expert input.
+This CPR is held constant across all interest rate scenarios, which means the model cannot capture the well-documented inverse relationship between prepayment speeds and interest rate levels.
+In a volatile rate environment, the static CPR/Z-spread combination fails to dynamically hedge stochastic prepayment changes.
+
+\paragraph{Proposed extension.}
+Rather than a static scalar CPR, a simple rate-dependent prepayment function could be introduced:
+\begin{equation}\label{eq:CPR}
+  \text{CPR}(r_t) = \text{CPR}_{\text{base}} \cdot \exp\!\big(\beta\,(r_{\text{ref}} - r_t)\big),
+\end{equation}
+where $\text{CPR}_{\text{base}}$ is the baseline annualized prepayment rate (as currently set by RM Utrecht), $r_{\text{ref}}$ is a reference rate level (e.g., the EURIBOR level at the time the CPR was last calibrated), $r_t$ is the current or simulated short rate, and $\beta > 0$ is a sensitivity parameter.
+When $r_t < r_{\text{ref}}$ (rates have fallen), the exponential factor increases prepayment speed, reflecting borrowers' rational incentive to refinance.
+When $r_t = r_{\text{ref}}$, the function reduces to the static $\text{CPR}_{\text{base}}$.
+
+\paragraph{Data requirements and feasibility.}
+\begin{itemize}
+  \item \textbf{Historical prepayment data} --- needed to calibrate $\beta$.
+    RM Utrecht maintains historical CPR records for external RMBSs.
+    \emph{Constraint:} the historical dataset may be limited, especially for Dutch RMBSs where prepayment penalties reduce observed variability.
+  \item \textbf{OIS/EURIBOR curve} --- already available.
+  \item \textbf{CPR\textsubscript{base}} --- already provided by RM Utrecht under the existing annual review process.
+\end{itemize}
+
+\paragraph{Additional risk sensitivities.}
+\begin{itemize}
+  \item \textbf{Prepayment Duration}: the effective duration of the ABS under the rate-dependent CPR function, which will differ from the static-CPR duration.
+  \item \textbf{CPR Vega ($\partial V / \partial \beta$)}: sensitivity to the prepayment-rate elasticity parameter, quantifying exposure to model uncertainty in the CPR function.
+\end{itemize}
+
+\paragraph{Implementation considerations.}
+This extension is the most incremental of the three proposals.
+It requires modifying only the cash flow generation logic in \textit{BuildABS}/\textit{BuildFxdABS} to accept a rate-dependent CPR function rather than a scalar.
+The existing Z-spread calibration and discounting machinery would remain unchanged.
+The main challenge is calibrating $\beta$ robustly given the limited historical data, which argues for a conservative implementation with $\beta$ treated as an additional expert input alongside CPR\textsubscript{base}.
+
+\subsection{Summary and Recommendation}
+
+Table~\ref{table:AlternativeSummary} summarizes the three alternative models with respect to the Z-spread limitations they address, data feasibility, and recommended scope.
+
+\begin{table}[htb!]
+\footnotesize
+\centering
+\begin{tabular}{p{3.2cm}|p{3.5cm}|p{3.5cm}|p{3.5cm}}
+  \toprule[0.05cm]
+  & \textbf{Reduced-Form Intensity} & \textbf{OAS (Hull-White)} & \textbf{Stochastic CPR} \\
+  \hline\hline
+  \textbf{Z-spread gap} & No CDS--bond link for distressed credits & Callable/puttable basis risk; FRN implicit floor & Static CPR ignores rate-dependent prepayments \\ \hline
+  \textbf{Key new data} & CDS par spreads (Markit) & Swaption vol surface (VCUB) & Historical prepayment records (RM Utrecht) \\ \hline
+  \textbf{Key new Greeks} & CS01, Jump-to-Default & Swaption Vega, OAS-01 & Prepayment Duration, CPR Vega \\ \hline
+  \textbf{Recommended scope} & Credits with liquid CDS curves & Callable bonds \& FRNs in Murex & ABS portfolio (\textit{BuildABS}, \textit{BuildFxdABS}) \\ \hline
+  \textbf{Implementation effort} & Medium (Murex credit module activation; Quark bespoke) & Medium--High (Murex MC engine; Quark deprioritised) & Low (cash flow logic change + expert parameter) \\
+  \bottomrule[0.05cm]
+\end{tabular}
+\caption{Comparison of alternative models proposed as improvement points.}
+\label{table:AlternativeSummary}
+\end{table}
+
+PMV recommends that these alternatives be evaluated for feasibility in the next review cycle, prioritised as follows:
+\begin{enumerate}
+  \item \textbf{Stochastic CPR} (lowest effort, addresses an existing expert-input limitation).
+  \item \textbf{Reduced-Form Intensity} (highest impact for distressed credits, core data feeds already available).
+  \item \textbf{OAS} (most complex, but resolves multiple structural gaps; natural fit for Murex given ongoing migration).
+\end{enumerate}
+
+
+\section{Conclusions}\label{sec:Conclusions}
+See Executive Summary.
+
+\conc %This line copies the Executive Summary
+%
+%The list below summarizes the issues encountered during the review and the actions taken by PMV.
+%\begin{itemize}
+%\item[\textbf{Issue 1}] PMV will check with Risk Management if the values for the CPR parameter have been updated.
+%The values of the CPR parameter are updated on an annual basis.
+%\item[\textbf{Action 1}] The value for the CPR parameter is set manually since it cannot be calibrated from market instruments, the CPR parameter should be seen as an expert input.
+%For the CPR parameter used in the functions \textit{BuildFxdABS} and \textit{BuildABS} there was a well established framework
+%\footnote{
+%Since the CPR parameter is regarded as an expert input it should be seen as a model limitation.
+%    Rishi Patel from RM has confirmed (December 2019) that in the 2019 Stress Test Annual Review the ABS bonds were fully approved (September 2019), where the current stress test assumptions/parameters and CPR rates remained unchanged from the 2018 review.
+%    FM MGC has been informed in March 2020 that the CPR rates have been updated in 2019~\cite{TopInfoPriMod20200309}.
+%    The Data Management team has been requested to update the CPR's for all active ABS bonds.}.
+%    Responsibilities for the annual review of the CPR rates moved from RM London to RM Utrecht in 2019.
+%    In 2023 RM Utrecht agreed that some information on the process around CPR parameter was lost, due to the knowledge drain.
+%    Currently, RM Utrecht has started to rebuild the process around settlement and approval of the CPR parameters in ABS bonds. PMV is actively helping.
+%\item[\textbf{Issue 2}] There are multiple Quark interfaces used across Rabobank, and it is not guaranteed these interfaces are using the signed off functions and there is a lack of monitoring or control over the static data QSDM~\cite{MemoMultiInterfaceQuark}.
+%In 2016, it was concluded that the likelihood of a large loss is very low since there are additional controls in place and the fact that the additional added logic that is added to the interfaces is limited.
+%A reserve of Euro 100K is taken, the details can be found in~\cite{ModelRiskReserve20160630}.
+%\item[\textbf{Action 2}] It has been confirmed that the reserve of Euro 100K is still in place \cite{ModelRiskReserve20221206}.
+%\end{itemize}
+%This concludes the review.
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{\bibAll}
+
+\end{document} 
