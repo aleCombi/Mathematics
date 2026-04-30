@@ -1,0 +1,1599 @@
+\documentclass[]{pmv_report} %draftcopy
+
+\DeclareMathOperator{\ICP}{ICP}
+\DeclareMathOperator{\TIB}{TIB}
+
+\newcommand{\testsDone}{
+    \begin{itemize}
+        \item value;
+        \item par delta for pricing curves;
+        \item par delta for hedge curves.
+    \end{itemize}
+}
+
+
+\begin{document}
+\System{Murex}
+\Subject{IRS Vanilla}
+\SignOff{Yes}
+\Settings{See Appendix}
+
+\ColophonEntry{3.1.38.buffer. 53866.1 MXTEST01}{A. K. Tyagi}{E. van Raaij, S. Borst}{Initial validation.}{2018/06/06}
+\ColophonEntry{3.1.38.dev. 56086.stub.1 MXTEST01}{T. van der Zwaard}{J. van der Linden}{Signoff rectification estimation mode Current for compounding indices.}{2018/12/10}
+\ColophonEntry{3.1.38.21a MXTEST01}{J. van der Linden}{T. van der Zwaard}{Updated reference to generic functionality and static object documents. Added restrictions for curve calibration instruments. Removed sign-off for compounding rounding different than `None'.}{2019/02/07}
+\ColophonEntry{3.1.38.21a MXTEST01}{S. Borst}{J. van der Linden}{Include reference to the document that describes simulation views.}{2019/02/27}
+\ColophonEntry{3.1.38.21a MXTEST01}{T. van der Zwaard}{E. van Raaij}{Compounding rounding different than `None' now signed off again.}{2019/05/06}
+\ColophonEntry{3.1.38.21a MXTEST01}{D. Denysiuk}{E. van Raaij}{Settings tables update.}{2019/05/16}
+\ColophonEntry{3.1.38.27a MXTEST13}{T. van der Zwaard}{J. van der Linden}{Update formulation of limitations, no change in signoff.}{2019/10/02}
+\ColophonEntry{3.1.38.27a MXTEST13}{T. van der Zwaard}{N. Borovykh}{Align limitations for Compounding Swaps and Compound Index Swaps with the updated Quark signoff.}{2019/10/28}
+\ColophonEntry{3.1.38.31 MXTEST13}{T. van der Zwaard}{N. Borovykh}{Relax limitation for average swaps.}{2019/11/18}
+\ColophonEntry{3.1.38.31.of.1 MXTEST13}{T. van der Zwaard}{J. van der Linden}{Review of the settings tables, SchedulesDefinition now incorporated in the various tables rather than having one centralized table for this. This lead to the following change in restrictions: payment schedule ``Formula adjusted'' should not be allowed.}{2020/02/17}
+\ColophonEntry{3.1.38.31.of.1 MXTEST13}{T. van der Zwaard}{J. van der Linden}{Correcting the sign-off for average and compounding indices where the fixing should be in arrears.}{2020/02/17}
+\ColophonEntry{3.1.38.31.of.1 MXTEST13}{T. van der Zwaard}{S. Borst}{Changing payment and reset delay convexity limitation from 9 to 10 business days to align with the Quark signoff.}{2020/06/10}
+\ColophonEntry{3.1.38.31.of.1 MXTEST13}{T. van der Zwaard}{S. Borst}{Withdrawing signoff for stub period rate `Max(Next,Previous)'.}{2020/06/16}
+\ColophonEntry{3.1.38.40a.of.1 MXTEST13}{S. Borst}{J. van der Linden}{Update for the pay delay limitations for consistency purposes. Additionally, some typos were fixed in the document and setting tables.}{2020/11/18}
+\ColophonEntry{3.1.38.46 MXTEST13}{F. Beckebanze, A. Combi}{J. van der Linden}{Extended scope for Formula Definition for Average Indexes.}{2021/07/28}
+\ColophonEntry{3.1.38.46 MXTEST13}{F. Beckebanze}{J. van der Linden}{Rate conversion and conversion rule added.}{2021/08/10}
+\ColophonEntry{3.1.38.46 MXTEST13}{T. van der Zwaard}{S. Borst}{Add sign-off restriction due to bug in Murex when RateConvention.RateExpression != ``Standard basis'' is combined with DayCount = ``No''.}{2021/09/02}
+\ColophonEntry{3.1.38.48b.of.1 MXTEST13}{J. Python}{T. van der Zwaard}{Added XVA signoff.}{2021/11/30}
+\ColophonEntry{3.1.38.48b.of.1 MXTEST13}{J. Python}{J. van der Linden}{Restricted the combination ``Discount basis'' rate expression with floating legs. Withdrawal of ``FRA basis'' rate expression. Restricted the combination ``Constant annuities'' and ``Constant annuities(r)'' with floating legs.}{2021/11/30}
+\ColophonEntry{3.1.38.49.of.2 MXTEST13}{J. Python}{J. van der Linden}{Sign-off for interpolated indices.}{2022/03/14}
+\ColophonEntry{3.1.38.49.of.3 MXTEST13}{S. Borst}{PMV team}{Update for agreements and review items formatting relating to new PMV Model Inventory Application, no change in sign off.}{2022/05/12}
+\ColophonEntry{3.1.38.53b MXTEST13}{J. van der Linden}{S. Borst}{Restricted first fixing feature for a stub period in case of XVA. Corrected sign-off for customizations.}{2022/05/25}
+\ColophonEntry{3.1.38.55c MXTEST13}{T. van der Zwaard}{J. van der Linden}{Clarifying interpolated indices sign-off: not compatible with XVA. No change in sign-off.}{2022/07/21}
+\ColophonEntry{3.1.38.55c MXTEST13}{J. van der Linden}{S. Borst}{Validated bug fix for XVA first fixing bug, removed corresponding restriction.}{2022/08/10}
+\ColophonEntry{3.1.38.56a MXTEST13}{C. Acay}{S. Borst}{Validated the use of estimation mode `Current Index' for pricing compounded trades, added relevant limitations.}{2022/11/11}
+\ColophonEntry{3.1.38.56a MXTEST13}{T. van der Zwaard}{J. van der Linden}{Restricted sign-off of MarginMode InUnderlying to only be allowed with Linear or Yield rate conventions.}{2022/11/21}
+\ColophonEntry{3.1.38.56a.of.1 MXTEST13}{T. van der Zwaard}{J. van der Linden}{Restricted the sign-off of rate conventions, the exponential mode is no longer allowed at trade level for computing coupons. Also withdrawn the sign-off for trades where a leg has multiplicative margin with compounding flows and yield rate convention. Also withdrawn the sign-off of two compounding modes. Also withdrawn the sign-off for trades where a leg is based on a compounding index, where the compounding schedule is unequal to the underlying index schedule.}{2022/12/15}
+\ColophonEntry{3.1.38.56a.of.1 MXTEST13}{T. van der Zwaard}{J. van der Linden}{Updating compounding rounding bug info, no change in sign-off.}{2023/01/02}
+\ColophonEntry{3.1.38.56a.of.1 MXTEST13}{D. Sicolo}{T. van der Zwaard}{Sign-off for Basket indices, motivated by the CLP TNA index.}{2023/03/20}
+\ColophonEntry{3.1.50.14a.of.1 MXTEST02}{J. van der Linden}{S. Borst}{Change in rounding of interpolated stub rates. Added the limitation that full coupon stub coupons are only allowed in combination with `Current Index' stub rates.}{2023/03/23}
+\ColophonEntry{3.1.50.14a.of.1 MXTEST02}{D. Sicolo}{T. van der Zwaard}{Added final corrections in the `CLP TNA as a Basket index' section.
+No change in sign-off.}{2023/03/27}
+\ColophonEntry{3.1.50.15d MXTEST13}{T. van der Zwaard}{S. Borst}{Compounding rounding bug fixed by Murex in v50, corresponding agreement is removed.}{2023/06/27}
+\ColophonEntry{3.1.50.16a.of.1 MXTEST13}{T. van der Zwaard}{S. Borst}{Restricted sign-off of MarginMode InUnderlying to only be allowed with average, compound or start-end indices.}{2023/12/05}
+\ColophonEntry{3.1.50.19.of.1 MXTEST13}{C. Acay}{T. van der Zwaard}{Settings tables update. Restricted the sign-off for single period setting in schedule generator. In case of floating legs single period setting is allowed with a compounding index.}{2024/05/03}
+\ColophonEntry{3.1.50.19.of.1 MXTEST13}{T. van der Zwaard}{S. Borst}{Restricted sign-off of MarginMode InUnderlying further to only be allowed with compound indices.}{2024/05/14}
+\ColophonEntry{3.1.50.19.of.1 MXTEST13}{T. van der Zwaard}{S. Borst}{Rate conversion sign-off restrictions due to XVA bugs.}{2024/05/17}
+\ColophonEntry{3.1.50.19c MXTEST13}{P. van Hulst}{T. van der Zwaard}{Removed limitation on the settlement delay, now both the simple and relative shifters are signed off.}{2024/06/13}
+\ColophonEntry{3.1.50.22 MXTEST13}{D. Le}{S. Borst, J. van der Linden}{No change in sign-off. Restructured the testing section and added a comprehenstive test for average index.}{2024/11/11}
+\ColophonEntry{3.1.50.22.of.1 MXTEST13}{P. van Hulst}{S. Borst, T. van der Zwaard}{Compounding flows in combination with compounding indices is now allowed under certain limitations.}{2025/02/06}
+\ColophonEntry{3.1.50.22.of.3 MXTEST13}{P. van Hulst}{T. van der Zwaard}{Update formulation of compounding flows in combination with compouning indices limitations, no change in signoff.}{2025/06/06}
+\ColophonEntry{3.1.50.22.of.3 MXTEST13}{T. Hack}{J. van der Linden}{Settings tables update. Lifted part of the restriction for frequency of the driving schedule which should be the same as the frequency of the floating index. This is now only a restriction in case of Published or Average index.}{2025/07/02}
+\ColophonEntry{3.1.61.15b.of.3 MXTEST13}{D. Le}{J. van der Linden}{Updated settings tables regarding v3.1.61 upgrade GUI changes, which is backwards compatible with the previous version.}{2025/08/12}
+
+\ConclusionsIntro{The interest rate swap market is the largest derivative market in the world according to the Bank of International Settlements, and interest rate swaps are very liquid traded instruments.
+\newline\newline
+A vanilla interest rate swap is a contract in which two parties agree to exchange one stream of cash flows against another stream.
+There are three main types of the single currency interest rate swaps: plain vanilla swap where the fixed cash flows are exchanged for float cash flows, tenor swaps where payments are based on two different floating rates, and compounding swaps which have compounded payments.
+Compounding swaps may involve compounded floating rates (compounded indices), compounded cash flows, or both.
+\newline\newline
+The floating rates used as underlyings can be standard floating rates, compounded rates, or averaged rates.
+Compounded rates involve the reinvestment of periodic interest, impacting the rate applied at each compounding interval.
+\newline\newline
+The present value of the \textit{IRS Vanilla} product is calculated analytically, using the discount factors from two or more yield curves.
+As such, the valuation of the plain vanilla and tenor swaps is model-free, except for interpolation and/or extrapolation.
+If the swap and the market instruments from which the yield curves are built are both traded under CSA, no approximation is needed to price the product.
+In case of non-CSA swaps, the spread between the Discount curve and the Forecasting curve is assumed to be deterministic.
+\newline\newline
+The product \textit{IRS Vanilla} is a single currency product and supports the Cheapest-to-Deliver framework (CtD).
+\newline\newline
+The product \textit{IRS Vanilla} supports the XVA framework~\cite{Mx.XVAFramework}.
+\newline\newline
+The following outputs are included in the sign-off,
+\testsDone
+\input{../../../General/LinkSimulationViews/LinkSimulationViews.tex}
+\newline\newline
+In case the calculation end date of the floating rate does not coincide with the period's payment date a convexity adjustment is required in the valuation.
+At the current stage it is not possible to calculate the convexity adjustment for this product.
+Therefore, the features which require a convexity adjustment are not signed off or signed off under very strict limitations.
+For example, for a standard floating rate a period's payment date cannot be more than $30$ business days away from the corresponding floating rate end date, see Appendix~\ref{sec:Limitations}.
+\newline\newline
+Swaps with averaged rates are generally not allowed since the convexity adjustments are too large to neglect -- unless the curve used to value such trades is built exclusively with the same type of swap.
+This is particularly relevant for average index swaps traded in the US market which pay one of the following indexes: BMA, Fed Fund, Prime, and Commercial Paper.
+Swaps with average indices are signed off where the index of the deal is the same index (from a market point of view, not from the Murex config point of view) as is used to build the curve with averaging swaps, the curve can have this index as the only unknown during the calibration.
+Also, the deal should not have any compounded payments.
+\newline\newline
+The sign-off limitations are reflected in the fields `value' and 'limitation' of the Settings Table~\cite{MxSettings.IRS} but for convenience also reported in Appendix~\ref{sec:Limitations}.
+}
+
+\makecoverpage
+
+\section{Notation}
+The following notation will be used throughout the document.
+\begin{deflist}{$P^D(t,T_n^i)$, $P^f(t,T_n^i)$, $P^{\text{Fund}}(t,T_n^i)$}
+\item[$T_0$]
+Today's date.
+\item[$T_1^i,T_2^i,\hdots T_{N^i+1}^i$]
+Accrual dates of the $i$-th leg of the underlying swap, usually $i=1,2$.
+The number of periods in different legs can be different.
+We skip the superscript $i$ if it is clear which leg is considered.
+\item[$\alpha_{n}^{i}$]
+Day-count fraction for the period $(T_n^i, T_{n+1}^i)$ using the specification of the $i$-th leg.
+\item[$r^D(t)$]
+Risk-free short rate.
+\item[$r^F(t)$]
+Funding short rate.
+\item[$r^f(t)$]
+Forecasting short rate.
+\item[$B^D(t)$]
+Money-market account, $B^D(t)=e^{\int_{T_0}^t r^D(s)ds}$;
+\item[$B^F(t)$]
+Funding money-market account $B^F(t)=e^{\int_{T_0}^t r^F(s)ds}$;
+\item[$\E^{\Q}_t$]
+Time-$t$ expectation under the measure corresponding to the money-market account.
+\item[$\E^{n+1}_t$]
+Time-$t$ expectation under the discount forward measure corresponding to the num\'eraire $P^D(\cdot,T_{n+1}^i)$ for CSA derivatives, and to the num\'eraire $P^{\text{Fund}}(\cdot,T_{n+1}^i)$ for non-CSA derivatives.
+\item[$q_n^i$]
+Notional of the $i$-th leg at time $T_n^i$.
+\item[$k_n^i$]
+Fixed rate/margin of the $i$-th leg at time $T_n^i$.
+\item[$F_n(t)$]
+Forward rate for the period $(T_n^i,T_{n+1}^i)$, $F_n(t)=F(t,T_n^i,T_{n+1}^i)$.
+\item[$M^C,M^L$]
+Compound and \Libor margins;
+\item[$P^D(t,T_n^i)$, $P^f(t,T_n^i)$, $P^{\text{Fund}}(t,T_n^i)$]
+Discount factors from the discount curve, forecasting (estimation) curve and funding curve, respectively.
+In terms of the short rate the zero-coupon bonds can be represented by $P^*(t,T)=\E_t\left[ e^{-\int_t^T r^*(s)ds} \right]$.
+\end{deflist}
+
+\section{Introduction}
+In this document we discuss the validation of the Murex product \textit{IRS Vanilla}~\cite{Mx.VanillaSwaps}, which prices single-currency interest rate swaps.
+
+A vanilla interest rate swap is a contract in which two parties agree to exchange one stream of cash flows against another stream.
+The payments can be of different types: fixed, floating, averaged and compounded.
+
+\section{Product Description}
+A vanilla interest rate swap is a contract in which two parties agree to exchange one stream of cash flows against another stream.
+These streams are called legs.
+The legs are in one currency, with the same notional and have the same start and end dates.
+Payments are made on pre-specified dates, which are not necessarily the same for both legs.
+
+Swaps of different maturities are often traded to hedge against or speculate on changes in interest rates.
+Swaps are also used by corporates to transform cash flows linked to one index like fixed or 6m \Libor into cash flows linked to another index like 3m \Libor or in hedging to change the exposure to a different point on a yield curve.
+A plain \textit{vanilla fixed-for-floating} interest rate swap is a swap in which one leg pays fixed flows and the other leg pays floating rate.
+The reference rate in such contracts is usually the interbank rate, the most common of such rates is the London Interbank Offered rate, known as \Libor.
+\Libor rates are available in different currencies and also in different markets, for example \textsc{Euribor} is the rate fixing in Brussels or \textsc{Tibor} is the rate fixing in Tokyo.
+For convenience, all these interbank rates will be referred to as \Libor.
+The floating rate is fixed at the beginning of the period and both fixed and floating coupons are paid at the end of the period.
+
+Another common type of interest rate swap is the \textit{floating-for-floating}, or the tenor swap.
+Both floating rates are fixed at the beginning of the period and are paid at the end of the period.
+
+The third type of interest rate swap is a \textit{compound swap}, where at least one leg pays a flow which is compounded over a pre-specified period.
+
+The underlying rate in \textit{fixed-for-floating} and \textit{floating-for-floating} swaps can be not only a standard \Libor rate, but also a compound or average rate.
+%2.against one index in the favor of another (for example, 1 mo USD T-bill for 1 mo USD \LIBOR)
+%3.different points on a yield curve (for example, 1 mo USD \LIBOR for 6 mo USD \LIBOR)
+
+In Figure~\ref{fig:murexSwap} we present the IRS vanilla trade as seen in the e-TradePad screen.
+
+ \begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{% to center the image
+  \includegraphics[width=0.65\textwidth]{figures/Swap.png}}
+\captionof{figure}{\textit{IRS Vanilla} product in the e-TradePad.}\label{fig:murexSwap}% only if needed
+\end{minipage}
+
+Select \textit{Template details/Open} to bring up the screen with the details of the Swap generator:
+
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{% to center the image
+  \includegraphics[width=1.1\textwidth]{figures/swapgen1.png}}
+\makebox[\linewidth]{
+  \includegraphics[width=1.1\textwidth]{figures/swapgen2.png}}
+\captionof{figure}{Swap generator details.}\label{fig:murexSwapGenerator}% only if needed
+\end{minipage}
+
+%\mynote{EvR: shouldn't we repeat some of these exercises as part of periodic review?}
+
+\section{Model Description}
+In this section a precise description of the mathematical model is given plus important modelling details.
+
+\subsection{Model Inputs}
+\label{sec:modelinputs}
+The following input data is used in the model:
+\input{../../../General/ModelInputs/Start.tex}
+\input{../../../General/ModelInputs/YieldCurves.tex}
+\input{../../../General/ModelInputs/HedgeCurves.tex}
+\input{../../../General/ModelInputs/End.tex}
+
+If the product is used with CtD functionality, then additionally the following model input is used together with \textbf{Yield curves} to construct CtD discount factors:
+\input{../../../General/ModelInputs/Start.tex}
+\input{../../../General/ModelInputs/FxCurves.tex}
+\input{../../../General/ModelInputs/End.tex}
+
+\input{../../../General/ModelInputs/XVAGeneric.tex}
+
+\subsection{Model Details}
+In this we present details of the model and the various features it covers.
+
+\subsubsection{Assumptions}
+The accrual dates $T_n^i$ of the legs are constructed using the payment calendar as specified in leg's details.
+In the rest of this section we skip the superscript $i$ t shorten the notations, as it does not matter which date strip is considered.
+
+We assume that we work in a multi-curve framework~\cite{Mx.CurveAnalytics}, and consider both collateralized and un-collateralized derivatives.
+There is one discount curve, this curve is the classic risk-neutral curve (usually we use the OIS curve), the price of the zero-coupon bond at time $t$ maturing at time $T_n$ from the discount curve is
+denoted by $P^D(t,T_n)$.
+
+Additionally, there is one funding curve, this curve is assumed to be constructed from the discount curve plus some time-dependent but deterministic spread.
+That is, we assume that any rate from the funding curve has the same distribution as the corresponding rate from the discount curve and only the forward is different.
+In this way we can calculate all necessary expectations without performing the change of measure: the volatility in the convexity adjustment term is $0$, according to the assumption that the spread between
+different curves is deterministic~\cite{Mx.RateCurve}.
+Zero-coupon bond prices from the funding curve are denoted by $P^{\text{Fund}}(t,T_n)$. For collateralized derivatives the funding curve is usually equal to the OIS curve and thus $P^{\text{Fund}}(t,T_n)=P^D(t,T_n)$, while for un-collateralized derivatives this curve takes into account the funding costs.
+
+Finally, there is one forecasting curve, this curve corresponds to the \Libor with a certain tenor.
+In Murex, a forecasting curve is referred to as an estimation curve.
+The price of the discount bond at time $t$ maturing at time $T_n$ from the forecasting curve is denoted by $P^f(t,T_n)$.
+Below we shortly explain how the curve is constructed.
+
+From the market (swaps, FRAs) we can extract the prices of the following cash flows
+\begin{equation}
+V_n(T_0)=\alpha_n^L P^D(T_0,T_{n+1}) \E_{T_0}^{n+1} \left[ \frac{F_n(T_n)}{P^D(T_{n+1},T_{n+1})} \right],
+\end{equation}
+where $F_n(T_n)$ is the forward rate for the period $(T_n,T_{n+1})$ and $\alpha_n^L$ is the day-count fraction between $T_n$ and $T_{n+1}$ calculated using the rate conventions defined on the index level.
+
+Further we define the process for the forward rate to be a martingale under the discount $T_{n+1}$ forward measure:
+\begin{equation}
+\label{libor}
+F_n(t)\triangleq\E_t^{n+1} [F_n(T_n)]=\E_t^{n+1} \left[ \frac{P^f(T_n,T_{n})-P^f(T_n,T_{n+1})} {\alpha_n^L P^f(T_{n},T_{n+1})} \right].
+\end{equation}
+
+And define the discount factors from the forecasting curve such that
+\begin{equation}
+V_n(T_0)= P^D(T_0,T_{n+1})F_n(T_0) = P^D(T_0,T_{n+1}) \frac{P^f(T_0,T_n)-P^f(T_0,T_{n+1})}{\alpha_n^L P^f(T_{0},T_{n+1})\\ } .
+ \end{equation}
+
+Thus, the forward rates are defined as follows:
+\begin{equation}
+\label{eq:unadjfwd}
+F_n(T_0) \equiv \frac{P^f(T_0,T_n) - P^f(T_0,T_{n+1})}{\alpha_n^L P^f(T_0,T_{n+1}) }.
+\end{equation}
+
+Consider now the pricing of CSA and non-CSA derivative with the same final payoff $V(T)$.
+Under CSA agreement
+\begin{equation*}
+V_{\text{CSA}}(T_0)=B(T_0) \E_{T_0}^{\Q} \left[\frac{V(T)}{B^D(T)}\right]=\E_{T_0}^{\Q} \left[ e^{-\int_{T_0}^T r^D(u)du} V(T)\right] = P^D(T_0,T) \E_{T_0}^T[V(T)],
+\end{equation*}
+where $r^D(u)$ is the risk-free (OIS) short rate, $\E_t^T$ is the expectation under the measure corresponding to $P^D(\cdot,T)$ as a num\'eraire, $B(T_0)=1$ and $P^D(t,T)=\E_{t}^{\Q}[e^{-\int_{t}^T r^D(u)du}]$.
+
+The value of the non-CSA derivative is:
+\begin{equation}\label{eq:ncsa}
+V_{\text{NonCSA}}(T_0)=\E_{T_0}^{\Q} \left[ e^{-\int_{T_0}^T r^F(u)du} V(T)\right],
+\end{equation}
+where $r^F(u)$ is a funding short rate so that $P^{\text{Fund}}(t,T)=\E_t^{\Q}[e^{-\int_{t}^T r^F(u)du}]$.
+
+We can rewrite the equation~\eqref{eq:ncsa} using the risk-free short rate:
+\begin{align*}
+V_{\text{NonCSA}}(T_0)=\E_{T_0}^{\Q} \left[ e^{-\int_{T_0}^T r^F(u)du} V(T)\right] =\E_{T_0}^{\Q} \left[ e^{-\int_{T_0}^T r^D(u)du} e^{-\int_{T_0}^T [r^F(u)-r^D(u)]du}V(T)\right].
+\end{align*}
+Since the spreads are deterministic the expectation can be split in two parts:
+\begin{equation*}
+V_{\text{NonCSA}}({T_0})= \E_{T_0}^{\Q} \left[ e^{-\int_{T_0}^T [r^F(u)-r^D(u)]du}\right] \cdot \E_{T_0}^{\Q} \left[ e^{-\int_{T_0}^T r^D(u)du} V(T)\right].
+\end{equation*}
+Using the fact that $P^*(t,T)=\E_t\left[ e^{-\int_t^T r^*(s)ds} \right]$ and assuming that the short rates are independent of each other, we arrive at the following:
+\begin{equation}
+\label{eq:noncsa}
+V_{\text{NonCSA}}({T_0})=\frac{P^\text{Fund}(T_0,T) }{P^D({T_0},T)} \cdot P^D(T_0,T) \E_{T_0}^T[V(T)] = P^{\text{Fund}}({T_0},T)\E_{T_0}^T[V(T)].
+\end{equation}
+This expression is used in Murex to find the value of the derivative under the funding measure.
+
+Note that below we will use the notation $P^{\text{Fund}}(t,T) $ for both CSA and non-CSA derivatives, keeping in mind that for CSA derivatives $P^{\text{Fund}}(t,T)=P^D(t,T)$.
+
+\textbf{Remark.} The derivations above were performed for the \textit{linear} accrual convention.
+However, all of the above holds for exponential and yield conventions as well, for some more details see~\cite{Mx.RateCurve}.
+
+\subsubsection{Vanilla Fixed-for-Float Swap}
+In a fixed-for-float swap on each accrual period $[T_n^1,T_{n+1}^1]$ one party pays float \Libor rate $F_n$ and a margin $k_n^1$, where the float rate fixes at the beginning on the period and pays at the end of the period.
+Another party on each accrual period $[T_n^2,T_{n+1}^2]$ pays fixed rate $k_n^2$ at the end of the period.
+
+The value of this swap at time $t$ is equal to the sum of expected payments:
+\begin{equation*}
+  V_{\text{swap}}(t)=\sum_{n=1}^{N^1} \alpha_{n}^1 q_n^1\E_t^{\Q} \left[\frac{B(t)}{B(T_{n+1}^1)} \left( F_n(T_n^1)+k_n^1\right)\right]
+  - \sum_{m=1}^{N^2}\alpha_m^{2} q_m^2\E_t^{\Q} \left[\frac{B(t)}{B(T_{m+1}^2)} k_m^2\right].
+\end{equation*}
+To calculate the expressions under the expectation we change to the forward measure in each element of the sum:
+\begin{align}
+  V_{\text{swap}}(t) &= \sum_{n=1}^{N^1}
+  \alpha_{n}^1 q_n^1 P^{\text{Fund}}(t,T_{n+1}^1)\E_t^{n+1} \left[\frac{ F_n(T_n^1)}{P^D(T_{n+1}^1,T_{n+1}^1)}\right]+ \nonumber \\
+  &+ \sum_{n=1}^{N^1}
+  \alpha_{n}^1 q_n^1 k_n^1 P^{\text{Fund}}(t,T_{n+1}^1)-
+  \sum_{m=1}^{N^2} \alpha_m^{2} q_m^2 k_m^2 P^{\text{Fund}}(t,T_{m+1}^2).
+\end{align}
+Remember that the forward rate $F_n(t)$ is by definition a martingale under the discount forward measure and can be represented using the zero-coupon bonds from the forecasting curve as follows:
+\begin{equation}
+  F_n(t)=\frac{P^f(t,T_n^1)-P^f(t,T_{n+1}^1)}{\alpha_n^L P^f(t,T_{n+1}^1)},
+\end{equation}
+where $\alpha_n^L$ is the day-count fraction between $T_n^1$ and $T_{n+1}^1$ calculated using the Rate convention defined on the index level, see~\cite[Fig.2]{Mx.Index}.
+Thus,
+\begin{equation*}
+ \E_t^{n+1} \left[\frac{ F_n(T_n^1)}{P^D(T_{n+1}^1,T_{n+1}^1)}\right]=\E_t^{n+1}\left[ F_n(T_n^1)\right]=F_n(t).
+\end{equation*}
+
+Hence, the value of the vanilla fixed-for-float swap becomes:
+\begin{equation}
+  V_{\text{swap}}(t)=\sum_{n=1}^{N^1}
+  \alpha_{n}^1 q_n^1 P^{\text{Fund}}(t,T_{n+1}^1) (F_n(t)+k_n^1) -
+  \sum_{m=1}^{N^2} \alpha_m^{2} q_m^2 k_m^2 P^{\text{Fund}}(t,T_{m+1}^2).
+\end{equation}
+
+For a period where the rate end date (this is the calculation end date of a standard floating rate) is not equal to the payment date, a convexity adjustment is required in the valuation.
+The difference of the payment date and the rate end date in business days is referred to as the pay delay.
+The influence of the convexity adjustment related to the pay delay can be tested by comparing the prices obtained from the model without the convexity adjustment to prices obtained from a model that includes the convexity adjustment.
+As the model that includes the convexity adjustment the standard single curve based Libor Market model~\cite{Quark.CMM} is used.
+For this analysis the reader is referred to the Quark validation document~\cite{Quark.RateAdj}.
+Using the results obtained in~\cite{Quark.RateAdj} it was decided to put a limitation of $30$ business days for the pay delay, see Appendix~\ref{sec:settings}.
+
+\subsubsection{Vanilla Tenor Swap}
+In case of a tenor swap, or a floating-for-floating swap, the parties exchange payments based on two different \Libor rates.
+The value of the contract at time $t$ is given by the following expression:
+\begin{align*}
+  V_{\text{tenorSwap}}(t) &= \sum_{n=1}^{N^1} \alpha_{n}^1 q_n^1\E_t^{\Q} \left[ \frac{B(t)}{B(T_{n+1}^1)} \left( F_n(T_n^1)+k_n^1\right) \right] \\
+  &- \sum_{m=1}^{N^2}\alpha_m^2 q_m^2\E_t^{\Q} \left[ \frac{B(t)}{B(T_{m+1}^2)} (F_m(T_m^2)+k_m^2)\right],
+\end{align*}
+where $F_n(T_n^1)$ and $F_m(T_m^2)$ are two \Libor rates with different tenors, e.g., 6m and 12m.
+
+As in the case of fixed-for-floating we change to the forward measure in each element of the sum:
+\begin{align}
+  V_{\text{tenorSwap}}(t) &= \sum_{n=1}^{N^1} \alpha_{n}^1 q_n^1 P^{\text{Fund}}(t,T_{n+1}^1) \E_t^{n+1} \left[\frac{ F_n(T_n^1)+k_n^1}{P^D(T_{n+1}^1,T_{n+1}^1)}\right] \nonumber \\
+  &- \sum_{m=1}^{N^2}\alpha_m^{2} q_m^2 P^{\text{Fund}}(t,T_{m+1}^2)\E_t^{m+1} \left[\frac{F_m(T_m^2)+k_m^2}{P^D(T_{m+1}^2,T_{m+1}^2)}\right].
+\end{align}
+
+According to the definition of the forecasting \Libor rate, the expectations above can be rewritten:
+\begin{equation}
+  V_{\text{tenorSwap}}(t)=\sum_{n=1}^{N^1} \alpha_{n}^1 q_n^1 P^{\text{Fund}}(t,T_{n+1}^1) ( F_n(T_n^1)+k_n^1)-
+   \sum_{m=1}^{N^2}\alpha_m^{2} q_m^2 P^{\text{Fund}}(t,T_{m+1}^2) (F_m(T_m^2)+k_m^2).
+\end{equation}
+
+For a tenor swap the same limitation holds with respect to the pay delay as previously mentioned, see Appendix~\ref{sec:settings}.
+
+\subsubsection{Compounding Swap}
+Compounding swaps are a type of swaps where at least one leg pays a flow which is compounded over a pre-specified period, called \textit{compounding period}.
+Interest rate flows based on fixed rate or \Libor are reinvested and paid at the end of the compounding period.
+There are different types of compounding, see~\cite{Mx.GenericFunctionalities}.
+
+The swap leg is recognized as a compound leg in case the field Frequency ratio of the payment schedule (see the picture below) is different from $1$.
+
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{% to center the image
+ \includegraphics[width=0.65\textwidth]{figures/FreqRatio.png}}
+\captionof{figure}{Frequency ratio specification.}\label{fig:FreqRatio}% only if needed
+\end{minipage}
+
+As an example we consider a case when the Frequency ratio is equal to $2$, which means the payments are done on each second pay date.
+
+\begin{figure}[h]
+\centering
+    \begin{tikzpicture}[scale=1.3]
+    \draw[thick, ->] (0,0) node[below] {$T_1$} -- (10,0) node[below] {$t$};
+    \draw[thick] (1,.1) -- (1,0) node[below] {$T_2$};
+    \draw[thick] (2,.1) node[above] {$p_1$} -- (2,0) node[below] {$T_3$};
+    \draw[thick] (3,.1) -- (3,0) node[below] {$T_4$};
+    \draw[thick] (4,.1) node[above] {$p_2$} -- (4,0) node[below] {$T_5$};
+    \draw[thick] (5,.1) -- (5,0) node[below] {$T_6$};
+    \draw[thick] (6,.1) node[above] {$p_3$} -- (6,0) node[below] {$T_7$};
+    \draw[thick] (7,.1) -- (7,0) node[below] {$T_8$};
+    \draw[thick] (8,.1) node[above] {$p_4$} -- (8,0) node[below] {$T_9$};
+    \end{tikzpicture}
+\caption{Example of compounding over 8 periods with payments done every second period.  This corresponds to Frequency ratio=2.}
+\label{fig:example}
+\end{figure}
+
+We assume the compound margin can be different from the \Libor margin, which corresponds to the \textit{(I+M1) at (I+M2)} compound type, for a general case see~\cite{Mx.GenericFunctionalities}.
+
+For the floating leg the payment at date $p_1$ is equal to:
+\begin{equation*}
+  V_1(p_1)=q_1\alpha_1(F_1(T_1)+M^L_1)\Big(1+\alpha_2 (F_2(T_2)+M^C_2)\Big)+q_2 \alpha_2(F_2(T_2)+M^L_2),
+\end{equation*}
+where the rate $F_i(t)=F(t,T_i,T_{i+1})$ is the \Libor rate over the period $[T_i,T_{i+1}]$.
+
+For a general case the payment at date $p_n$ is equal to:
+\begin{equation}\label{eq:payment}
+  V_n(p_n )=\sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i \left( F_i(T_i)+M_i^L \right)
+  \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j \left( F_j(T_j)+M_j^C \right) \right],
+\end{equation}
+where $k(n)$ indicates the time interval ending at the current payment date.
+
+In case of a fixed compound leg the payment is of the form:
+\begin{equation}\label{eq:payment}
+  V_n(p_n )=\sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_iM_i^L
+  \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j M_j^C \right].
+\end{equation}
+
+To calculate the value of the compounding swap, we should be able to calculate the expectation of each payment:
+\begin{equation*}
+  V_n(t)=P^{\text{Fund}}(t,T_{n+1})\E_t^{n+1}
+  \left[
+  \sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i \left( F_i(T_i)+M_i^L \right)
+  \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j \left( F_j(T_j)+M_j^C \right) \right]
+  \right].
+\end{equation*}
+
+In case the compound margin, $M_j^C$ is not large and the length of the compounding period (from one pay date till the next pay date) is limited (see~\cite{MxSettings.IRS} for exact values), the expectation can be calculated as follows:
+\begin{equation*}
+  V_n(t)\approx P^{\text{Fund}}(t,T_{n+1})
+  \sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i \left( F_i(t)+M_i^L \right)
+  \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j \left( F_j(t)+M_j^C \right) \right].
+\end{equation*}
+The derivation is presented in Appendix~\ref{sec:Comp}.
+
+In case of compounded flows, a convexity adjustment is required in the valuation for two reasons:
+\begin{enumerate}
+  \item Pay delay;
+  \item Non-zero compound margin for a compounding period.
+\end{enumerate}
+
+With respect to the pay delay note that only the last compounded flow is relevant.
+Similar as for the standard floating rate case based on the analysis in~\cite{Quark.RateAdj} it was decided to put a limitation of $30$ business days for the pay delay, see Appendix~\ref{sec:settings}.
+
+The influence of the convexity adjustment related to the non-zero compound margin can be tested by comparing the prices obtained from the model without the convexity adjustment to prices obtained from a model that includes the convexity adjustment.
+As the model that includes the convexity adjustment again the standard single curve based Libor Market model~\cite{Quark.CMM} is used.
+For the analysis the reader is referred to the Quark validation document~\cite{Quark.CompoundFunctions}.
+
+We conclude from the analysis in~\cite{Quark.CompoundFunctions} that for a compounding period of $24$ months and shorter with compound margins not larger than $50$bp the influence of the convexity adjustment is very limited.
+As such, this limitation is imposed on the compound margin and the frequency of the deal, see Appendix~\ref{sec:settings}.
+
+There is one special case of the compounding leg, when the notionals for each sub-period of the same compound interval are constant, and in addition the \Libor margin is equal to the compound margin and both are constant within the compounding period.
+In this case, the payment at the pay date $p_n$ is:
+\begin{align*}
+  \frac{V_n(t)}{B^D(t)}&=q \E_t^{\Q}
+  \left[
+  \frac{
+  \prod_{j=k(n-1)+1}^{k(n)} \left( 1+\alpha_j \left( F_j(T_j)+M \right) \right)-1}
+  {B^D(T_{k(n)})}
+  \right].
+  \end{align*}
+For the derivation see Appendix~\ref{sec:CompConst}.
+
+\subsubsection{Non-Vanilla Swaps: Compound Index Swaps}
+The floating rate in fixed-for-float or tenor swaps is often a quantity derived from standard forward \Libor rates, such as compound index rates.
+
+The compound rate is specified by its tenor, e.g., $3$ months, and the tenor of the underlying index, e.g., $1$ day.
+For more details see~\cite{Mx.GenericFunctionalities} and~\cite{Mx.StaticDataObjects}.
+
+There are two calculation modes for the compound indices.
+In case the mode is the \textit{underlying} mode this means that the compound index is calculated using the underlying rates from the curve:
+\begin{equation*}
+R(t,T_S,T_{E})=\frac{1}{\alpha(T_S,T_E)} \left[ \prod_{i=1}^{i=K-1} \left(1+\alpha(T_i,T_{i+1})(F(t,T_i,T_{i+1})+M_i)\right)-1
+\right],
+\end{equation*}
+where $M_i$ is non-zero only for the case when Margin Mode is set to \textit{In underlying}.
+
+The expression above is in general not a martingale under the pay measure.
+Similar as for the compounded flows in case of a compounded floating rate (a compounding index) a convexity adjustment is required in the valuation for two reasons:
+\begin{enumerate}
+  \item Pay delay;
+  \item Non-zero compound margin for a compounding period.
+\end{enumerate}
+
+With respect to the pay delay, only the last compounded period is relevant.
+Similar as for the standard floating rate case based on the analysis in~\cite{Quark.RateAdj} it was decided to put a limitation of $30$ business days for the pay delay, see Appendix~\ref{sec:settings}.
+
+To investigate the influence of the convexity adjustment, we consider the price of a single coupon with the weekly compound index for different coupon lengths and for different margins.
+As the model that includes the convexity adjustment we again use the standard single curve based Libor Market model~\cite{Quark.CMM}.
+We consider a trade with a single coupon, the start date of the trade is in 3y, 10y and 20y from today.
+The coupon length changes between 1w and 48w. We use the market data from 01/12/2017.
+In the Figure~\ref{fig:compIndex} we present our findings.
+
+\begin{minipage}{\linewidth}% to keep image and caption on one page
+\makebox[\linewidth]{% to center the image
+ \includegraphics[width=0.55\textwidth]{figures/CompIndex3y.png}}
+
+\makebox[\linewidth]{% to center the image
+  \includegraphics[width=0.55\textwidth]{figures/CompIndex10y.png}
+  \includegraphics[width=0.55\textwidth]{figures/CompIndex20y.png}}
+\captionof{figure}{The differences in bp between the coupon with the compound index with and without the convexity adjustment, with different start dates and for different margins.}
+\label{fig:compIndex}%      only if needed
+\end{minipage}
+
+We conclude that for coupons with length of $12$ months and shorter, the influence of the convexity adjustment is very limited (less than $0.001$ of bp).
+Also, the margin of $100$ bp and less has a limited influence on the value of the coupon.
+As such, it was decided to sign off the use of the compound indices for trades with frequencies of $12$ months and shorter and with the margin less than $100$ bp only, see Appendix~\ref{sec:settings}.
+
+A special case of the above is the OIS case, i.e., when the underlying index has a daily frequency.
+In this particular situation the model is signed off with the only restriction that the compound margin is not larger than $200$ bp, see Appendix~\ref{sec:settings}.
+For a detailed analysis and substantiation of this limitation, the reader can consult~\cite{Quark.CompoundFunctions}.
+
+
+%\item In case of a (standard) floating rate a period's payment date cannot be more than 30 business days away from the corresponding period's rate end date. Note that in case of a non-interpolated stub period the tenor of the index used for the stub period is not allowed to differ more than 30 business days from the tenor of the stub period~\cite{MxSettings.IRS}.
+%          \item In case of an interpolated stub period or a stub period that involves an interpolated index the stub period's payment date and second date of the ``estimationPeriodBetween'' field cannot be more than 30 business days away from each other. Note that an interpolated floating rate is obtained in Murex via the interpolated stub setting or an interpolated rate via an interpolated index. In both cases the rate end date is renamed in Murex and is the second date of the ``estimationPeriodBetween'' field. For a stub period the payment date and second date of the “estimationPeriodBetween” field cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+%          \item In case of compounded or average floating rate the payment date and corresponding rate end date of the last period cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+%          \item In case of compounded flows the payment date and corresponding rate end date of the last compounded flow cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+%          \item The frequency of the driving schedule should be the same as the frequency of the floating index \cite{MxSettings.IRS}.
+%
+%
+%For a period where the calculation end date of the floating rate is not equal to the payment date or the compound margin is non-zero, a convexity adjustment is required in the valuation. The influence of the convexity adjustment can be tested by comparing the prices obtained from the model without the convexity adjustment to prices obtained using from a model that includes the convexity adjustment. As the model that includes the convexity adjustment the standard single curve based Libor Market model~\cite{Quark.CMM} is used. For this analysis the reader is referred to the Quark validation document~\cite{Quark.CompoundFunctions}.
+
+
+In case the estimation mode is \textit{Current}, the compound index is calculated as the published index:
+\begin{equation*}
+  R(t,T_S,T_E)=\frac{1}{\alpha(T_S,T_E)}\left( \frac{P^f(t,T_S)}{P^f(t,T_E)} -1\right),
+\end{equation*}
+where $P^f(t,T_i)$ is the discount factors from the forecasting curve.
+It is assumed that the spreads between different curves are deterministic,~\cite{Mx.RateCurve}.
+Clearly, the obtained rate is a martingale under the pay measure, as such, no convexity adjustment is needed by construction.
+This mode is intended only for curve construction and hence is not signed off for pricing purposes.
+
+
+\paragraph{Combination of Compounding Indices with Compounded Flows}
+The combination of compounding indices with compounded flows is generally supported within the model framework.
+However, to maintain consistency in valuation and risk management, the use of both compounding mechanisms together is \textbf{only allowed} under the following conditions:
+\begin{itemize}
+    \item When the \textit{Margin Mode} is set to \textbf{Additive};
+    \item When the \textit{Rate Convention} is \textbf{Linear};
+    \item For compounding structures where the \textbf{compounding mode} follows:
+    \begin{itemize}
+        \item $(I+M)$ at $(I+M)$;
+        \item $(I+M)$ at $I$.
+    \end{itemize}
+\end{itemize}
+These limitations ensure that no additional convexity adjustments become necessary.
+
+\subsubsection{Non-Vanilla Swaps: Average Index Swaps (BMA/FF/Prime/CP Swaps)} \label{sec:avgIdxSwap}
+It is also possible to define the floating rate of the swap as an average of the underlying pre-specified rates:
+\begin{align}
+  R(t,T_S,T_E) &= \frac{1}{\alpha(T_S,T_E)} \sum_{i=1}^{K-1} \alpha(T_i,T_{i+1})F(t,T_i,T_{i+1}), \label{eq:avgRate}
+\end{align}
+see~\cite{Mx.StaticDataObjects} for more details.
+
+In other words, when we consider $R(t,T_S,T_E)$ from equation~\eqref{eq:avgRate} to be the average rate in which the rates $F(t,T_i,T_{i+1})$ are averaged, we can write for a single payment of the average rate:
+\begin{align}
+  V(t) &= B(t) \E^{\Q}_t\left[ \frac{N \alpha R(t,T_S,T_E)}{B(T_P)}\right] \nonumber \\
+  &= N \alpha P^D(t,T_P) \E^{T_P}_t\left[ R(t,T_S,T_E)\right]\nonumber \\
+  &\approx N \alpha P^D(t,T_P) \E^{T_E}_t\left[ R(t,T_S,T_E)\right], \label{eq:avgSwap1}
+\end{align}
+where $N$ is the notional, $\alpha$ is the accrual fraction of the coupon and $T_P$ is the payment date corresponding to coupon end date $T_E$.
+
+With respect to the pay delay, only the last period is relevant.
+Similar as for the standard floating rate case based on the analysis in~\cite{Quark.RateAdj} it was decided to put a limitation of $30$ business days for the pay delay, see Appendix~\ref{sec:settings}.
+
+Next to the pay delay associated with the payment date and end date of the averaged rate we also have to deal with the end dates of all the underlying forward rates.
+If we rewrite equation~\eqref{eq:avgSwap1} using equation~\eqref{eq:avgRate}, we get:
+\begin{align}
+  V(t) &\approx \frac{N \alpha P^D(t,T_P)}{\alpha(T_S,T_E)} \sum_{i=1}^{K-1} \alpha(T_i,T_{i+1}) \E^{T_E}_t\left[ F(T_i,T_i,T_{i+1})\right].\label{eq:avgSwap2}
+\end{align}
+As each of the $F(T_i,T_i,T_{i+1})$ are not martingales under the $T_E$-forward measure but under the $T_{i+1}$-forward measure and the difference between dates $T_{i+1}$ and $T_E$ can be substantial, the convexity related to this change of measure cannot be ignored.
+
+If the curve, which is used to price a swap with an average index, is constructed using the market quotes of products on the same average index (which include the convexity adjustment), then such a swap can be priced without an additional approximation.
+This holds because the pricing in this case is actually an interpolation over the market quotes.
+This is especially important when valuing some swaps common in the US markets, such as BMA, Fed Fund (FF), Prime, or Commercial Paper (CP)~\footnote{CP swaps pay a rate which is calculated by compounding a strip of average rates. Furthermore, BMA swaps are quoted as a percentage of the 3m \Libor rate, while the others as a spread over the 3m \Libor rate.} swaps.
+In general we can say that a deal where one of the legs pays/receives the interest rate linked to a given average index is fine under the condition that the corresponding forecasting curve is built using exactly the same index and that the average index is the only unknown during the calibration phase of this curve.
+
+Let us illustrate this with an example for the 3m average Fed Fund (FF) rate, which is an average of the overnight FF rate over a period of 3m.
+The forecasting curve used for the estimation of the overnight FF rate, the \Arg{USD1D FF} curve, is built using basis swaps where a 3m \Libor is swapped for a 3m average FF rate.
+In this case the 3m \Libor curve is assumed to be `known' in the sense that during the calibration of the \Arg{USD1D FF} curve the only unknowns are the 3m average FF rates and this is the objective which we wish to calibrate.
+Once this calibration is done we can take these calibrated 3m average FF rates right off the curve to value another swap or other product where one of the legs is based on the 3m average FF rates.
+This corresponds to using equation~\eqref{eq:avgSwap1} directly.
+In this case no convexity adjustment is required as in the valuation step we have an expectation of the sum of overnight FF rates instead of the sum of expectations of overnight FF rates.
+
+In other words, we can value the coupon in equation~\eqref{eq:avgSwap1} by taking $R(t,T_S,T_E)$ directly off the curve without any extra convexity needing to be taken into account.
+Hence, the following limitation is imposed: the index of the deal should be the same index (from a market point of view, not from the Murex config point of view) as is used to build the curve with averaging swaps, the curve can have this index as the only unknown during the calibration.
+Also, the deal should not have any compounded payments.
+For pricing-purposes the mean type ``built on a weighting schedule'' is allowed to be used, provided the difference between the schedule period lengths of the weighting schedule and the fixing schedule used in the average index for the curve calibration is no more than 10 calendar days.
+This limitation is imposed to bound the error due to neglecting convexity adjustments.
+
+\paragraph{Remark.} Murex also allows the usage of an approximation when calculating the average rate for performance reasons: the so-called ``2nd order'' approximation.
+This feature is allowed in the context curve construction, but not in the context of valuing such deals.
+More details can be found in the section on swaps of~\cite{MxSettings.RateCurves}. \\
+
+However, in practice, trades are ageing while the `average' curve is still built with the same tenors.
+Though the curve and instrument are on the same average index, the periods of the curve instruments and the actual trade are no longer aligned and a convexity adjustment might be required.
+The misalignment can be categorised in three cases:
+\begin{enumerate}
+ \item For an already started coupon a part of the rates is already fixed.
+ Therefore, the average which has to be estimated for the first coupon is different compared to the case when the full coupon period is in the future.
+ \item If an already started trade has multiple coupons, also coupons for which the corresponding averaging period is fully in the future contributes to an error, because of a misalignment of coupon dates.
+ For example, the trade contains an averaging period in between $1$M and $4$M, while the averaging curve only has $3$M and $6$M spine points.
+ The length of the period is aligned, but there still is an interpolation error.
+ \item In case of stub periods, the length of the stub period is different than the averaging period of the curve instrument.
+\end{enumerate}
+These cases have been thoroughly analysed in the Comprehensive Testing Section~\ref{sec:ComprehensiveTesting}.
+We can correctly price coupons on an average index by using a curve which is calibrated to average instruments.
+However, the results of this comprehensive tests show that this does not hold for stub coupons and coupons that are partially in the past.
+Limitations are required and have to be imposed.
+As a result, \href{https://dev.azure.com/raboweb/PMVProjectList/_workitems/edit/8242126}{{\color{blue}Epic 8242126}} has been created.
+
+\subsubsection{CLP TNA as a Basket index}
+Baskets are linear combinations of several indices, such as weighted average, sum, multiplication.
+The CLP TNA index is configured as a \Func{Basket} index in Murex.
+CLP TNA refers to the Indice Camara Promedio (ICP) for Chilean Pesos, where ICP is an index of the average cost of funds, denominated in Chilean Pesos, for unsecured overnight (one day) borrowing in the Chilean interbank market.
+
+The way that the index is calculated in Murex is described below:
+\begin{itemize}
+  \item Past TNA will be computed based on the published ICP.
+  \item Future TNA will be estimated with the last known ICP, compounded with the overnight rate.
+\end{itemize}
+
+The ICP is calculated according to the following formula:
+\begin{align}
+  \ICP_i
+    &= \ICP_{i-1} \cdot \left( 1 + \frac{\TIB_{\text{base annual}(i-1)}}{100} \cdot \frac{N}{360} \right), \label{eq:ICP}
+\end{align}
+where
+\begin{itemize}
+  \item $\ICP_i$: Indice de Camara Promedio of day $i$;
+  \item $\ICP_{i-1}$: Indice de Camara Promedio of previous Bank Business Day of day $i$;
+  \item $\TIB_{\text{base annual}(i-1)}$: TIB of previous Bank Business Day of day $i$, where TIB represents the average daily interest rate and is calculated at the close of each day by the Central Bank of Chile;
+  \item N: number of days, for which TIB of the previous Bank Business Day needs to be used;
+  \item $\ICP_i$ is rounded to 2 decimals.
+\end{itemize}
+
+The CLP TNA \Func{Basket} index admits `Sum' and `Multiplication' as formula types.
+The \Func{Formula type} set to `Sum' implies that the different weighted indices are summed, and a constant can be added to them.
+The \Func{Formula type} set to `Multiplication' indicates that the different indices are multiplied.
+
+Being a \Func{Basket} index, CLP TNA, is the sum of two indices:
+$$ \text{CLP TNA} = \text{CLP ICP X TCP} + \text{CLP ICP START-END IR} $$
+\Func{Basket} indices are in principle only signed off for this type of configuration.
+Figure~\ref{fig:CLPTNA} gives a clear representation of how the CLP TNA index is structured.
+
+\begin{figure}[!h]
+    \centering
+    \begin{subfigure}[b]{1.0\textwidth}
+    \begin{tikzpicture}[node distance=6cm]
+    % create the nodes
+    \node (start)[rectangle, draw, align=center, minimum width=4cm, minimum height=2cm] {\bfseries CLP TNA \\ {\itshape Basket}};
+    \node (first1) [rectangle, below left of=start, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=5.5cm] {\bfseries CLP ICP X TCP \\ {\itshape Basket}};
+    \node (first2) [rectangle, below right of=start, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=5.5cm] {\bfseries CLP ICP START-END IR\\ {\itshape Start-end}};
+
+    \node (second11) [rectangle, below left of=first1, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=4cm] {\bfseries CLP ICP START-END \\ {\itshape Start-end}};
+    \node (second12) [rectangle, below right of=first1, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=4cm] {\bfseries CLP TCP CPD \\ {\itshape Compounded}};
+
+    \node (second111) [rectangle, below of=second11, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=3.3cm] {\bfseries CLP ICP PUBLISHED \\ {\itshape Pool factor} \\ {\itshape(Published)}};
+    \node (second122) [rectangle, below of=second12, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=3.3cm] {\bfseries CLP TCP \\ {\itshape Rate Curve }};
+
+    \node (first21) [rectangle, below of=first2, draw, align=center, minimum width=4cm, minimum height=2cm, node distance=2.8cm] {\bfseries CLP ICP PUBLISHED \\ {\itshape Pool factor} \\ {\itshape(Published)}};
+
+    % create the edges
+    \draw [->] (start) -- (first1);
+    \draw [->] (start) -- (first2);
+    \draw (first1.east) -- +(3.5,0) node[midway, above] {$+$} -- (first2.west);
+    \draw [->] (first1) -- (second11);
+    \draw [->] (first1) -- (second12);
+    \draw (second11.east) -- +(1.64,0) node[midway, above] {$\times$} (second12.west);
+    \draw [->] (first2) -- (first21);
+    \draw [->] (second11) -- (second111);
+    \draw [->] (second12) -- (second122);
+
+    \end{tikzpicture}
+  \end{subfigure}
+  \caption{CLP TNA configured as a \Func{Basket} index in Murex.}
+  \label{fig:CLPTNA}
+\end{figure}
+
+CLP ICP X TCP is also a \Func{Basket} index, which in turn is the multiplication of other two different indices, where the first has a scaling factor:
+\begin{align}
+  \text{CLP ICP X TCP}
+    &= \left(\frac{1}{100} \cdot \text{CLP ICP START-END} \right) \times \text{CLP TCP CPD}, \label{eq:TCP1}
+\end{align}
+where
+\begin{itemize}
+  \item CLP ICP START-END is an index having \Func{Formula:} \Func{Start-end} of type `Ratio' that allows CLP ICP PUBLISHED as underlying.
+  The latter is a different index, characterized by \Func{Category} `Pool factor' and \Func{Formula:} \Func{Published index}.
+  More details about \Func{Start-end} indices can be found in~\cite[Section 3.6.1]{Mx.StaticDataObjects}.
+  More details about \Func{Published} indices can be found in~\cite[Section 3.6.4]{Mx.StaticDataObjects}.
+  \item CLP TCP CPD is the Tasa Camara Promedio Compound index, with \Func{Category} `Rate', \Func{Formula:} \Func{Compounded}, \Func{Estimation mode} `Underlying indices', linear implied rate convention and with CLP TCP index as underlying index.
+      CLP TCP is another published index which value is taken from the rate curve.
+\end{itemize}
+
+At the same time, CLP TNA is also composed by CLP ICP START-END IR, which is an index with \Func{Formula:} \Func{Start-end} of type `Implied ratio', and a rate convention `Linear'.
+It admits as underlying index CLP ICP PUBLISHED which in turn is the same underlying of CLP ICP START-END described before.
+
+
+
+To have a more clear idea of how CLP TNA index works, it is appropriate to consider three different cases:
+\begin{enumerate}
+  \item The start date $(T_1)$ and end date $(T_2)$ of the coupon are both not in the past, i.e., after $T_{\text{today}} \leq T_1 < T_2$.
+    In this case, the contribution comes from CLP ICP X TCP, and therefore from the \Func{Compounded} index CLP TCP CPD.
+    Precisely, if the two dates are set in the future, then CLP ICP PUBLISHED and CLP ICP START-END IR, according to their definition in~\cite[Section 3.6.1]{Mx.StaticDataObjects} are published indices and their contribution for the future is `Last known', i.e., equal to the last known rate that corresponds to the rate of $T_{\text{today}}$).
+    Therefore,
+    \begin{align}
+      \text{CLP ICP START-END}
+        &= \frac{\ICP_{\text{last known}}}{\ICP_{\text{last known}}} \cdot 100 = 100, \nonumber
+    \end{align}
+    such that CLP ICP X TCP from Equation~\eqref{eq:TCP1} can be written as:
+    \begin{align}
+      \text{CLP ICP X TCP}
+        &= \left(\frac{1}{100} \cdot \text{CLP ICP START-END} \right) \times \text{CLP TCP CPD} \nonumber \\
+        &= \text{CLP TCP CPD}. \nonumber
+    \end{align}
+    For CLP ICP START-END IR, we are looking for the rate $R$ such that,
+    \begin{align}
+      1 + R \cdot \alpha
+        &= \frac{\ICP_{\text{last known}}}{\ICP_{\text{last known}}}, \nonumber
+    \end{align}
+    implying $R=0$, see~\cite[Section 3.6.1]{Mx.StaticDataObjects} for further details on \Func{Implied Ratio}.
+    This results in
+    \begin{align}
+      \text{CLP TNA}
+        &= \text{CLP ICP X TCP} + 0 \nonumber \\
+        &= \text{CLP TCP CPD}. \nonumber
+    \end{align}
+    In summary, we are effectively dealing with a purely compound index over the interval $[T_1, T_2]$.
+
+  \item The start date $(T_1)$ and the end date $(T_2)$ of the coupon are both in the past, i.e., $T_1 < T_2 < T_{\text{today}}$.
+    In this case, the CLP TCP CPD index does not contribute to the entire calculation, and CLP ICP START-END IR index provides the values for the final computation of CLP TNA index as follows
+    \begin{align}
+      \text{CLP TNA}
+        &= 0 + \text{CLP ICP START-END IR} \nonumber \\
+        &= \frac{1}{\alpha(T_1,T_2)}\left(\frac{\ICP_{T_2}}{\ICP_{T_1}} - 1\right). \nonumber
+    \end{align}
+    In summary, we are dealing purely with fixings in this case.
+
+  \item The start date of the coupon $(T_1)$ is in the past and end date of the coupon $(T_2)$ is in the future, i.e., $T_1 < T_{\text{today}} \leq T_2$.
+    Here, both `Start-end' and `Compounded' indices contribute to the computation of CLP TNA index in the following way:
+    \begin{itemize}
+      \item the \Func{Start-end} index CLP ICP START-END IR is not null before $T_{\text{today}}$ and it is calculated as
+      \begin{align}
+        \text{CLP ICP START-END IR}
+          &= \frac{1}{\alpha(T_1,T_2)}\left(\frac{\ICP_{\text{last known}}}{\ICP_{T_1}} - 1\right). \nonumber
+      \end{align}
+      \item the \Func{Start-end} index CLP ICP START-END is not null before $T_{\text{today}}$ and it is calculated as
+      \begin{align}
+      \text{CLP ICP START-END}
+        &= \frac{\ICP_{\text{last known}}}{\ICP_{T_1}} \cdot 100, \nonumber
+    \end{align}
+      \item the \Func{Compounded} index, CLP TCP CPD, is null before $T_{\text{today}}$ and not null from $T_{\text{today}}$ onwards till time $T_2$.
+    \end{itemize}
+
+    In summary, we are dealing with fixings over the interval $[T_1, T_{\text{today}})$ and a compound index over the interval $[T_{\text{today}}, T_2]$.
+\end{enumerate}
+
+From a valuation perspective, since there is a linear relationship between the value of the IRS and the CLP TNA index, the changes in the index have a constant impact on the value of the swap, without any non-linear effects due to convexity and any complicated calculations since the ones involved are sum and multiplication.
+
+
+\subsubsection{Stub Rates}
+In case the length of the accrual period is shorter (for short coupon) or longer (for long coupon) then the tenor of the index $\tau_{\text{Libor}}$, the stub rate has to be calculated for this period.
+
+In case the stub period length $\tau_S$ is shorter than the rate with the shortest tenor $\tau_1$ in the corresponding archiving group \textit{excluding the 1D rate}, then the interpolation is not performed.
+Instead the stub rate is defined as a rate with tenor $\tau_1$, which is the current ISDA specification according to FEng.
+
+Assume the stub period length is $\tau_S$ is in-between two tenors in the corresponding archiving group, $\tau_1<\tau_S<\tau_2$. Define $\tau_i$ to be the tenor closest to
+$\tau_S$:
+\begin{equation*}
+ \tau_i=\left\{
+ \begin{array}{cl}
+   \tau_1 & \text{ if } \tau_S-\tau_1<\tau_2-\tau_S\\
+   \tau_2 & \text{ otherwise }.
+   \end{array}
+  \right.
+\end{equation*}
+The stub rate is calculated depending on the setting of the Broken (stub) rate argument, see Figure~\ref{fig:murexSwap}.
+\begin{equation}
+  F_S(T_0,T,T+\tau_S)=
+  \left\{
+  \begin{array}{cl}
+    F(T_0,T,T+\tau_{\text{Libor}}) & \text{ if \textit{Broken rate}=current} \\
+    F(T_0,T,T+\tau_{1}) & \text{ if \textit{Broken rate}=previous} \\
+    F(T_0,T,T+\tau_{2}) & \text{ if \textit{Broken rate}=next} \\
+    F(T_0,T,T+\tau_{i}) & \text{ if \textit{Broken rate}=closest} \\
+    w_1 F(T_0,T,T+\tau_{1}) +w_2 F(T_0,T,T+\tau_{2}) & \text{ if \textit{Broken rate}=interpolated} \\
+    \end{array}
+  \right.
+\end{equation}
+where $w_1$ and $w_2$ are weights for interpolation with $w_1=\frac{\tau_2-\tau_S}{\tau_2-\tau_1}$ and $w_1=\frac{\tau_S-\tau_1}{\tau_2-\tau_1}$.
+
+In case of a non-interpolated stub period the tenor of the index used for the stub period is not allowed to differ more than 30 business days from the tenor of the stub period, see Appendix~\ref{sec:settings}.
+
+In case of an interpolated stub period or a stub period that involves an interpolated index the stub period's payment date and second date of the ``estimationPeriodBetween'' field cannot be more than 30 business days away from each other.
+An interpolated floating rate is obtained in Murex via the interpolated stub setting or an interpolated rate via an interpolated index.
+In both cases the rate end date is renamed in Murex and is the second date of the ``estimationPeriodBetween'' field.
+For a stub period the payment date and second date of the “estimationPeriodBetween” field cannot be more than 30 business days away from each other, see Appendix~\ref{sec:settings}.
+From Murex version 50 on, it is observed that rounding also takes place for rates that are not yet fixed.
+This only happens if the interpolation takes place between two tenors, for which a fixing is available for only one of them.
+Since this should not occur in practice, and because the impact is very small, this behaviour is accepted.
+
+\subsubsection{Amortizing Notional}
+The notional in interest rate swap pricer can be specified in different ways:
+\begin{description}
+  \item[Single number] - in this case the notional can be supplied in e-TradePad in the field called \textit{Nominal}.
+  \item[Array of notionals] - the array can be inserted manually into the flows by pressing \textit{Flows}-\textit{Open}.
+  \item[Predefined formula] - in the \textit{Amortizing} input there is a dropdown menu which allows to define the amortizing method, see~\cite{Mx.LoanDeposit}.
+  In this case the remaining notional is calculated using a predefined formula.
+\end{description}
+The detailed description of available types is presented in the Amortization section of~\cite{Mx.GenericFunctionalities}.
+Currently for the Predefined formula amortizing notional only the following types are signed off:
+\begin{itemize}
+\item LinearRate;
+\item LinearAmount;
+\item Constant;
+\item RealCouponReinv;
+\item ConstantAnnuities;
+\item ConstantAnnuitiesRate.
+\end{itemize}
+The field Annuity Term in default amortization type ConstantAnnuities/ConstantAnnuitiesRate is out of scope.
+
+\subsubsection{Additional Flows}
+It is possible to add a number of fixed flows to the trade. To do so press \textit{Additional flows-Open} and in the new window choose \textit{Insert}.
+Now the amount and the payment date can be set.
+The currency should be the same as the currency of the trade.
+
+The adjustment to the value of the trade due to the added flows can be calculated as follows:
+\begin{equation*}
+\Delta V(t)=\sum_{k=1}^{N^A} a_k P^{\text{Fund}}(t,T_k^A),
+\end{equation*}
+where $N^A$ is the number of additional flows, $a_k$ are the additional flows and $T_k^A$ are the payment dates of the additional flows.
+The discount factor $P^{\text{Fund}}(t,T_k^A)$ comes from the discount curve, which is usually OIS curve for CSA derivatives and the funding curve for non-CSA derivatives.
+
+\textbf{Remark.} The additional flows are added on the trade level, independent of the leg.
+
+\subsubsection{Vanilla Swap with Customized Flows}
+Once a cash flow table is generated by using the generator and trade settings, Murex gives the possibility to customize this table by editing the fields manually.
+The following fields can be adjusted:
+\begin{itemize}
+  \item Schedule;
+  \item First Fixing;
+  \item Interest Rates;
+  \item Interest Flows;
+  \item Remaining Capital Flow;
+  \item Interest Margin;
+  \item Sales Margin;
+  \item Rate Factor.
+\end{itemize}
+For details please consult the Flows Customization section in~\cite{Mx.GenericFunctionalities}.
+In some cases the change of the field can result in a flow which requires a convexity adjustment.
+All limitations related to convexity adjustments should be upheld.
+
+\subsubsection{CtD Framework}
+\label{sec:CtD}
+The \textit{IRS Vanilla} product supports the Cheapest-to-Deliver (CtD) framework. \input{../../../General/Miscellaneous/ProductInScopeForCTD.tex}
+
+\subsubsection{XVA Framework}
+\label{sec:XVA}
+The \textit{IRS Vanilla} product supports the XVA framework. \input{../../../General/Miscellaneous/ProductInScopeForXVA.tex}
+
+\subsection{Model Summary}
+The present value of the interest rate swap is an analytical expression depending on the discount factors from the Discount curve and Forecasting curve(s), thus this model belongs to the Yield Curve model category.
+
+The main assumptions are:
+\input{../../../General/ModelSummary/Start.tex}
+\input{../../../General/ModelSummary/YieldCurves.tex}
+\input{../../../General/ModelSummary/ConvAdjFloatingRate.tex}
+\input{../../../General/ModelSummary/End.tex}
+
+If the product is used with CtD functionality, then the model inherits one additional assumption related to FX curves and the assumptions valid for the CtD framework:
+\input{../../../General/ModelSummary/Start.tex}
+\input{../../../General/ModelSummary/FX.tex}
+\input{../../../General/ModelSummary/CTD.tex}
+\input{../../../General/ModelSummary/End.tex}
+
+\input{../../../General/ModelSummary/XVAGeneric.tex}
+
+\section{Testing} \label{sec:Testing}
+
+In this section, we discuss both the initial and comprehensive testing.
+
+\subsection{Initial Testing}
+
+The \textit{IRS Vanilla} product is replicated in PMV's replication library.
+The replication error for the value is less than $10^{-7}$.
+For the par delta the replication error is less than $5 \cdot 10^{-4}$ \cite{Mx.RateCurve}.
+All errors are within the predefined threshold described in~\cite{PMVPricingModelsTestingTolerancesGuidelines}.
+
+More details on what precisely has been tested can be found in the section below.
+
+\subsubsection{Inputs}
+The \textit{IRS Vanilla} product has been tested:
+\begin{itemize}
+  \item for vanilla and tenor swaps;
+  \item for different currencies: EUR, USD, GBP and JPY.
+  JPY currency is special in a way that there is a rounding of fixed cash flows on a currency level.
+  The yield curves that are used for the product are determined via the rate curve assignment.
+  \item for different swap generators, also with adjusted settings.
+  \item for different Notional amounts: single numbers, arrays of notionals and amortizing notionals with predefined formula.
+  \item for \Libor rates with different tenors and different formula definition settings.
+  \item for different start and maturity periods, specifies both as dates and as maturity strings.
+  \item for already started, starting today and forward starting deals.
+  \item for different Rate conventions as specified on the trade level in Rate convention.
+  \item for different Payments and Fixing calendars.
+  \item for different Broken (stub) periods: up front, in arrears, both ends (backwards) and both ends (forwards).
+  \item for different Broken coupons: short coupon, long coupon and full coupon.
+  \item for different Broken rates: current, previous, next, closest, interpolated.
+  \item for different CtD curves by selecting different counterparties that are linked to specific collateral agreement categories.
+\item for Basket indices with different types of underlying indices.
+  \item for different compounding indices/rates and compounded flows.
+  \item for different compounding indices in combination with compounded flows.
+\end{itemize}
+
+\subsubsection{Outputs}\label{sec:outputs}
+The \textit{IRS Vanilla} product has been tested for the following outputs, \testsDone
+
+Description of the outputs:
+\input{../../../General/ModelOutputs/Start.tex}
+\input{../../../General/ModelOutputs/Value.tex}
+\input{../../../General/ModelOutputs/ParDelta.tex}
+\input{../../../General/ModelOutputs/End.tex}
+
+\input{../../../General/LinkSimulationViews/LinkSimulationViews.tex}
+
+\subsection{Comprehensive Testing}\label{sec:ComprehensiveTesting}
+
+\subsubsection{Convexity Adjustment for Average Indices}
+PMV replicated the XVA Monte Carlo (MC) engine which is used for XVA calculations in Murex.
+PMV’s MC engine is extended such that it can also be used for pricing simplified trades via a MC pricer.
+Combined with the Hull-White one-factor model (HW1F), see~\cite{Mx.XVAFramework}, this MC engine is used to assess the convexity adjustment impact on simple swaplet instruments.
+The number of paths is chosen in such a way that the MC error is small enough to see the magnitude of the error introduced by neglecting the convexity adjustment.
+The objective of this assessment is not to have a precise error estimate.
+
+A simplified test product has been set up for a single swaplet with one floating coupon payment without capital payments.
+See Appendix~\ref{sec:AverageIndex} for more details.
+The following product characteristics are relevant:
+\begin{itemize}
+ \item the start date of the coupon period;
+ \item the length of the coupon period, also commonly referred to as the tenor;
+ \item the frequency of the average operator.
+ Typically the average is taken over business days;
+ \item the rate convention of the underlying rate.
+ Typically a linear rate convention is used;
+ \item the coupon payment date.
+\end{itemize}
+
+The impact will also be sensitive to the following market data inputs:
+\begin{itemize}
+ \item A flat interest rate is used at different levels up to $20\%$;
+ \item The HW1F model is calibrated to a flat swaption implied volatility.
+ It has been tested for multiple levels of flat implied volatilities;
+ \item Within the HW1F model, the mean reversion parameter is assumed to be constant in time.
+\end{itemize}
+
+The error magnitude introduced by the misaligned averaging periods between the trade and the curve is investigated.
+The misalignment can be categorised in three cases:
+\begin{enumerate}
+ \item For an already started coupon a part of the rates is already fixed.
+ Therefore, the average which has to be estimated for the first coupon is different compared to the case when the full coupon period is in the future;
+ \item If an already started trade has multiple coupons, also coupons, for which the corresponding averaging period is fully in the future, contributes to an error.
+    This is because of a misalignment of coupon dates.
+ For example, the trade contains an averaging period in between $1$M and $4$M, while the averaging curve only has $3$M and $6$M spine points.
+ The length of the period is aligned, but there still is an interpolation error;
+ \item In case of stub periods, the length of the stub period is different than the averaging period of the curve instrument.
+\end{enumerate}
+
+\subsubsection*{Impact analysis}
+
+To understand when the error can become large, the impact of various model parameters and trade inputs is analzyed.
+
+\paragraph{Interest Rates}
+Figure~\ref{fig:ImpactRate} shows that a growing interest rate results in a larger error.
+For the stressed scenarios a flat interest rate of $20\%$ is used.
+When the flat rate is far enough from $0$, the relative error seems to grow linearly in rate.
+This means that the absolute error will grow faster, since the value of the coupon itself grows typically linear in rate as well.
+For example, for a linear rate convention the absolute error will grow quadratic in interest rate.
+
+\paragraph{Mean Reversion}
+Theoretically, a higher mean reversion causes a reduced volatility when the model volatility is kept constant.
+Since the model volatilities are calibrated to implied volatilities, the model volatilities will be higher to compensate for the higher mean reversion.
+Based on Figure~\ref{fig:ImpactMeanRevBase}, the relative error grows in mean reversion.
+Therefore, for the stressed tests a high mean reversion of $10\%$ is used.
+
+\paragraph{Impact of Tenor}
+In Figure~\ref{fig:Tenor}, it is shown that the relative error grows more or less quadratic in tenor length.
+The differences are calculated with the extreme stressed case.
+For the longest tenor of $1$Y the error increases to $5\%$.
+PMV checked the production portfolio via the SUP01 environment for August 2022, to have an indication of what kind of trades use an averaged index.
+There are only a few trades for the $6$M and $12$M tenor.
+The longest tenor with a significant number of trades is $3$M.
+Therefore, this tenor is used for further analysis with stressed data.
+
+\paragraph{Different Rate Conventions}
+As only average indices with linear rate conventions exist in production, a linear rate convention is used for testing.
+However, it should be noted that for this example a rate convention with computing mode `Yield' has an error twice as large as a similar example with a rate convention with computing mode `Linear', while the `Exponential' convention produces a much smaller error.
+
+\begin{table}[H]
+\footnotesize
+\centering
+\begin{tabular}{l|l|l}
+  \toprule[0.05cm]
+  \textbf{Computing Mode} & \textbf{Relative Error} & \textbf{MC Standard Deviation} \\
+  \hline\hline
+  Linear      & $0.28\%$ & $0.04\%$ \\ \hline
+  Yield       & $0.57\%$ & $0.02\%$ \\ \hline
+  Exponential & $0.01\%$ & $0.02\%$ \\
+  \bottomrule[0.05cm]
+\end{tabular}
+\caption{Impact of rate convention computing mode under extreme stressed market data for $3$M averaging rates.
+The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+ \label{tab:rateConvs}
+\end{table}
+
+\paragraph{Implied Volatility}
+In Figure~\ref{fig:ImpactVolBase}, the impact of implied volatility on the $3$M averaging rate test is given for the base test case.
+As expected, an increase in implied volatility results in an increase in relative error.
+The growth is more or less quadratic in implied volatility.
+In Figure~\ref{fig:ImpactVolStress3M}, the impact is given for the extremely stressed test case where both interest rate, volatility and mean reversion are high.
+The maximum error under extreme stress is just below $30$ bps, measured relative to the coupon value.
+In Figure~\ref{fig:ImpactVolStress12M}, the impact of implied volatility on the $12$M averaging rate test is given for the stressed test case.
+It is clear that the impact for this test is even higher and grows to around $5\%$.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/FlatRate.png}
+        \caption{Relative error as a function of interest rate in the base test case. The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+        \label{fig:ImpactRate}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/MeanRev.png}
+        \caption{Relative error as a function of mean reversion in the base test case. The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+        \label{fig:ImpactMeanRevBase}
+    \end{subfigure}
+
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/Tenor.png}
+        \caption{Impact of tenor length in the extreme stressed case. The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+        \label{fig:Tenor}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/ImpliedVol.png}
+        \caption{Impact of implied volatility for base case. The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+        \label{fig:ImpactVolBase}
+    \end{subfigure}
+
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/ImpliedVolStressed3M.png}
+        \caption{Impact of implied volatility for $3$M test case with extreme stressed market data. The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+        \label{fig:ImpactVolStress3M}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}{0.45\textwidth}
+        \centering
+        \includegraphics[width=\linewidth]{figures/ImpliedVolStressed12M.png}
+        \caption{Impact of implied volatility for $12$M test case with extreme stressed market data. The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.}
+        \label{fig:ImpactVolStress12M}
+    \end{subfigure}
+
+    \caption{Combined impact of various factors on relative error in MC pricing and implied volatility across different test cases.}
+    \label{fig:CombinedImpact}
+\end{figure}
+
+\paragraph{Market data scenarios}
+The MC prices are compared against the analytic approximation without using curves calibrated to average instruments.
+Different scenarios are considered for different test trades.
+In Table~\ref{tab:baseandStressedCase}, test data is given for a base case and an extreme stressed case.
+The base case is not only used to have an idea of the error, but also to investigate if the error is increasing or decreasing in a certain variable.
+This helps to formulate a stressed scenario.
+The stressed level used for implied volatility is based on~\cite{Fornari05}.
+
+\begin{table}[H]
+\footnotesize
+\centering
+\begin{tabular}{l|l|l}
+  \toprule[0.05cm]
+  \textbf{Parameter} & \textbf{Base} & \textbf{Extreme Stress} \\
+  \hline\hline
+  Interest rate  & $5\%$   & $20\%$ \\ \hline
+  Implied vol    & $25\%$  & $70\%$ \\ \hline
+  Frequency      & Daily & Daily  \\ \hline
+  Mean reversion & $2\%$   & $10\%$ \\
+  \bottomrule[0.05cm]
+\end{tabular}
+\caption{Base case and stressed case for testing impact of input parameters.}
+\label{tab:baseandStressedCase}
+\end{table}
+
+The error is measured relative to the analytic calculated estimated price, which is the Murex price.
+When interpreting the errors, it has to be taken into account that capital exchanges are excluded.
+Therefore, the presented relative errors are higher compared to a test case where capital payments are included.
+
+The relative error $\epsilon$ is defined by:
+\begin{equation*}
+ \epsilon = \frac{ |V^{MC}(t_0) - V^{MX}(t_0)| }{ |V^{MX}(t_0)|}.
+\end{equation*}
+Here $V^{MC}(t_0)$ is the MC price and $V^{MX}(t_0)$ is the price estimated by the analytical pricer used by Murex.
+
+\subsubsection*{Case 1: Already Started Trades and Mismatch of Periods}
+
+For already started trades, the averaging periods on trade level are out of sync with the averaging periods on the rate curve.
+
+The following procedure has been followed to illustrate the issue in case of 3M averaging instruments:
+\begin{itemize}
+ \item First, an averaging swaplet instrument with an expiry of $3$M is priced with the HW1F model, as well as an averaging swaplet instrument with an expiry of $6$M.
+ \item A curve is constructed with two spine points, one at $3$M and one at $6$M.
+ Flat extrapolation and linear interpolation are used.
+ This curve is calibrated such that the analytic pricer prices back averaging swaplet instruments with an expiry of respectively $3$M and $6$M.
+ \item Multiple test averaging swaplet trades are defined.
+ Each swaplet has a tenor of $3$M but starts at a different point in time.
+ The start date differs from nearly $3$ months in the past until $3$ months in the future.
+ Historical fixings are assumed to be equal to the rate at the valuation date.
+ Tests that start in the past will demonstrate the error that is introduced, if the averaging period is shorter than the period which is used in the curve calibration instruments.
+ Test trades without stub periods starting in the future do not have this issue, but the mismatch in start and end date still might result in an error.
+ \item If for an already started trade there is only one rate which is not yet fixed, this single rate should be calculated with the $1$D curve.
+ This raised the idea of adding a $1$D spine point to the averaging curve, where the $1$D spine point is forced to be equal to the $1$D curve.
+\end{itemize}
+
+In Figure~\ref{fig:ImpactCalibrationBase}, the relative error is plotted as a function of the start date.
+The following observations are made:
+\begin{itemize}
+ \item If the trade started far enough in the past, using the $1$D curve is more accurate than using the curve which is calibrated to the average index instrument.
+ Each coupon of each trade will reach this phase at some point in the future.
+ \item If the convexity adjustment is neglected, the relative error grows as a function of the start date.
+ This is due to the fact that rates further in the future have a higher variance.
+ \item If the calibrated curve is used, the error vanishes by construction at spine points.
+ The error does no longer grow as function of the start date.
+ The calibrated curve is calibrated to MC prices and hence is partially calibrated to the MC error.
+ Therefore, the MC error should be small in order to make fair comparisons between test results obtained without calibration (orange) and with calibration (green and blue).
+ The MC confidence region is given by a shaded region which is far below the error introduced by the analytical pricer without calibrated curve.
+ The two calibrated curves share the same benefit as the MC price is exactly matched at the spine point.
+ \item Adding the $1$D spine points improves the relative error of the calibrated curve in case of coupons starting before the first spine point.
+ Only in case the start date is in the past, the relative error is still outside the $95\%$ confidence interval.
+ That the error for trades starting in between today and 3M also decreases by adding the $1$D spine points was not directly expected because the length of the averaging period is still $3$M.
+ The reason is that the extra spine point gives a more natural slope to the short end of the rate curve which is not achieved by flat extrapolation.
+ For calculating the average rate, discount factors in between $1$D and $3$M are still used to calculate for example a forward starting coupon which starts before the $3$M spine points, and hence the interpolation between $1$D and $3$M is also used here.
+\item Figure~\ref{fig:ImpactCalibrationBaseExtend} is the same as Figure~\ref{fig:ImpactCalibrationBase}, but now also test trades starting after the first spine point are added.
+ For these extra tests, the additional $1$D spine point does not have a significant impact anymore.
+ This is expected, because no discount factors from before the $3$M pillar are used.
+ The remaining error is below the standard error of the MC price.
+\end{itemize}
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.8\linewidth]{figures/Base3M.png}
+ \caption{Base case relative difference for different start dates in case convexity adjustment is neglected (orange), in case the average curve is calibrated at maturities $3$M and $6$M (blue), and in case also an additional spine point is added at the first day after $t_0$ (green).
+ The horizontal axis gives the start date of the test trade as a year fraction.
+ So, a value of $-0.25$ means that the start date is $3$M ago and ends today.
+ A value of $0.085$ means that the trade starts approximately $1$M from today and ends $4$M from today.}
+ \label{fig:ImpactCalibrationBase}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.8\linewidth]{figures/Base3Mextended.png}
+  \caption{Same figure as Figure~\ref{fig:ImpactCalibrationBase}.
+  Now the curve is also calibrated to an average coupon starting at $6$M (around 0.5) and ending at $9$M (around 0.75).
+  Results are added for coupons starting $3$M (around 0.25) in the future until coupons starting $6$M in the future (around 0.75).}
+  \label{fig:ImpactCalibrationBaseExtend}
+\end{figure}
+
+In Figure~\ref{fig:ImpactCalibrationStress}, the same test is done as given in Figure~\ref{fig:ImpactCalibrationBase}, but now with stressed data.
+As expected, the errors are much larger, but the patterns stay the same.
+However, even in this extreme stressed case, the error of the calibrated curve extended with a $1$D spine point (green line) is not larger than $4$ basis points (bps).
+Without the extra spine point (blue line) the maximum error for this example is $11$ bps.
+So adding the $1$D spine point reduces the error.
+
+\begin{figure}[H]
+ \centering
+ \includegraphics[width=0.8\linewidth]{figures/Stressed3M.png}
+ \caption{Extreme stressed case relative difference for different start dates in case convexity adjustment is neglected (orange), in case the average curve is calibrated at maturities $3$M and $6$M (blue), and in case also an additional spine point is added at the first day after $t_0$ (green).
+ The horizontal axis gives the start date of the test trade as a year fraction.
+ So, a value of $-0.25$ means that the start date is $3$M ago and ends today.
+ A value of $0.085$ means that the trade starts approximately $1$M from today and ends $4$M from today.}
+ \label{fig:ImpactCalibrationStress}
+\end{figure}
+
+
+
+
+
+
+\subsubsection*{Case 2: Short Stub Periods Forward Starting Trades}
+A different way in which a mismatch in period length can occur is because of a short stub period.
+A short stub period is a stub period which is shorter than the tenor period.
+This happens if the period between the start and end date agreed in the contract is not exactly divisible by the tenor length.
+In such a case, the schedule will exist of a number of full periods and $1$ or $2$ periods with a different length.
+The periods with different length are called stub periods.
+They can be placed at the start of the schedule (up-front), at the end of the schedule (in-arrears), or divided over both the start and end of the schedule.
+
+The problem is now different than in Case 1, because the stub periods can be further in the future.
+This is the case for forward starting trades with an up-front stub period, but also with regular trades with a stub period in-arrears.
+While the issue in Case 1 was fixed by adding a $1$D point to the short end of the curve, this cannot be done for stub periods located in the future.
+If such a stub period has a length of $1$D, then using the $1$D curve is better than using the curve which is calibrated to average rates of for example $3$M.
+This only holds for calculating the price of the stub coupon, not for all other coupons.
+The relative error for a stub coupon of $2$ business days is illustrated in Figure~\ref{fig:ImpactStub}.
+In this case, the orange line shows there is no significant error different than the MC error if the convexity adjustment is neglected.
+However, when a curve calibrated to $3$M average indices is used, an error is introduced.
+Figure~\ref{fig:ImpactStub} also shows, that adding the $1$D spine point to the to average instruments calibrated curve, makes the error linear in time, while without the additional spine point the error is constant until the first spine point due to the flat extrapolation.
+
+\begin{figure}[H]
+    \centering
+      \includegraphics[width=0.8\linewidth]{figures/ForwardStartingStub.png}
+      \caption{Extreme stressed case relative difference for stub periods of $2$ business days for different start dates in case convexity adjustment is neglected (orange), in case the average curve is calibrated at maturities $3$M and $6$M (blue), and in case also an additional spine point is added at the first day after $t_0$ (green).
+      The horizontal axis gives the start date of the test trade as a year fraction.}
+    \label{fig:ImpactStub}
+\end{figure}
+
+The longer the stub period, the larger the required convexity adjustment. In Figure~\ref{fig:ImpactStub1M}, the errors for a stub period of $1$M are presented. In this case, a convexity adjustment is required and therefore estimating a $1$M average without calibrated curve results in a more significant error (orange) than for the $2$D case. The stub period length is still closer to $1$D than to $3$M, therefore the curve calibrated to the $3$M index still gives a larger error. In Figure~\ref{fig:ImpactStub1M}, as well as Figure~\ref{fig:ImpactStub}, adding the extra spine point is beneficial if the start date of the stub period is close to the evaluation date ($t_0 = 0$).
+
+\begin{figure}[H]
+    \centering
+      \includegraphics[width=0.8\linewidth]{figures/ForwardStartingStub1M.png}
+      \caption{Extreme stressed case relative difference for stub periods of $1$M for different start dates in case convexity adjustment is neglected (orange), in case the average curve is calibrated at maturities $3$M and $6$M (blue), and in case also an additional spine point is added at the first day after $t_0$ (green).
+      The horizontal axis gives the start date of the test trade as a year fraction.}
+    \label{fig:ImpactStub1M}
+\end{figure}
+
+In general a trade does not only contain a stub coupon but also contains a range of full coupons in the future.
+Recall from Figure~\ref{fig:ImpactCalibrationBaseExtend} that the error of neglecting the convexity adjustment grows in time, and that the interpolation error is much smaller.
+Furthermore, any trade will become an already started trade in which case one coupon will be partially in the past.
+Therefore, using a curve calibrated to average instruments extended with the $1$D spine point has the best performance.
+Therefore, stub periods too far in the future should not be allowed.
+This can be the case either for upfront stubs of forward starting trades as well as in-arrear stubs of any other trade.
+
+
+
+\subsubsection*{Case 3: Long Stub Periods}
+
+The analyses also showed that:
+\begin{itemize}
+ \item Floating rate periods which are shorter than the coupon frequency can result in a significant error.
+ For a $3$M frequency this can be more than $0.1\%$ in stressed circumstances.
+ In case of long stub periods or short stub periods far in the future the error can grow over $1\%$.
+ \item in case of already started coupons, the error can be reduced by adding an extra spine point at the short end of the curve, such that an averaging period of $1$ business day after today is matched exactly;
+ \item the interpolation error is also reduced by adding the extra spine point on the short end of the curve.
+ \item the error introduced by stub periods starting close to the evaluation date is smaller if the extra spine point is added.
+ \item stub periods located further in the future introduce a larger error.
+ Adding an extra spine point at the short end of the curve results in a larger error in this case.
+\end{itemize}
+
+
+\subsubsection{Sanity check on feature `Today cash'}
+We have performed a sanity check on the feature `Today cash' for the values \textit{Incorporated} (today's cash flow included in pricing) and \textit{not incorporated} (today's cash flow not included in pricing) and observed that it showed an expected behaviour.
+Since, it is not possible to have regression tests on this feature, it can not be signed off (for more detail see Appendix~\ref{sec:Limitations}).
+
+
+\section{Conclusions}
+See Executive Summary.
+
+\newpage
+\bibliographystyle{plain}
+\bibliography{\bibAll}
+\newpage
+\appendix
+% Have smaller font in the appendix
+\small
+% Maybe Break before section
+
+\section{Settings}
+\label{sec:settings}
+\input{../../../General/Settings/SettingsBackground.tex}
+\input{SettingsOverview.tex}
+\input{../../../General/Settings/Limitations.tex}\label{sec:Limitations}
+\newline
+\newline
+\input{../../../General/Settings/LimitationsCurve.tex}
+
+\begin{enumerate}
+  \item Accrual dates (start and end dates) for Murex fixed and floating legs:
+      \begin{enumerate}
+         \item No period start date can be less than the start date of the leg~\cite{MxSettings.IRS}.
+         \item No period end date can be greater than the maturity date of the leg~\cite{MxSettings.IRS}.
+         \item The frequency of the driving schedule should be the same as the frequency of the floating index in case the formula of the index is `Published index' or `Average'~\cite{MxSettings.IRS}.
+      \end{enumerate}
+  \item Floating Rate (fixed-for float and tenor swap):
+    \begin{enumerate}
+        \item Pay delay: a period's payment date cannot be more than 30 business days away from the corresponding period's rate end date.
+        In case of a non-interpolated stub period the tenor of the index used for the stub period is not allowed to differ more than 30 business days from the tenor of the stub period~\cite{MxSettings.IRS}.
+        \item In case of an interpolated stub period or a stub period that involves an interpolated index the stub period's payment date and second date of the ``estimationPeriodBetween'' field cannot be more than 30 business days away from each other.
+        Note that an interpolated floating rate is obtained in Murex via the interpolated stub setting or an interpolated rate via an interpolated index.
+            In both cases the rate end date is renamed in Murex and is the second date of the ``estimationPeriodBetween'' field.
+            For a stub period the payment date and second date of the ``estimationPeriodBetween'' field cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+         \item In case of an interpolated rate, the rate's payment date and second date of the ``estimationPeriodBetween'' field cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+         \item In case the stub period \Arg{Coupon} setting is set to `Full coupon', the \Arg{Stub period rate} should be set to `Current Index'.
+         Reason being, Murex always use `Current Index' in the background, regardless of the \Arg{Stub period rate} setting.
+        \end{enumerate}
+  \item Compounded floating rate (compound index swaps):
+      \begin{enumerate}
+          \item Pay delay: the payment date and corresponding rate end date of the last period cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+          \item In case the Margin mode=\textit{In underlying} the compound indices are signed off~\cite{MxSettings.IRS,MxSettings.IRSGenerator} under the conditions that there is no compounding on flows and one of the two holds:
+            \begin{enumerate}
+              \item The margin should be less than $100$ bp and the coupon frequency is not more than $12$ months;
+              \item The frequency of the underlying index is daily and the compound margin is not larger than $200$ bp.
+            \end{enumerate}
+          \item Trades where a leg is based on a compounding index, where the compounding schedule is not equivalent to the underlying index schedule are not signed off~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+	   The reason for this is that Murex does not support this in their xVA engine, see Murex case C-1136070 for further background info.
+      \end{enumerate}
+  \item Average floating rate (average index swaps):
+      \begin{enumerate}
+          \item Pay delay: the payment date and corresponding rate end date of the last period cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+          \item The swaps with average indices are not signed off in general, because the convexity adjustment is not available yet~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+          \item The swap with average indices are signed off where the index of the deal is the same index (from a market point of view, not from the Murex config point of view) as is used to build the curve with averaging instruments, the curve can have this index as the only unknown during the calibration.
+              Also the deal should not have any compounded payments~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+              For pricing-purposes the mean type `built on a weighting schedule’ is allowed to be used, provided the difference between the schedule period lengths of the weighting schedule and the fixing schedule used in the average index for the curve calibration is no more than 10 calendar days.
+              This limitation is imposed to bound the error due to neglecting convexity adjustments.
+          \item The approximation methods (the first order  and the second order) for the average rates are not requested and as such are not signed off~\cite{MxSettings.StaticData-RateIndex}.
+          \item Murex does not recommend to use \textit{Rate conversion} in combination with Average index (see Murex documentation~\cite{Mx.RateIndex})~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+      \end{enumerate}
+  \item Compounding flows (compound swaps):
+  \begin{enumerate}
+    \item Pay delay: the payment date and corresponding rate end date of the last compounded flow cannot be more than 30 business days away from each other~\cite{MxSettings.IRS}.
+    \item With respect to the compounding period length one of the below should hold~\cite{MxSettings.IRS}:
+    \begin{enumerate}
+      \item The compound margin is $0$;
+      \item The length of the compounding period is $24$ months or shorter and the compound margin is not larger than $50$ bp.
+            If the estimation mode is set to \Arg{Current Index}, then the margin is $0$;
+    \end{enumerate}
+    \item The combination of compounding indices with compounded flows is only allowed under the following conditions:
+    \begin{enumerate}
+      \item The Margin Mode is set to Additive.
+      \item The Rate Convention is set to Linear.
+      \item The compounding mode is either:
+        \begin{enumerate}
+          \item (I + M) at (I + M), or
+          \item (I + M) at I.
+        \end{enumerate}
+    \end{enumerate}
+      \item For estimation mode \Arg{Current Index}, the start and end date of the rate should be a business day.
+    \end{enumerate}
+  \item Bug related restrictions, all related to compounding flows:
+      \begin{enumerate}
+          \item For compounding mode `(I+M1) at (I+M2)' the second margin (M2) is missing from the exports and therefore the numbers cannot be tested on an automated basis.
+            The issue has been reported to Murex, it was identified as a bug, though it is not likely to be fixed anytime soon.
+            Until the fix is delivered this feature is not signed off~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+          \item For compounding mode `I at (I+M)' a bug has been reported to Murex, though it is not likely to be fixed anytime soon.
+            Until the fix is delivered this feature is not signed off~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+            \item Flow compounding modes `(I at I) + M' and `I at (I+M) + M' are not signed off~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+	       The reason for this is that Murex does not support this in their xVA engine, see Murex case C-1053393 for further background info.
+          \item In case of compounding where the \Arg{Margin Mode} is non-standard (i.e., not set to \Arg{Additive}) and the \Arg{Rate Convention} is non-standard (i.e., not set to \Arg{Linear}) Murex confirmed their product is not working as it should.
+              FEng re-assessed what is required for Alpha and they indicated that a \Arg{Multiplicative} margin mode is required for compounding rule `(I+M) at (I+M)'.
+              Murex confirmed that this is working properly and this was confirmed by the testing done during the validation.
+              For now this means that the combination of a non-standard \Arg{Margin Mode} and compounding is only allowed for a \Arg{Multiplicative} margin mode together with compounding rule `(I+M) at (I+M)'~\cite{MxSettings.IRSGenerator}.
+            \item Trades where a leg has a multiplicative margin with compounding flows, e.g., `(I+M) @ (I+M)', and yield rate convention are not signed off~\cite{MxSettings.IRSGenerator}.
+	       The reason for this is that Murex does not support this in their xVA engine, see Murex cases C-1053393 and C-1100012 for further background info.
+      \end{enumerate}
+  \item Basket indices are only signed off if the compounding of flows is turned off~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+  \item Compounding is not allowed when the amortizing amounts depend on the size of the coupons.
+  This is the case for the amortization types \Arg{Constant annuities}, \Arg{Constant annuities (r)} and \Arg{Real coupon reinvestment}.
+  This implies that the frequency ratio of the payment schedule of the underlying generator should be set to 1~\cite{MxSettings.IRS}.
+  \item During one of the validations, it came to light that there is a bug in Murex at swap generator level if DayCount = ``No'' is combined with RateConvention.RateExpression=``Discount/FRA basis''.
+      Murex commented that DayCount=``No'' is only intended to work with RateConvention.RateExpression = ``Standard basis''.
+      For the products where DayCount = ``No'' is signed off, this leads to a restriction, see~\cite{MxSettings.IRSGenerator}.
+      See Murex case C-1074109 for further background info.
+  \item Rate conversion:
+  \begin{enumerate}
+    \item Rate conversion rounding at generator level is not signed off, see~\cite{MxSettings.IRSGenerator}.
+    \item For floating rates, and if the rate conversion includes the rate (conversion Scope being interest rate or exclude margin), then the conversion must take place from the rate conversion of the index to the rate conversion of the generator.
+      If only the margin is converted, then the rate convention of the index and generator must be identical.
+      Also, Murex does not recommend to use rate conversion in combination with Average index~\cite{MxSettings.IRSGenerator}.
+    \item Due to bugs in the XVA pricer, rate conversion is not allowed to be used on any floating leg or a deliverable fixed leg.
+    The rate conversion is only taken into account correctly for Non-Deliverable (ND) fixed legs.
+    For the IRS Vanilla product this effectively means that rate conversion is no longer signed off, as ND fixed legs are not in scope for the IRS Vanilla product~\cite{MxSettings.IRSGenerator}.
+    See Murex case C-1158502 for further background info.
+  \end{enumerate}
+  \item Stub period rate \Arg{Max(Next,Previous)} is not signed off as volatilities are required to properly price this optionality~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+  \item Interpolated indices are not compatible with the XVA framework, and therefore not signed off for XVA~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+  \item The \Arg{TodayCash} functionality is not signed off.
+  In the e-TradePad a user can select the \Arg{TodayCash} functionality and this will impact the NPV.
+  However, this \Arg{TodayCash} setting is not stored and will therefore not be part of the XML export corresponding to the trade.
+  Product Control has confirmed that they do not want that the       \Arg{TodayCash} setting is stored.
+  As such, PMV cannot perform regression testing for this functionality and therefore not signed off~\cite{MxSettings.IRS}.
+  %\item The CompoundingRounding feature is only signed off for the setting \Arg{None}. Any other choices are not signed off as a bug has been found and reported to Murex under Defect ID DEF0403945. The bug is that compounding flows that have not fixed yet are rounded while they should not be. Until the fix is delivered this feature is not signed off \cite{MxSettings.IRSGenerator}.
+  \item The amortization types \Arg{Constant annuities} and \Arg{Constant annuities (r)} are only signed-off when the amortization takes place on a fixed leg.
+  This is because amortization of these types are not supported for floating legs in XVA.
+  See C-1083480 and DEF0453565 for more information.
+  \item The rate expression \Arg{Discount basis} is only allowed for fixed legs, and the rate expression \Arg{FRA basis} is not allowed in any case.
+  This is because of bugs in the Murex XVA engine.
+  See C-1074109 and DEF0443835 for more information.
+  \item Margin mode `In underlying':
+  \begin{itemize}
+    \item Is only allowed in combination with rate conventions that have a `Linear' or `Yield' computing mode, and a `Standard basis' rate expression~\cite{MxSettings.IRSGenerator}.
+    This is because the Murex XVA engine does not support other cases than this.
+    See C-1060753 and DEF0443837 for more information.
+    \item Is only supported for compound indices~\cite{MxSettings.IRSGenerator}.
+    See C-1475995 for more information.
+  \end{itemize}
+  \item Exponential rate conventions are not signed off for pricing, i.e., exponential rate conventions are not allowed for coupon calculation at trade level~\cite{MxSettings.IRS,MxSettings.IRSGenerator}.
+  The reason for this is that Murex does not support this in their XVA engine, see Murex cases C-1087470 and C-1099109 for further background info.
+\end{enumerate}
+ The reason behind the majority of these limitations above is the fact that a convexity adjustment is neglected, these restrictions have been imposed in agreement with FEng.
+
+
+\section{Compounding Swap}
+\label{sec:Comp}
+We have to calculate the value of the coupon:
+\begin{equation*}
+  V_n(t)=P^{\text{Fund}}(t,T_{n+1})\E_t^{n+1}
+  \left[
+  \sum_{i=k(n-1)+1}^{k(n)} N_i \alpha_i \left( F_i(T_i)+M_i^L \right)
+  \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j \left( F_j(T_j)+M_j^C \right) \right]
+  \right].
+\end{equation*}
+Notice that in case the compound margin $M_j^C$ is $0$ then the product can be rewritten as follows:
+\begin{equation*}
+  \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j \left( F_j(T_j)+M_j^C \right) \right] =
+  \frac{1}{P(T_{i+1},T_{i+2})}\hdots \frac{1}{P(T_{k(n)-1},T_{k(n)})} \approx\frac{1}{P(T_{i+1},T_{k(n)})}.
+\end{equation*}
+
+Substitute this into the expectation:
+\begin{align*}
+  \frac{V_n(t)}{P^{\text{Fund}}(t,T_{n+1})}& \approx \E_t^{n+1}
+  \left[
+  \sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i \left( F_i(T_i)+M_i^L \right)
+  \frac{1}{P(T_{i+1},T_{k(n)})}
+  \right]=\\
+  &=
+  \sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i \E_t^{n+1}
+  \left[ \frac{F_i(T_i)}{P(T_{i+1},T_{k(n)})}\right]
+  + q_i \alpha_i \E_t^{n+1}\left[\frac{M_i^L}{P(T_{i+1},T_{k(n)})} \right]=\\
+  & \approx \sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i \E_t^{n+1}
+  \left[\frac{P(T_i,T_{i})-P(T_i,T_{i+1})}{\alpha_i P(T_{i},T_{k(n)})}\right]
+  + q_i \alpha_i \E_t^{n+1}\left[\frac{M_i^L}{P(T_{i+1},T_{k(n)})} \right]=\\
+  &=
+  \sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i
+  \frac{P(t,T_{i})-P(t,T_{i+1})}{\alpha_i P(t,T_{k(n)})}
+  + q_i \alpha_i M_i^L \frac{P(t,T_{i+1})}{P(t,T_{k(n)})} =\\
+  &=\sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i
+  F_i(t)\frac{P(t,T_{i+1})}{ P(t,T_{k(n)})}
+  + q_i \alpha_i M_i^L \frac{P(t,T_{i+1})}{P(t,T_{k(n)})}=\\
+  &=\sum_{i=k(n-1)+1}^{k(n)} q_i \alpha_i (F_i(t)+M_i^L) \prod_{j=i+1}^{k(n)} \left[ 1+\alpha_j \left( F_j(t)+M_j^C \right) \right].
+\end{align*}
+To calculate the expectation we used the standard assumption that the spread between the funding and the forecasting curves is deterministic.
+Alternatively, it can be shown that if the tenor of the underlying rate is short and the notional and margin are constants then the volatility of the interest rate has only a very limited influence on the value of the coupon.
+If this is the case, then the expectation can be calculated by assuming all forward values $F_i(t)$ under the expectation are taken today.
+
+To show that the value of the coupon does not depend on the volatility, we use the following approximation:
+\begin{equation*}
+1+\alpha_j \left( F_j(T_j)+M_j^C \right)\approx \exp(\alpha_j(r^f(T_j)+M_j^C )).
+\end{equation*}
+
+\section{Compounding Swap with Constant Margin and Notional}
+\label{sec:CompConst}
+To show that the expression for the coupon of the compounding swap in case of constant notional and margin can be simplified, we used the following result.
+\begin{equation}\label{eq:techNote}
+  \sum_{i=1}^n Y_i \prod_{j=i+1}^n (1+ Y_j) = \prod_{i=1}^n (1+ Y_j) - 1.
+\end{equation}
+We will proof this by mathematical induction.
+For the case $ n = 1$ it is trivial.
+Therefore, we only need to proof that if~\eqref{eq:techNote} holds for $n = k$, it also holds
+for $n = k+1$.
+\begin{align}
+  \sum_{i=1}^{k+1} Y_i \prod_{j=i+1}^{k+1} (1+ Y_j) &= (1 + Y_{k+1}) \left[ \sum_{i=1}^k Y_i \prod_{j=i+1}^k (1+ Y_j) \right] + Y_{k+1} \nonumber\\
+  &= (1 + Y_{k+1}) \left[ \prod_{j=1}^k (1+ Y_j) - 1 \right] + Y_{k+1} \nonumber\\
+  &= \prod_{j=1}^{k+1} (1+ Y_j) - 1.
+\end{align}
+
+
+\section{Single Swaplet with Average Index without Capital Payments}
+\label{sec:AverageIndex}
+
+\subsection*{Notation}
+
+The following notation will be used throughout this analysis:
+\begin{deflist}{$L(t_{i-1}^\text{f}, t_{i-1},t_i)$}
+\item[$t^\text{f}$, $s$, $e$, $p$]
+Fixing date, start date, end date and payment date of a floating interest rate period.
+\item[$t_{i-1}^\text{f}, t_{i-1},t_i$]
+Fixing date, start date and end date at date number $i$ of a floating interest rate period within an averaging period.
+\item[$\alpha^\text{X}(a,b)$]
+Year fraction between $a$ and $b$ in daycount convention X.
+\item[$P(t,T)$]
+Price of a zero-coupon bond maturing at $T$, for date $t$.
+\item[$L(t_{i-1}^\text{f}, t_{i-1},t_i)$]
+Rate between dates $t_{i-1}$ and $t_i$ with a fixing date at time $t_{i-1}^\text{f}$, this is a random variable up to time $t_{i-1}^\text{f}$.
+\item[$F(t, s, e)$]
+Expectation of a rate between dates $s$ and $e$, where $e > s$, in the measure corresponding to a risk-free bond maturing at $e$ at date $t$.
+\item[$n$] Number of averaging days within an averaging period.
+\item[$N$]
+Notional.
+\item [$r(t)$]
+Continuous time interest rate at time $t$.
+\item [$x(t)$]
+Modified short rate, used within the Hull-White model.
+\item [$\psi(0,t)$]
+Deterministic time dependent function to convert between $x(t)$ and $r(t)$.
+\item [$a$]
+Mean reversion parameter.
+\item [$\sigma(t)$]
+Model volatility at time $t$.
+\item [$W(t)$]
+Brownian motion at time $t$.
+\item [$V(t)$]
+Price of derivative at time $t$.
+\item[$B(t)$]
+Money market account at time $t$.
+\item[$f(\alpha, L)$]
+Function linked to the selected rate convention to calculate the coupon value from a daycount fraction $\alpha$ and rate $L$. See Section~\ref{sec:product} for more details.
+\item[$\alpha$]
+Year fraction.
+\item[$\bar{L}$]
+Average rate.
+\end{deflist}
+
+
+
+\subsubsection*{Simplified Test Product}
+A simplified test setup is used to investigate the neglected convexity adjustment for average indices.
+A product type is used which only consist of one floating coupon payment without capital payments.
+
+The payout of such a single coupon at the payment date $p$ is given by:
+\begin{align}
+  V(p)   & =  f(\alpha, \bar{L}), \label{eq:payoutSingleCoupon1} \\
+  \alpha & = \alpha^\text{X}(s,e), \label{eq:payoutSingleCoupon2} \\
+  \bar{L} & =  \frac{1}{n} \sum_{i=1}^n L(t_{i-1}^\text{f}, t_{i-1}, t_i). \label{eq:payoutSingleCoupon3}
+\end{align}
+Here, $L(t_{i-1}^\text{f},t_{i-1}, t_i)$ is the stochastic interest rate corresponding to the underlying index.
+The average rate is the rate corresponding to the averaging index, and the coupon is calculated by a function $f$ depending on the rate convention:
+\begin{itemize}
+ \item \textit{Linear Standard Basis}:
+ \begin{equation*}
+   f(\alpha, \bar{L})  = N \times \alpha^\text{X}(s,e) \times \frac{1}{n} \sum_{i=1}^n L(t_{i-1}^\text{f}, t_{i-1}, t_i),
+ \end{equation*}
+ Note that there are other linear rate conventions. However, only `Linear Standard Basis' is signed off in case of averaging indices.
+\item \textit{Yield}:
+    \begin{equation*}
+          f(\alpha, \bar{L})  = N \times \left[ \left( 1 + \frac{1}{n} \sum_{i=1}^n L(t_{i-1}^\text{f},t_{i-1}, t_i) \right)^{\alpha^\text{X}(s,e)} - 1 \right].
+    \end{equation*}
+\item \textit{Exponential}:
+    \begin{equation*}
+          f(\alpha, \bar{L})  = N \times \left( e^{\alpha^\text{X}(s,e) \times \frac{1}{n} \sum_{i=1}^n L(t_{i-1}^\text{f},t_{i-1}, t_i)} - 1 \right).
+    \end{equation*}
+\end{itemize}
+
+The risk neutral pricing theorem states that the current value of such a trade is equal to:
+\begin{equation}
+  V(t_0) = \E^Q\left[ \frac{B(t_0)}{B(t_n)} f(\alpha, \bar{L}) \right].
+\end{equation}
+The rates $L(t_{i-1}^\text{f}, t_{i-1}, t_i)$ can be modelled by the MC engine as described in~\cite{Mx.XVAFramework} .
+Furthermore, $B(t)$ is defined as the money market account defined by:
+\begin{equation}
+ \d B(t)=r(t)B(t)\dt.
+\end{equation}
+
+
+
+
+
+%\section{Interest Rate Index}
+%\subsection{Current Index}
+%If a certain interest rate rate is liquid enough and has it's own forecasting curve, then in Murex it is specified as a \textit{Published index} with the estimation mode equal to \textit{Current index}. In Figure~\ref{fig:Lib} the field specifying the 3m USD \Libor are presented.
+%
+%
+%\begin{minipage}{\linewidth}% to keep image and caption on one page
+%\makebox[\linewidth]{% to center the image
+% \includegraphics[width=0.65\textwidth]{figures/Libor.png}}
+%
+%  \makebox[\linewidth]{%
+%   \includegraphics[width=0.65\textwidth]{figures/Libor_settings.png}
+%  }
+%\captionof{figure}{Specification of 3m USD \Libor in Murex.}\label{fig:Lib}% only if needed
+%\end{minipage}
+%
+%
+%In terms of the discount factors from the corresponding forecasting curve, the \Libor rate with tenor $\delta$ is defined as follows:
+%\begin{equation}
+%\label{eq:currentlibor}
+%F(t,T,T+\delta)=\frac{P^f(t,T_0)-P^f(t,T_1)}{\alpha_c P^f(t,T_1)}.
+%\end{equation}
+%Here $P^f(t,T_i)$ is a discount factors from the forecasting curve corresponding to the index. For "current indices" the curves are specified in the curve assignment.
+%The index has a fixing date $T_R$, which is specified on the trade level. The start date of the index $T_0$ is obtained
+%from the fixing date $T_R$ by applying the \textit{Start delay}:
+%\begin{equation*}
+%T_0=T_R+\text{StartDelay}.
+%\end{equation*}
+%The end date $T_1$ is obtained from the start date $T_0$ by moving forward with the period $\delta$ specified in the \textit{Schedule generator} (3 months in the current example) and using the same calendar as the one given in \textit{Start delay} (confirmed by Murex 27.10.17):
+%\begin{equation*}
+%T_1=T_0+\delta.
+%\end{equation*}
+%The factor $\alpha_c$ is the day count fraction between $T_0$ and $T_1$ calculated using the Rate convention as specified in~\ref{fig:Lib}.
+%
+%\textbf{Remark.} In case the \Libor is not liquid enough to have it's own curve, but has the tenor (e.g., 1W) which is shorter than the tenor of the shortest liquid \Libor (e.g., 1M), then it was decided to extract the \Libor from the curve corresponding to the shortest liquid \Libor. That is on the short end the extrapolation is applied.
+%
+%\textbf{Remark.} All published indices should have a correct curve specified on the index level. The curve should be the same as in the curve assignment.
+%
+%\subsection{Interpolated Index}
+%In case the index is not liquid enough to have it's own curves, it will be interpolated from the available curves. There are two types of interpolation available in Murex,
+%we will describe only the type requested by Rabobank.
+%
+%If we would like to forecast a \Libor with an illiquid tenor $\delta$, which satisfies
+%\begin{equation*}
+%\delta_i<\delta<\delta_{i+1},
+%\end{equation*}
+%\textbf{Remark.} Note that for indices with the fixing date $T_R$ is the past, all fixings should be present in the corresponding archiving group. Currently the indices with tenors not in the archiving group are not signed off.
+%
+%\subsection{Compounding indices}
+%
+%
+%\subsection{Averaging indices}
+%
+%\subsection{Stub rates}
+%In case the length of the accrual period is less then the tenor of the index, the stub rate has to be calculated for this period.
+%
+%
+%In case the index of the product (or leg of the product) is a \Libor rate with illiquid tenor (has no corresponding curve) ...
+%In case the stub period is shorter than the rate with the shortest tenor $\tau_1$ in the corresponding archiving group \textit{excluding the 1D rate}, then the interpolation is not performed. Instead the
+%stub rate is defined as a rate with tenor $\tau_1$, which is the current ISDA specification according to FEng.
+
+\end{document}
