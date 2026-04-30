@@ -279,8 +279,86 @@ This expression is used in Murex to find the value of the derivative under the f
 
 Note that below we will use the notation $P^{\text{Fund}}(t,T) $ for both CSA and non-CSA derivatives, keeping in mind that for CSA derivatives $P^{\text{Fund}}(t,T)=P^D(t,T)$.
 
-\textbf{Remark.} The derivations above were performed for the \textit{linear} accrual convention.
-However, all of the above holds for exponential and yield conventions as well, for some more details see~\cite{Mx.RateCurve}.
+\textbf{Remark.} The derivations above implicitly assumed the \textit{Linear-Standard basis} rate convention; for the corresponding statements under the other four rate conventions supported by Murex see the next subsubsection \textit{Rate Conventions and the Forward Rate} and~\cite{Mx.RateCurve}.
+
+\subsubsection{Rate Conventions and the Forward Rate}
+\label{sec:RateConventions}
+
+The forward rate $F_n(T_0)$ derived in equation~\eqref{eq:unadjfwd} and, more generally, the entire derivation in the previous subsubsection were carried out implicitly under the \textit{Linear-Standard basis} rate convention.
+Murex however supports five rate conventions, configured on the index level via the \Arg{RateConvention} object: \Arg{Linear-Standard basis}, \Arg{Linear-Discount basis}, \Arg{Linear-FRA basis}, \Arg{Yield} and \Arg{Exponential}.
+Of these, only \Arg{Linear-Standard basis} is the standard convention; the other four are non-standard.
+The choice of rate convention impacts both the definition of the forward rate $F_n(t)$ in terms of the forecasting-curve discount factors $P^f(t,T_n),P^f(t,T_{n+1})$ and the functional form of the floating cash flow.\footnote{The companion document~\cite{ConvexityAdjustments} % TODO: confirm bibkey
+uses the alternative notation $T_i^s, T_i^e, \alpha_i^F, L_i, P^F$ for the same quantities; in this document we use the local IRS Vanilla notation $T_n, T_{n+1}, \alpha_n^L, F_n, P^f$ throughout.}
+
+For each of the five conventions the forward rate $F_n(t)$ associated with the period $(T_n,T_{n+1})$ is defined from the forecasting curve as follows:
+\begin{equation}
+\label{eq:fwd-rate-conventions}
+F_n(t) = \begin{cases}
+\dfrac{1}{\alpha_n^L}\left(\dfrac{P^f(t,T_n)}{P^f(t,T_{n+1})}-1\right), & \text{Linear-Standard basis}, \\[1.2em]
+\dfrac{1}{\alpha_n^L}\left(1-\dfrac{P^f(t,T_{n+1})}{P^f(t,T_n)}\right), & \text{Linear-Discount basis}, \\[1.2em]
+\dfrac{1}{\alpha_n^L}\bigl(P^f(t,T_n)-P^f(t,T_{n+1})\bigr), & \text{Linear-FRA basis}, \\[1.2em]
+\left(\dfrac{P^f(t,T_n)}{P^f(t,T_{n+1})}\right)^{1/\alpha_n^L}-1, & \text{Yield}, \\[1.2em]
+\dfrac{1}{\alpha_n^L}\,\log\dfrac{P^f(t,T_n)}{P^f(t,T_{n+1})}, & \text{Exponential}.
+\end{cases}
+\end{equation}
+The Linear-Standard basis case reduces to equation~\eqref{eq:unadjfwd}.
+The Linear-Discount and Linear-FRA basis are written here as Linear-FRA-/Linear-Discount-style variants; the structurally relevant fact is that there are five \emph{distinct} closed forms for $F_n(t)$.
+
+The corresponding floating cash flow on the period $(T_n,T_{n+1})$, paid at $T_{n+1}^p$ on a notional $q_n$ with margin $M_n$ and floating-leg accrual $\alpha_n^{flt}$, takes the form $C_n^{flt}(T_{n+1}^p) = q_n\,g\!\left(\alpha_n^{flt},\,F_n(T_n)+M_n\right)$, where the function $g(\alpha,L+M)$ is determined by the rate convention as follows:
+\begin{equation}
+\label{eq:g-rate-conventions}
+g(\alpha,L+M) = \begin{cases}
+\alpha\,(L+M), & \text{Linear-Standard basis}, \\[0.6em]
+\dfrac{\alpha(L+M)}{1-\alpha(L+M)}, & \text{Linear-Discount basis}, \\[0.9em]
+\dfrac{\alpha(L+M)}{1+\alpha(L+M)}, & \text{Linear-FRA basis}, \\[0.9em]
+(1+L+M)^{\alpha}-1, & \text{Yield}, \\[0.6em]
+e^{\alpha(L+M)}-1, & \text{Exponential}.
+\end{cases}
+\end{equation}
+For the Linear-Standard basis the function $g$ is linear in $L$, whereas for the four non-standard conventions it is non-linear in $L$.
+
+\bigskip
+\noindent\fbox{\begin{minipage}{0.97\linewidth}
+\textbf{Convexity Adjustment for Non-Standard Rate Conventions.}
+
+The companion review document~\cite{ConvexityAdjustments} % TODO: confirm bibkey
+defines the convexity adjustment of a payoff $f(X_T)$ priced under a measure $\mathbb{Q}^N$ as
+\begin{equation}
+\label{eq:CA-definition}
+CA_t \;:=\; f(X_t)-\E_t^N\!\left[f(X_T)\right],
+\end{equation}
+and identifies two structural sources for $CA_t \ne 0$: (i) curvature in the payoff function $f$ when $X_t$ is a martingale under $\mathbb{Q}^N$ (Jensen's inequality), and (ii) curvature in the pricing measure when $f$ is linear but $X_t$ is not a martingale under $\mathbb{Q}^N$ (e.g., CMS-type adjustments).
+
+The case at hand is unambiguously of \emph{Source~(i)} type.
+By construction the forward rate $F_n(t)$ defined in~\eqref{eq:fwd-rate-conventions} is a martingale under the discount $T_{n+1}$-forward measure (cf.~equation~\eqref{libor}), but the payoff function $g(\alpha,L+M)$ in~\eqref{eq:g-rate-conventions} is non-linear in $L$ for all four non-standard conventions.
+Consequently
+\begin{equation*}
+\E_t^{n+1}\!\left[g\!\left(\alpha_n^{flt},F_n(T_n)+M_n\right)\right] \;\ne\; g\!\left(\alpha_n^{flt},F_n(t)+M_n\right)
+\end{equation*}
+in general, by Jensen's inequality.
+The Murex analytical pricer however computes the floating cash flow as $g\!\left(\alpha_n^{flt},F_n(t)+M_n\right)$, i.e. it pulls the expectation through the non-linear function $g$.
+Identifying $f \leftrightarrow g$ and $X \leftrightarrow F_n+M_n$ in~\eqref{eq:CA-definition}, the resulting mispricing is exactly a Source-(i) (Jensen) convexity adjustment
+\begin{equation*}
+CA_n^{\text{rate-conv}} \;:=\; g\!\left(\alpha_n^{flt},F_n(t)+M_n\right) - \E_t^{n+1}\!\left[g\!\left(\alpha_n^{flt},F_n(T_n)+M_n\right)\right],
+\end{equation*}
+which is exact (i.e.\ identically zero) only for the Linear-Standard basis convention and is otherwise neglected by the analytical pricer.
+
+For the \Arg{Yield} rate convention, recovering the closed-form analytical expression $C_n^{flt}(T_{n+1}^p) = P^D(t,T_{n+1}^p)\,q_n\,\bigl(P^f(t,T_n)/P^f(t,T_{n+1})-1\bigr)$ used in production requires \emph{three additional approximations} stacked on top of neglecting the Source-(i) convexity:
+\begin{enumerate}
+    \item the margin is set to zero, $M_n=0$;
+    \item the floating-leg accrual fraction equals the forecasting-curve accrual fraction, $\alpha_n^{flt}=\alpha_n^F$;
+    \item the change-of-measure convexity from the natural payment date $T_{n+1}^p$ to the period end $T_{n+1}^e$ is neglected.
+\end{enumerate}
+Each of these approximations is independent of the Source-(i) Jensen mismatch and compounds the total mispricing for the Yield convention.
+
+The empirical magnitude of this neglected convexity is documented in Section~\ref{sec:ComprehensiveTesting} (see Table~\ref{tab:rateConvs}): under stressed market data on $3$M averaging rates, the relative error of the analytical pricer for the Yield convention is approximately twice that of the Linear convention, while the Exponential convention shows a much smaller error of the opposite sign in this particular example.
+This empirical pattern is consistent with the Source-(i) interpretation above, but it does not by itself sign-off the omitted convexity for general market conditions and trade configurations.
+
+The Source-(i) convexity adjustment $CA_n^{\text{rate-conv}}$ associated with non-standard rate conventions is currently neither modelled nor explicitly signed off as part of the IRS Vanilla model.
+A partial mitigation is the existing trade-level limitation that the \Arg{Exponential} rate convention is not allowed for coupon calculation at trade level, see Appendix~\ref{sec:Limitations} (item on Exponential rate conventions, cf.\ line item near Murex cases C-1087470 and C-1099109).
+This limitation removes one of the four non-standard conventions from the trade-level scope, but does not address the residual Source-(i) convexity exposure for the \Arg{Linear-Discount basis}, \Arg{Linear-FRA basis} and \Arg{Yield} conventions where they remain in scope.
+\end{minipage}}
+\bigskip
 
 \subsubsection{Vanilla Fixed-for-Float Swap}
 In a fixed-for-float swap on each accrual period $[T_n^1,T_{n+1}^1]$ one party pays float \Libor rate $F_n$ and a margin $k_n^1$, where the float rate fixes at the beginning on the period and pays at the end of the period.
