@@ -1,0 +1,11 @@
+flowchart LR
+    FE([FEng request<br/>GUI terms])
+    MRM[MRM<br/>writes runnable rules<br/>+ extraction queries<br/>tests on snapshot]
+    CSV([CSV data contract])
+    PC[PC<br/>runs extraction<br/>runs rule suite]
+    OUT([Breaks - escalation])
+
+    FE --> MRM --> CSV --> PC --> OUT
+
+    classDef ok fill:#d4f4d4,stroke:#080,color:#000
+    class MRM,PC ok

@@ -1,0 +1,23 @@
+flowchart TB
+    subgraph SCOPE[In Murex]
+        direction TB
+        T[Trades]
+        G[Generators]
+        RI[Rate indices]
+        SCH[Schedules]
+        CUR[Currencies]
+        OTH[Other settings tables]
+
+        T -.some flow through.-> G
+        G -.use.-> RI
+        G -.use.-> SCH
+        G -.use.-> CUR
+    end
+
+    CHECK[Current tool<br/>checks generators only]
+    G --> CHECK
+
+    classDef ok fill:#d4f4d4,stroke:#080,color:#000
+    classDef gap fill:#ffe0e0,stroke:#c00,color:#000
+    class G ok
+    class T,RI,SCH,CUR,OTH gap

@@ -1,0 +1,18 @@
+flowchart LR
+    FE([FEng request<br/>GUI terms])
+    MRM[MRM<br/>writes XML limitation<br/><b>cannot run it</b>]
+    PCMAP[PC<br/>maintains PC Mapping<br/>GUI label to DB column]
+    MUR[Murex Team Rabobank<br/>writes/changes Oracle query<br/>via ticket]
+    IT[Scheduled extraction<br/>fixed cadence]
+    TOOL[C# tool<br/>generators only]
+    OUT([Breaks - escalation])
+
+    FE --> MRM --> PCMAP
+    PCMAP -.-> MUR -.-> PCMAP
+    PCMAP -.-> IT -.CSV.-> TOOL
+    PCMAP --> TOOL --> OUT
+
+    classDef pain fill:#ffe0e0,stroke:#c00,color:#000
+    classDef wait fill:#fff4cc,stroke:#c80,color:#000
+    class MRM pain
+    class MUR wait
